@@ -159,7 +159,7 @@ export default function ModulePage() {
               onClick={() => router.push('/')}
               className="text-charcoal/60 hover:text-ink text-sm min-h-[44px] touch-manipulation inline-flex items-center gap-2"
             >
-              <img src="/IVY.svg" alt="IVY" className="h-8 w-8 object-contain" />
+              <img src="/ivy-corner-logo.png" alt="IVY" className="h-8 w-8 object-contain" />
               ← Back to Modules
             </button>
             <button

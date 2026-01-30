@@ -83,8 +83,8 @@ export default function DashboardPage() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
         <div className="mb-8">
           <a href="/" className="inline-flex items-center gap-3 mb-6">
-            <img src="/IVY.svg" alt="IVY" className="h-12 w-12 object-contain" />
-            <span className="tier-1-gravitas text-xl">Ivy Workbook</span>
+            <img src="/ivy-corner-logo.png" alt="IVY" className="h-12 w-12 object-contain" />
+            <span className="font-cinzel-decorative font-bold text-xl uppercase text-ink">IVY</span>
           </a>
           <h1 className="tier-1-gravitas text-2xl sm:text-4xl mb-2">Dashboard</h1>
           <p className="tier-2-instruction text-lg text-charcoal/80">

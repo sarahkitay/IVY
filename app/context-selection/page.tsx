@@ -112,8 +112,8 @@ export default function ContextSelectionPage() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
         <div className="mb-6 sm:mb-8">
           <a href="/dashboard" className="inline-flex items-center gap-3 mb-6">
-            <img src="/IVY.svg" alt="IVY" className="h-12 w-12 object-contain" />
-            <span className="tier-1-gravitas text-xl">Ivy Workbook</span>
+            <img src="/ivy-corner-logo.png" alt="IVY" className="h-12 w-12 object-contain" />
+            <span className="font-cinzel-decorative font-bold text-xl uppercase text-ink">IVY</span>
           </a>
           <a href="/dashboard" className="label-small-caps text-charcoal/60 hover:text-ink text-sm block mb-4">
             ← Back to Dashboard

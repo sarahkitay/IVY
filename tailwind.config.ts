@@ -12,6 +12,7 @@ const config: Config = {
         serif: ['EB Garamond', 'Playfair Display', 'serif'],
         sans: ['Inter', 'Source Sans 3', 'system-ui', 'sans-serif'],
         mono: ['JetBrains Mono', 'monospace'],
+        'cinzel-decorative': ['"Cinzel Decorative"', 'serif'],
       },
       colors: {
         ink: '#1a1a1a',
