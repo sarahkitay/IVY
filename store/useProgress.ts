@@ -5,6 +5,7 @@ import { calculateBoardCredibilityPoints } from '@/utils/answerQuality';
 
 interface ProgressStore {
   progress: Progress;
+  setProgress: (progress: Progress) => void;
   checkModuleUnlock: (module: Module) => boolean;
   completeModule: (moduleId: string) => void;
   getOverallProgress: () => number;
@@ -22,7 +23,9 @@ const initialProgress: Progress = {
 
 export const useProgress = create<ProgressStore>((set, get) => ({
   progress: initialProgress,
-  
+
+  setProgress: (progress) => set({ progress }),
+
   checkModuleUnlock: (module: Module) => {
     const { state } = useBusinessState.getState();
     

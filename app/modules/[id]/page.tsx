@@ -1,6 +1,7 @@
 'use client';
 
 import { useParams, useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { useState, useCallback } from 'react';
 import { getModuleById } from '@/data/all-modules';
 import { useBusinessState } from '@/store/useBusinessState';
@@ -151,7 +152,7 @@ export default function ModulePage() {
             onClick={() => router.push('/')}
             className="text-charcoal/60 hover:text-ink mb-4 text-sm min-h-[44px] touch-manipulation inline-flex items-center gap-2"
           >
-            <img src="/logo.png" alt="" className="h-8 w-8 object-contain" width={32} height={32} />
+            <Image src="/logo.png" alt="" width={32} height={32} className="h-8 w-8 object-contain" />
             ← Back to Modules
           </button>
           <div className="label-small-caps mb-2">
@@ -379,7 +380,12 @@ export default function ModulePage() {
         </div>
 
         {/* Post-module quiz (Ivy syllabus key concepts) */}
-        <ModuleQuiz moduleId={moduleId} />
+        <ModuleQuiz
+          moduleId={moduleId}
+          onQuizComplete={(correctCount, total) => {
+            updateModuleOutput(moduleId, { quizScore: correctCount, quizTotal: total });
+          }}
+        />
 
         {/* Hindsight Graph (future projections) */}
         <HindsightGraph currentModuleId={moduleId} />

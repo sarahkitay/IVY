@@ -2,14 +2,16 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useBusinessState } from '@/store/useBusinessState';
+import Image from 'next/image';
+import { useProjectStore } from '@/store/useProjectStore';
 import { ApplicationContext, CaseStudy } from '@/types/context';
 import { caseStudies } from '@/data/caseStudies';
 
 export default function ContextSelectionPage() {
   const router = useRouter();
-  const { setApplicationContext } = useBusinessState();
+  const createProject = useProjectStore((s) => s.createProject);
   const [selectedType, setSelectedType] = useState<'my-company' | 'case-study' | 'hypothetical' | 'observer' | null>(null);
+  const [saving, setSaving] = useState(false);
   const [myCompanyData, setMyCompanyData] = useState({
     businessType: 'startup' as 'startup' | 'employer' | 'client' | 'side-project',
     companyName: '',
@@ -21,7 +23,17 @@ export default function ContextSelectionPage() {
     category: '',
   });
 
-  const handleContinue = () => {
+  const getProjectName = (context: ApplicationContext): string => {
+    switch (context.type) {
+      case 'my-company': return context.companyName;
+      case 'case-study': return context.caseName;
+      case 'hypothetical': return context.category;
+      case 'observer': return 'Observer Mode';
+      default: return 'New Project';
+    }
+  };
+
+  const handleContinue = async () => {
     if (!selectedType) return;
 
     let context: ApplicationContext;
@@ -67,8 +79,17 @@ export default function ContextSelectionPage() {
         return;
     }
 
-    setApplicationContext(context);
-    router.push('/');
+    setSaving(true);
+    try {
+      const name = getProjectName(context);
+      await createProject(name, context);
+      router.push('/');
+    } catch (e) {
+      console.error(e);
+      alert('Failed to create project. Check console.');
+    } finally {
+      setSaving(false);
+    }
   };
 
   const getContextLabel = (context: ApplicationContext | undefined): string => {
@@ -91,9 +112,12 @@ export default function ContextSelectionPage() {
     <div className="min-h-screen bg-cream">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
         <div className="mb-6 sm:mb-8">
-          <a href="/" className="inline-flex items-center gap-3 mb-6">
-            <img src="/logo.png" alt="Ivy Workbook" className="h-12 w-12 object-contain" width={48} height={48} />
+          <a href="/dashboard" className="inline-flex items-center gap-3 mb-6">
+            <Image src="/logo.png" alt="Ivy Workbook" width={48} height={48} className="h-12 w-12 object-contain" />
             <span className="tier-1-gravitas text-xl">Ivy Workbook</span>
+          </a>
+          <a href="/dashboard" className="label-small-caps text-charcoal/60 hover:text-ink text-sm block mb-4">
+            ← Back to Dashboard
           </a>
           <h1 className="tier-1-gravitas text-2xl sm:text-4xl mb-4">Choose Your Application Context</h1>
           <p className="tier-2-instruction text-lg long-text mb-2">
@@ -294,12 +318,15 @@ export default function ContextSelectionPage() {
         </div>
 
         <div className="flex justify-end gap-4">
+          <a href="/dashboard" className="btn-formal bg-charcoal/10 text-ink hover:bg-charcoal/20 inline-flex items-center justify-center">
+            Back to Dashboard
+          </a>
           <button
             onClick={handleContinue}
-            disabled={!selectedType}
+            disabled={!selectedType || saving}
             className="btn-formal"
           >
-            Continue to Modules
+            {saving ? 'Saving…' : 'Continue to Modules'}
           </button>
         </div>
       </div>

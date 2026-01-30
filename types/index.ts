@@ -73,6 +73,8 @@ export interface ModuleOutput {
   };
   coldCallResponse?: string;
   redTeamResponse?: string;
+  quizScore?: number;
+  quizTotal?: number;
   timestamp: string;
 }
 

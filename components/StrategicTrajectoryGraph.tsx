@@ -39,7 +39,7 @@ export default function StrategicTrajectoryGraph() {
     <div className="command-center p-6 border border-charcoal/20" style={{ borderRadius: 0 }}>
       <h3 className="font-serif text-xl mb-1">Strategic Trajectory</h3>
       <p className="text-xs text-charcoal/60 font-mono mb-4">
-        Profit impact from answer quality and keywords across completed modules.
+        Reactive: profit impact from answer quality and strategic keywords across completed modules.
       </p>
       <svg width={width} height={height} className="border border-charcoal/10" style={{ borderRadius: 0 }}>
         <line x1={margin.left} y1={margin.top} x2={margin.left} y2={margin.top + chartHeight} stroke="#1a1a1a" strokeWidth="2" />

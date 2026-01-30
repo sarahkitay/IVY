@@ -9,6 +9,7 @@ interface BusinessStateStore {
   addExperiment: (experiment: Experiment) => void;
   updateBoardCredibility: (delta: number) => void;
   setApplicationContext: (context: ApplicationContext) => void;
+  replaceState: (state: Partial<BusinessState>) => void;
   reset: () => void;
 }
 
@@ -94,6 +95,15 @@ export const useBusinessState = create<BusinessStateStore>((set) => ({
         lastUpdated: new Date().toISOString(),
       },
     })),
-  
+
+  replaceState: (partial) =>
+    set((store) => ({
+      state: {
+        ...store.state,
+        ...partial,
+        lastUpdated: new Date().toISOString(),
+      },
+    })),
+
   reset: () => set({ state: initialState }),
 }));

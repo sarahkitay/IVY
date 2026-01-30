@@ -5,9 +5,10 @@ import { getQuizForModule } from '@/data/moduleQuizzes';
 
 interface ModuleQuizProps {
   moduleId: string;
+  onQuizComplete?: (correctCount: number, total: number) => void;
 }
 
-export default function ModuleQuiz({ moduleId }: ModuleQuizProps) {
+export default function ModuleQuiz({ moduleId, onQuizComplete }: ModuleQuizProps) {
   const quiz = getQuizForModule(moduleId);
   const [selected, setSelected] = useState<{ [qId: string]: number }>({});
   const [submitted, setSubmitted] = useState(false);
@@ -15,7 +16,9 @@ export default function ModuleQuiz({ moduleId }: ModuleQuizProps) {
   if (!quiz || quiz.questions.length === 0) return null;
 
   const handleSubmit = () => {
+    const correct = quiz.questions.filter((q) => selected[q.id] === q.correctIndex).length;
     setSubmitted(true);
+    onQuizComplete?.(correct, quiz.questions.length);
   };
 
   const correctCount = quiz.questions.filter((q) => selected[q.id] === q.correctIndex).length;

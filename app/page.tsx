@@ -1,30 +1,48 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import Image from 'next/image';
 import { useBusinessState } from '@/store/useBusinessState';
 import { useProgress } from '@/store/useProgress';
+import { useProjectStore } from '@/store/useProjectStore';
 import { getModulesByPillar } from '@/data/all-modules';
 import { useEffect, useState } from 'react';
 import ValueWedge from '@/components/ValueWedge';
 import StrategicTrajectoryGraph from '@/components/StrategicTrajectoryGraph';
+import LiveValuationCAC from '@/components/LiveValuationCAC';
 import { caseStudies } from '@/data/caseStudies';
 
 export default function Home() {
   const router = useRouter();
   const { state } = useBusinessState();
   const { progress } = useProgress();
+  const currentProjectId = useProjectStore((s) => s.currentProjectId);
+  const loadProject = useProjectStore((s) => s.loadProject);
   const [mounted, setMounted] = useState(false);
+  const [hydrating, setHydrating] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // Redirect to context selection if not set
+  // Hydrate from Firebase when we have a project id but no context (e.g. after refresh)
   useEffect(() => {
-    if (mounted && !state.applicationContext) {
-      router.push('/context-selection');
+    if (!mounted || !currentProjectId || state.applicationContext) return;
+    let cancelled = false;
+    setHydrating(true);
+    loadProject(currentProjectId)
+      .then(() => { if (!cancelled) setHydrating(false); })
+      .catch(() => { if (!cancelled) setHydrating(false); });
+    return () => { cancelled = true; };
+  }, [mounted, currentProjectId, state.applicationContext, loadProject]);
+
+  // Redirect to dashboard if no project selected
+  useEffect(() => {
+    if (mounted && !currentProjectId) {
+      router.push('/dashboard');
     }
-  }, [mounted, state.applicationContext, router]);
+  }, [mounted, currentProjectId, router]);
 
   if (!mounted) {
     return (
@@ -34,8 +52,16 @@ export default function Home() {
     );
   }
 
-  if (!state.applicationContext) {
-    return null; // Will redirect
+  if (hydrating || (currentProjectId && !state.applicationContext)) {
+    return (
+      <div className="min-h-screen bg-cream flex items-center justify-center">
+        <p className="text-charcoal">Loading project…</p>
+      </div>
+    );
+  }
+
+  if (!currentProjectId) {
+    return null; // Will redirect to dashboard
   }
 
   return (
@@ -46,12 +72,12 @@ export default function Home() {
           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-4">
             <div className="flex items-start gap-4">
               <a href="/" className="shrink-0" aria-label="Ivy Workbook home">
-                <img
+                <Image
                   src="/logo.png"
                   alt="Ivy Workbook"
-                  className="h-14 w-14 sm:h-16 sm:w-16 object-contain"
                   width={72}
                   height={72}
+                  className="h-14 w-14 sm:h-16 sm:w-16 object-contain"
                 />
               </a>
               <div>
@@ -66,6 +92,13 @@ export default function Home() {
               </p>
               </div>
             </div>
+            <div className="flex items-center gap-4">
+            <Link
+              href="/dashboard"
+              className="label-small-caps text-charcoal/60 hover:text-ink text-sm"
+            >
+              Back to Dashboard
+            </Link>
             {state.applicationContext && (
               <div className="command-center px-4 py-2">
                 <p className="label-small-caps mb-1 text-charcoal/50">CONTEXT</p>
@@ -81,6 +114,7 @@ export default function Home() {
                 </p>
               </div>
             )}
+            </div>
           </div>
         </header>
 
@@ -331,10 +365,14 @@ export default function Home() {
           })}
         </div>
 
-        {/* Live Dashboard */}
+        {/* Live Dashboard — reactive to answers and quiz */}
         <div className="mt-12 pt-8 border-t border-charcoal/20">
-          <h3 className="font-serif text-2xl mb-6">Live Dashboard</h3>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+          <h3 className="font-serif text-2xl mb-2">Live Dashboard</h3>
+          <p className="tier-3-guidance mb-6">
+            Valuation and CAC respond to answer quality (keywords, specificity) and correct quiz answers.
+          </p>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+            <LiveValuationCAC />
             <ValueWedge />
             <StrategicTrajectoryGraph />
           </div>

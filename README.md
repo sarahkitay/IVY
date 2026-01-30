@@ -33,8 +33,18 @@ Unlike most apps, you cannot "scroll" to the end. Progression is blocked by `req
 - **TypeScript**
 - **Tailwind CSS** (Custom design system with EB Garamond, Inter, JetBrains Mono)
 - **Zustand** (State management)
+- **Firebase** (Firestore for project persistence)
 - **Recharts** (Data visualization)
 - **Framer Motion** (Animations)
+
+## Firebase
+
+Projects (context + module outputs + progress) are stored in Firestore so you can switch between projects without losing data.
+
+- **Config**: `lib/firebase.ts` uses your project config; override with `NEXT_PUBLIC_FIREBASE_*` env vars if needed.
+- **Firestore**: Collection `projects`; each document has `name`, `applicationContext`, `state`, `progress`, `createdAt`, `updatedAt`.
+- **Index**: For "Your projects" (ordered by `updatedAt`), deploy indexes: `firebase deploy --only firestore:indexes` (or create the index in Firebase Console when prompted).
+- **Rules**: In Firebase Console → Firestore → Rules, allow read/write for testing, e.g. `match /projects/{id} { allow read, write: if true; }`. Tighten for production (e.g. require auth).
 
 ## Design System
 
