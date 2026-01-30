@@ -72,8 +72,12 @@ export default function ModuleQuizPage() {
           <ModuleQuiz
             moduleId={moduleId}
             standalone
-            onQuizComplete={(correctCount, total) => {
-              updateModuleOutput(moduleId, { quizScore: correctCount, quizTotal: total });
+            onQuizComplete={(correctCount, total, conceptIncomplete) => {
+              updateModuleOutput(moduleId, {
+                quizScore: correctCount,
+                quizTotal: total,
+                quizConceptIncomplete: conceptIncomplete ?? false,
+              });
             }}
           />
 

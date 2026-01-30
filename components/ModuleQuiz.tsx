@@ -5,7 +5,8 @@ import { getQuizForModule } from '@/data/moduleQuizzes';
 
 interface ModuleQuizProps {
   moduleId: string;
-  onQuizComplete?: (correctCount: number, total: number) => void;
+  /** (correctCount, total, conceptIncomplete). conceptIncomplete = true when a disqualifier question was missed. */
+  onQuizComplete?: (correctCount: number, total: number, conceptIncomplete?: boolean) => void;
   /** When true, used on dedicated quiz page—larger spacing, no surrounding module. */
   standalone?: boolean;
 }
@@ -19,11 +20,17 @@ export default function ModuleQuiz({ moduleId, onQuizComplete, standalone = fals
 
   const handleSubmit = () => {
     const correct = quiz.questions.filter((q) => selected[q.id] === q.correctIndex).length;
+    const conceptIncomplete = quiz.questions.some(
+      (q) => q.disqualifier && selected[q.id] !== q.correctIndex
+    );
     setSubmitted(true);
-    onQuizComplete?.(correct, quiz.questions.length);
+    onQuizComplete?.(correct, quiz.questions.length, conceptIncomplete);
   };
 
   const correctCount = quiz.questions.filter((q) => selected[q.id] === q.correctIndex).length;
+  const conceptIncomplete = quiz.questions.some(
+    (q) => q.disqualifier && selected[q.id] !== q.correctIndex
+  );
   const allAnswered = quiz.questions.every((q) => selected[q.id] !== undefined);
 
   return (
@@ -88,10 +95,17 @@ export default function ModuleQuiz({ moduleId, onQuizComplete, standalone = fals
           Submit Answers
         </button>
       ) : (
-        <p className="font-mono text-sm mt-6 text-charcoal/80">
-          Score: {correctCount} / {quiz.questions.length}
-          {correctCount === quiz.questions.length && ' — Board-ready.'}
-        </p>
+        <div className="mt-6 space-y-2">
+          {conceptIncomplete && (
+            <p className="text-sm font-medium text-orange-700 bg-orange-50 border border-orange-200 px-3 py-2" style={{ borderRadius: 0 }}>
+              Concept incomplete — required question(s) missed. Retake the quiz and get the required question right to advance.
+            </p>
+          )}
+          <p className="font-mono text-sm text-charcoal/80">
+            Score: {correctCount} / {quiz.questions.length}
+            {correctCount === quiz.questions.length && !conceptIncomplete && ' — Board-ready.'}
+          </p>
+        </div>
       )}
     </div>
   );

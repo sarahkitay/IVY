@@ -97,6 +97,19 @@ export default function ModulePage() {
       return;
     }
 
+    // Key concepts check: if quiz has a disqualifier question, concept must be complete to advance
+    const quiz = getQuizForModule(moduleId);
+    if (quiz?.questions.some((q) => q.disqualifier)) {
+      if (moduleOutput?.quizConceptIncomplete === true) {
+        alert('Key concepts check: concept incomplete. Retake the quiz and get the required question right to advance.');
+        return;
+      }
+      if (moduleOutput?.quizScore == null || moduleOutput?.quizTotal == null) {
+        alert('Complete the Key concepts check (quiz) before advancing.');
+        return;
+      }
+    }
+
     // All worksheets must be completed for this module
     const allWorksheetsComplete = moduleData.worksheets.every((ws) => {
       const data = worksheetData[ws.id] ?? state.moduleOutputs[moduleId]?.worksheets?.[ws.id];
@@ -667,17 +680,22 @@ export default function ModulePage() {
             <p className="label-small-caps text-charcoal/60 mb-4">
               Ivy syllabus: {getQuizForModule(moduleId)?.title}. Taken on its own page — you cannot refer back to the module.
             </p>
+            {moduleOutput?.quizConceptIncomplete === true && (
+              <p className="text-sm font-medium text-orange-700 bg-orange-50 border border-orange-200 px-3 py-2 mb-4" style={{ borderRadius: 0 }}>
+                Concept incomplete — required question(s) missed. Retake the quiz and get the required question right to advance.
+              </p>
+            )}
             {moduleOutput?.quizScore !== undefined && moduleOutput?.quizTotal !== undefined ? (
               <div className="flex flex-wrap items-center gap-4">
                 <p className="font-mono text-sm text-charcoal/80">
                   Score: {moduleOutput.quizScore} / {moduleOutput.quizTotal}
-                  {moduleOutput.quizScore === moduleOutput.quizTotal && ' — Board-ready.'}
+                  {moduleOutput.quizScore === moduleOutput.quizTotal && !moduleOutput?.quizConceptIncomplete && ' — Board-ready.'}
                 </p>
                 <a
                   href={`/modules/${moduleId}/quiz`}
                   className="label-small-caps text-charcoal/70 hover:text-ink underline"
                 >
-                  Retake
+                  {moduleOutput?.quizConceptIncomplete ? 'Retake (required to advance)' : 'Retake'}
                 </a>
               </div>
             ) : (

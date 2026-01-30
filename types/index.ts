@@ -145,6 +145,8 @@ export interface ModuleOutput {
   redTeamResponse?: string;
   quizScore?: number;
   quizTotal?: number;
+  /** When true: key concepts check had a required (disqualifier) question missed; must retake to advance. */
+  quizConceptIncomplete?: boolean;
   /** "What would you do Monday?" — In the next 7 days, what changes in the world if you're right? */
   whatWouldChangeIn7Days?: string;
   /** Legitimacy lens answers (Yale): who could attack, exploitative risk, implicit promise. */
