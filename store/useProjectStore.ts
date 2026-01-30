@@ -60,7 +60,19 @@ export const useProjectStore = create<ProjectStore>()(
         setProgress(initialProgress);
         const state = useBusinessState.getState().state;
         const progress = useProgress.getState().progress;
-        const id = await createProjectInFirebase(name, context, state, progress);
+
+        const FIREBASE_TIMEOUT_MS = 8000;
+        let id: string;
+        try {
+          id = await Promise.race([
+            createProjectInFirebase(name, context, state, progress),
+            new Promise<string>((_, reject) =>
+              setTimeout(() => reject(new Error('timeout')), FIREBASE_TIMEOUT_MS)
+            ),
+          ]);
+        } catch (_e) {
+          id = `local-${Date.now()}`;
+        }
         set({ currentProjectId: id });
         return id;
       },

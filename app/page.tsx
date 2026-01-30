@@ -19,6 +19,7 @@ export default function Home() {
   const { progress } = useProgress();
   const currentProjectId = useProjectStore((s) => s.currentProjectId);
   const loadProject = useProjectStore((s) => s.loadProject);
+  const setCurrentProjectId = useProjectStore((s) => s.setCurrentProjectId);
   const [mounted, setMounted] = useState(false);
   const [hydrating, setHydrating] = useState(false);
 
@@ -26,9 +27,18 @@ export default function Home() {
     setMounted(true);
   }, []);
 
+  // Local projects don't persist context after refresh — send back to dashboard
+  useEffect(() => {
+    if (!mounted || !currentProjectId || state.applicationContext) return;
+    if (!String(currentProjectId).startsWith('local-')) return;
+    setCurrentProjectId(null);
+    router.push('/dashboard');
+  }, [mounted, currentProjectId, state.applicationContext, setCurrentProjectId, router]);
+
   // Hydrate from Firebase when we have a project id but no context (e.g. after refresh)
   useEffect(() => {
     if (!mounted || !currentProjectId || state.applicationContext) return;
+    if (String(currentProjectId).startsWith('local-')) return;
     let cancelled = false;
     setHydrating(true);
     loadProject(currentProjectId)
@@ -52,7 +62,7 @@ export default function Home() {
     );
   }
 
-  if (hydrating || (currentProjectId && !state.applicationContext)) {
+  if (hydrating || (currentProjectId && !state.applicationContext && !String(currentProjectId).startsWith('local-'))) {
     return (
       <div className="min-h-screen bg-cream flex items-center justify-center">
         <p className="text-charcoal">Loading project…</p>

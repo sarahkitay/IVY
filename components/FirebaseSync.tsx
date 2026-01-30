@@ -15,7 +15,7 @@ export default function FirebaseSync() {
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    if (!currentProjectId) return;
+    if (!currentProjectId || String(currentProjectId).startsWith('local-')) return;
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     timeoutRef.current = setTimeout(() => {
       syncCurrentProjectToFirebase();
