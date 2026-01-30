@@ -40,20 +40,31 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-cream">
-      <div className="max-w-7xl mx-auto px-6 py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
         {/* Header */}
-        <header className="mb-12">
-          <div className="flex items-start justify-between mb-4">
-            <div>
-              <h1 className="tier-1-gravitas text-5xl mb-2">
-                IVY WORKBOOK
-              </h1>
+        <header className="mb-8 sm:mb-12">
+          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-4">
+            <div className="flex items-start gap-4">
+              <a href="/" className="shrink-0" aria-label="Ivy Workbook home">
+                <img
+                  src="/logo.png"
+                  alt="Ivy Workbook"
+                  className="h-14 w-14 sm:h-16 sm:w-16 object-contain"
+                  width={72}
+                  height={72}
+                />
+              </a>
+              <div>
+                <h1 className="tier-1-gravitas text-3xl sm:text-5xl mb-2">
+                  IVY WORKBOOK
+                </h1>
               <p className="tier-2-instruction text-lg">
                 Marketing as Value Architecture
               </p>
               <p className="tier-3-guidance mt-2">
                 Author: Sarah Kitay | Edition: Founders & Operators
               </p>
+              </div>
             </div>
             {state.applicationContext && (
               <div className="command-center px-4 py-2">
@@ -74,8 +85,8 @@ export default function Home() {
         </header>
 
         {/* Status Dashboard */}
-        <div className="command-center p-6 mb-8">
-          <div className="grid grid-cols-3 gap-6">
+        <div className="command-center p-4 sm:p-6 mb-6 sm:mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
             <div>
               <p className="text-sm text-charcoal/60 mb-1">Board Credibility</p>
               <p className="text-3xl font-serif">{state.boardCredibilityScore}</p>

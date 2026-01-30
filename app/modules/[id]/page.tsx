@@ -78,6 +78,18 @@ export default function ModulePage() {
       return;
     }
 
+    // Cold Call required when module has one
+    if (moduleData.coldCall && !moduleOutput?.coldCallResponse?.trim()) {
+      alert('Complete the Cold Call before advancing.');
+      return;
+    }
+
+    // Red Team required when module has one
+    if (moduleData.redTeam && !moduleOutput?.redTeamResponse?.trim()) {
+      alert('Complete the Red Team response (Enter Record) before advancing.');
+      return;
+    }
+
     // All worksheets must be completed for this module
     const allWorksheetsComplete = moduleData.worksheets.every((ws) => {
       const data = worksheetData[ws.id] ?? state.moduleOutputs[moduleId]?.worksheets?.[ws.id];
@@ -91,7 +103,6 @@ export default function ModulePage() {
         const val = worksheet.fields?.[req.id];
         return Boolean(worksheet?.completed && val !== undefined && val !== '' && (Array.isArray(val) ? (val as unknown[]).length > 0 : true));
       }
-      // No source: accept if we have it in moduleOutput, or if all worksheets are complete (worksheet-driven modules)
       if (moduleOutput?.requiredOutputs?.[req.id] !== undefined && moduleOutput.requiredOutputs[req.id] !== '') return true;
       return allWorksheetsComplete;
     });
@@ -133,19 +144,20 @@ export default function ModulePage() {
         />
       )}
 
-      <div className="max-w-5xl mx-auto px-6 py-12">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
         {/* Header */}
-        <div className="mb-8">
+        <div className="mb-6 sm:mb-8">
           <button
             onClick={() => router.push('/')}
-            className="text-charcoal/60 hover:text-ink mb-4 text-sm"
+            className="text-charcoal/60 hover:text-ink mb-4 text-sm min-h-[44px] touch-manipulation inline-flex items-center gap-2"
           >
+            <img src="/logo.png" alt="" className="h-8 w-8 object-contain" width={32} height={32} />
             ← Back to Modules
           </button>
           <div className="label-small-caps mb-2">
             {moduleData.pillar === 'pillar-1' ? 'PILLAR I' : moduleData.pillar === 'pillar-2' ? 'PILLAR II' : 'PILLAR III'} — MODULE {moduleData.order}
           </div>
-          <h1 className="tier-1-gravitas text-4xl mb-4">{moduleData.title}</h1>
+          <h1 className="tier-1-gravitas text-2xl sm:text-4xl mb-4">{moduleData.title}</h1>
           <div className="tier-a mb-6">
             <p className="tier-2-instruction text-lg long-text">{moduleData.thesis}</p>
           </div>
@@ -379,17 +391,17 @@ export default function ModulePage() {
         />
 
         {/* Complete Button */}
-        <div className="flex justify-end gap-4">
+        <div className="flex flex-col-reverse sm:flex-row justify-end gap-3 sm:gap-4 mt-6">
           <button
             onClick={() => router.push('/')}
-            className="btn-formal bg-charcoal/10 text-ink hover:bg-charcoal/20"
+            className="btn-formal bg-charcoal/10 text-ink hover:bg-charcoal/20 w-full sm:w-auto"
           >
             Save & Exit
           </button>
           <button
             onClick={handleCompleteModule}
             disabled={isCompleted || state.applicationContext?.type === 'observer'}
-            className="btn-formal"
+            className="btn-formal w-full sm:w-auto"
           >
             {state.applicationContext?.type === 'observer' 
               ? 'Observer Mode (Read-Only)' 

@@ -129,10 +129,17 @@ code, pre {
   @apply relative z-10;
 }
 
-/* Worksheet styling - square corners */
+/* Worksheet styling - square corners, touch-friendly on mobile */
 .worksheet-field {
   @apply border border-charcoal/20 px-3 py-2 focus:outline-none focus:ring-2;
   border-radius: 0;
+  min-height: 44px;
+}
+
+@media (min-width: 640px) {
+  .worksheet-field {
+    min-height: auto;
+  }
 }
 
 .worksheet-field:focus {
@@ -321,6 +328,9 @@ code, pre {
   font-family: 'Inter', system-ui, sans-serif;
   font-weight: 500;
   letter-spacing: 0.02em;
+  min-height: 44px;
+  min-width: 44px;
+  touch-action: manipulation;
 }
 
 .btn-formal:hover {

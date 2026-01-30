@@ -42,6 +42,22 @@ Unlike most apps, you cannot "scroll" to the end. Progression is blocked by `req
 - **Colors**: Charcoal ink, muted sage/stone accents, cream/parchment backgrounds
 - **Aesthetic**: Minimal, academic, case-study inspired, no "startup bro" energy
 
+## Deploy (Vercel)
+
+1. Push your code to GitHub (repo: `sarahkitay/IVY`):
+   ```bash
+   git add -A
+   git status
+   git commit -m "Your message"
+   git push origin main
+   ```
+2. Go to [vercel.com](https://vercel.com) and sign in with GitHub.
+3. Click **Add New… → Project** and import the **IVY** repository.
+4. Leave **Framework Preset** as Next.js and **Root Directory** as `.`. Click **Deploy**.
+5. Your app will be live at `https://your-project.vercel.app`. Future pushes to `main` auto-deploy.
+
+Optional: from the project root you can also run `npx vercel` (after `npm i -g vercel` and `vercel login`) to deploy from the CLI.
+
 ## Getting Started
 
 ```bash
