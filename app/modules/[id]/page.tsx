@@ -362,6 +362,70 @@ export default function ModulePage() {
           </div>
         )}
 
+        {/* Reading Spine (Brown): optional but rewarded — primary, counterpoint, operator artifact */}
+        {moduleData.readingSpine && (
+          <div className="mb-8 border border-charcoal/15 bg-parchment/20 p-6" style={{ borderRadius: 0 }}>
+            <h2 className="tier-2-instruction text-xl mb-2">READING SPINE</h2>
+            <p className="tier-3-guidance text-sm text-charcoal/70 mb-4">
+              Optional but rewarded. One primary (classic), one counterpoint (critique), one operator artifact.
+            </p>
+            <div className="space-y-3">
+              <div className="border-l-2 border-sage/50 pl-3">
+                <p className="label-small-caps text-charcoal/60 text-xs mb-1">Primary</p>
+                <p className="tier-3-guidance text-sm font-medium">{moduleData.readingSpine.primaryReading.title}</p>
+                {moduleData.readingSpine.primaryReading.description && (
+                  <p className="text-xs text-charcoal/60 mt-1">{moduleData.readingSpine.primaryReading.description}</p>
+                )}
+              </div>
+              <div className="border-l-2 border-sage/50 pl-3">
+                <p className="label-small-caps text-charcoal/60 text-xs mb-1">Counterpoint</p>
+                <p className="tier-3-guidance text-sm font-medium">{moduleData.readingSpine.counterpointReading.title}</p>
+                {moduleData.readingSpine.counterpointReading.description && (
+                  <p className="text-xs text-charcoal/60 mt-1">{moduleData.readingSpine.counterpointReading.description}</p>
+                )}
+              </div>
+              <div className="border-l-2 border-sage/50 pl-3">
+                <p className="label-small-caps text-charcoal/60 text-xs mb-1">Operator artifact</p>
+                <p className="tier-3-guidance text-sm font-medium">{moduleData.readingSpine.operatorArtifact.title}</p>
+                {moduleData.readingSpine.operatorArtifact.description && (
+                  <p className="text-xs text-charcoal/60 mt-1">{moduleData.readingSpine.operatorArtifact.description}</p>
+                )}
+              </div>
+            </div>
+            {!state.applicationContext || state.applicationContext.type !== 'observer' ? (
+              <label className="flex items-center gap-2 mt-4 text-sm text-charcoal/70">
+                <input
+                  type="checkbox"
+                  checked={!!moduleOutput?.readingSpineCompleted}
+                  onChange={(e) => updateModuleOutput(moduleId, { readingSpineCompleted: e.target.checked })}
+                />
+                Mark reading spine completed (optional)
+              </label>
+            ) : null}
+          </div>
+        )}
+
+        {/* Synthesis prompt: connect to one other discipline (Brown) */}
+        {moduleData.synthesisDisciplines && moduleData.synthesisDisciplines.length > 0 && (
+          <div className="mb-8 border-l-2 border-charcoal/30 p-6 bg-parchment/10" style={{ borderRadius: 0 }}>
+            <h2 className="tier-2-instruction text-xl mb-2">SYNTHESIS</h2>
+            <p className="tier-3-guidance text-sm text-charcoal/80 mb-3">
+              Connect this module to ONE other discipline: {moduleData.synthesisDisciplines.join(' / ')}.
+            </p>
+            {!state.applicationContext || state.applicationContext.type !== 'observer' ? (
+              <textarea
+                value={moduleOutput?.synthesisResponse ?? ''}
+                onChange={(e) => updateModuleOutput(moduleId, { synthesisResponse: e.target.value })}
+                placeholder="One sentence: how does this connect to another field?"
+                className="w-full worksheet-field min-h-[80px]"
+                style={{ borderRadius: 0 }}
+              />
+            ) : (
+              <p className="tier-3-guidance text-sm text-charcoal/60 italic">Read-only in Observer Mode.</p>
+            )}
+          </div>
+        )}
+
         {/* Interactive Calculator for P3 Module 1 */}
         {moduleId === 'p3-module-1' && (
           <div className="mb-8">

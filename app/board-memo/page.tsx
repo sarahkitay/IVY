@@ -8,12 +8,13 @@ import StrategyNoteForm from '@/components/StrategyNoteForm';
 import StakeholderMap from '@/components/StakeholderMap';
 import BoardPushbackCards from '@/components/BoardPushbackCards';
 import ColdCallDefense from '@/components/ColdCallDefense';
+import ThesisLedger from '@/components/ThesisLedger';
 
 export default function BoardMemoPage() {
   const { state } = useBusinessState();
   const modules = getModulesInOrder();
   const [memo, setMemo] = useState('');
-  const [activeTab, setActiveTab] = useState<'memo' | 'strategy-note' | 'stakeholder' | 'pushback'>('memo');
+  const [activeTab, setActiveTab] = useState<'memo' | 'strategy-note' | 'stakeholder' | 'pushback' | 'thesis-ledger'>('memo');
 
   const generateMemo = () => {
     let memoContent = `# Strategic Board Memo\n\n`;
@@ -40,6 +41,15 @@ export default function BoardMemoPage() {
       if (state.strategyNote.whatWouldChangeIn7Days) {
         memoContent += `\n**What would you do Monday?** ${state.strategyNote.whatWouldChangeIn7Days}\n`;
       }
+      memoContent += `\n---\n\n`;
+    }
+
+    // Strategic Thesis Ledger
+    if (state.strategicThesisLedger && state.strategicThesisLedger.length > 0) {
+      memoContent += `## Strategic Thesis Ledger\n\n`;
+      state.strategicThesisLedger.forEach((line, i) => {
+        memoContent += `${i + 1}. ${line}\n`;
+      });
       memoContent += `\n---\n\n`;
     }
 
@@ -223,6 +233,13 @@ export default function BoardMemoPage() {
           >
             Board Pushback
           </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab('thesis-ledger')}
+            className={`label-small-caps px-3 py-2 text-xs sm:px-4 sm:py-2 sm:text-sm ${activeTab === 'thesis-ledger' ? 'border-b-2 border-ink text-ink' : 'text-charcoal/60 hover:text-ink'}`}
+          >
+            Thesis Ledger
+          </button>
         </div>
 
         {activeTab === 'strategy-note' && (
@@ -239,6 +256,11 @@ export default function BoardMemoPage() {
         {activeTab === 'pushback' && (
           <div className="command-center p-6 mb-6 border border-charcoal/20" style={{ borderRadius: 0 }}>
             <BoardPushbackCards />
+          </div>
+        )}
+        {activeTab === 'thesis-ledger' && (
+          <div className="command-center p-6 mb-6 border border-charcoal/20" style={{ borderRadius: 0 }}>
+            <ThesisLedger />
           </div>
         )}
 

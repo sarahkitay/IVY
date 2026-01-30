@@ -67,6 +67,9 @@ export interface BusinessState {
   /** Cold Call Defense: 3 follow-ups after Strategy Note. */
   coldCallDefenseResponses?: Record<string, string>;
 
+  /** Strategic Thesis Ledger (Brown): max 10 lines. "We believe ___ because ___; we will prove it by ___." */
+  strategicThesisLedger?: string[];
+
   // Timestamp
   lastUpdated: string;
 }
@@ -118,6 +121,10 @@ export interface ModuleOutput {
   whatWouldChangeIn7Days?: string;
   /** Legitimacy lens answers (Yale): who could attack, exploitative risk, implicit promise. */
   legitimacyLensResponses?: Record<string, string>;
+  /** Synthesis: connect this module to one discipline (economics, psychology, etc.). */
+  synthesisResponse?: string;
+  /** Reading spine completed (optional but rewarded). */
+  readingSpineCompleted?: boolean;
   timestamp: string;
 }
 
@@ -168,6 +175,14 @@ export interface Module {
     whatLooksExploitative: string;
     implicitPromise: string;
   };
+  /** Reading spine (Brown): optional but rewarded. */
+  readingSpine?: {
+    primaryReading: { title: string; description?: string; url?: string };
+    counterpointReading: { title: string; description?: string; url?: string };
+    operatorArtifact: { title: string; description?: string; url?: string };
+  };
+  /** Synthesis prompt: connect to one other discipline. */
+  synthesisDisciplines?: string[];
 }
 
 export interface Framework {
