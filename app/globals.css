@@ -1,0 +1,353 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+/* Paper texture filter */
+.paper-texture {
+  background-image: 
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 0, 0, 0.02) 2px,
+      rgba(0, 0, 0, 0.02) 4px
+    );
+  position: relative;
+}
+
+.paper-texture::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 50%, rgba(0, 0, 0, 0.01) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(0, 0, 0, 0.01) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+:root {
+  --ink: #1a1a1a;
+  --charcoal: #2d2d2d;
+  --sage: #8b9a7a;
+  --stone: #a8a8a8;
+  --cream: #faf8f3;
+  --parchment: #f5f1e8;
+}
+
+body {
+  @apply bg-cream text-ink font-sans antialiased paper-texture;
+  font-family: 'Inter', system-ui, sans-serif;
+  line-height: 1.6;
+}
+
+/* Long text blocks get increased line-height */
+.long-text {
+  line-height: 1.75;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  @apply font-serif;
+}
+
+/* Typography Severity Scale - 3 Tiers */
+
+/* Tier 1: Gravitas - Module titles, Cold Call, Red Team Attack */
+.tier-1-gravitas {
+  @apply font-serif;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: #1a1a1a;
+}
+
+/* Tier 2: Instruction - Section headers, "Why This Exists" */
+.tier-2-instruction {
+  @apply font-serif;
+  font-weight: 400;
+  color: #2d2d2d;
+}
+
+/* Tier 3: Guidance/Hints - Warnings, helper text */
+.tier-3-guidance {
+  @apply font-mono;
+  font-size: 0.75rem;
+  font-style: italic;
+  color: #666;
+  line-height: 1.5;
+}
+
+code, pre {
+  @apply font-mono;
+}
+
+/* Command Center aesthetic - Square corners, no rounding */
+.command-center {
+  @apply bg-white border border-charcoal/10;
+  border-radius: 0;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+/* Major sections get subtle shadow */
+.command-center.major-section {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Labels - JetBrains Mono, 10px, Uppercase */
+.label-mono {
+  @apply font-mono text-[10px] uppercase tracking-wider text-charcoal/60;
+}
+
+/* Oxblood Red for errors/Red Team */
+.oxblood {
+  color: #722f37;
+}
+
+.bg-oxblood {
+  background-color: #722f37;
+}
+
+.border-oxblood {
+  border-color: #722f37;
+}
+
+/* Cold Call gray page */
+.cold-call-overlay {
+  @apply fixed inset-0 z-50;
+}
+
+.cold-call-overlay::before {
+  content: '';
+  @apply absolute inset-0 bg-charcoal/95 backdrop-blur-sm;
+  filter: grayscale(100%);
+}
+
+.cold-call-overlay > * {
+  @apply relative z-10;
+}
+
+/* Worksheet styling - square corners */
+.worksheet-field {
+  @apply border border-charcoal/20 px-3 py-2 focus:outline-none focus:ring-2;
+  border-radius: 0;
+}
+
+.worksheet-field:focus {
+  --tw-ring-color: rgba(114, 47, 55, 0.3);
+}
+
+.worksheet-field:disabled {
+  @apply bg-charcoal/5 text-charcoal/60 cursor-not-allowed;
+  opacity: 0.7;
+}
+
+/* Red Team warning - Oxblood Red */
+.red-team-warning {
+  @apply border-l-4 bg-red-50/50 p-4;
+  border-left-color: #722f37;
+}
+
+/* Cold Call heartbeat animation */
+@keyframes heartbeat {
+  0%, 100% {
+    opacity: 0.95;
+  }
+  50% {
+    opacity: 0.85;
+  }
+}
+
+.cold-call-active {
+  animation: heartbeat 1.5s ease-in-out infinite;
+}
+
+/* Warning flash animation */
+@keyframes warning-flash {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.warning-flash {
+  animation: warning-flash 2s ease-in-out infinite;
+}
+
+/* Animations */
+@keyframes slide-up {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.3s ease-out;
+}
+
+/* Recurring vertical rule motif - for important sections */
+.vertical-rule {
+  border-left: 2px solid #1a1a1a;
+  padding-left: 1.5rem;
+  margin-left: 0;
+}
+
+/* Authority Density - Tier A: Doctrine */
+.tier-a {
+  @apply bg-parchment/50;
+  border-left: 2px solid #1a1a1a;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  padding-top: 1.25rem;
+  padding-bottom: 1.25rem;
+  position: relative;
+}
+
+/* Dangerous sections - Cold Call & Red Team */
+.tier-a-dangerous {
+  @apply bg-parchment/60;
+  border-left: 2px solid #1a1a1a;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+  position: relative;
+  box-shadow: none;
+}
+
+/* Micro-texture: Paper grain */
+.tier-a::before,
+.tier-a-dangerous::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 1px,
+      rgba(0, 0, 0, 0.01) 1px,
+      rgba(0, 0, 0, 0.01) 2px
+    );
+  pointer-events: none;
+  opacity: 0.3;
+}
+
+.tier-a-title {
+  @apply font-serif text-xl italic text-ink;
+  line-height: 1.3;
+  font-variant: small-caps;
+  letter-spacing: 0.05em;
+}
+
+.tier-a-statement {
+  @apply font-serif italic text-charcoal/90;
+  line-height: 1.4;
+}
+
+/* Small caps for labels */
+.label-small-caps {
+  @apply font-mono text-[10px] uppercase tracking-widest text-charcoal/60;
+  font-variant: small-caps;
+  letter-spacing: 0.1em;
+}
+
+/* Academic block quotes */
+.academic-quote {
+  @apply font-serif italic text-charcoal/80;
+  line-height: 1.5;
+  border-left: 2px solid #722f37;
+  padding-left: 1rem;
+  margin-left: 0;
+}
+
+/* Progress pressure - incomplete flags with authoritative language */
+.incomplete-flag {
+  @apply inline-flex items-center gap-2 px-3 py-1 bg-yellow-50 border border-yellow-200;
+  border-left-width: 3px;
+  border-left-color: #d97706;
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+}
+
+.incomplete-flag.board-ready {
+  @apply bg-green-50 border-green-200;
+  border-left-color: #16a34a;
+  opacity: 1;
+}
+
+.incomplete-warning {
+  @apply text-xs font-mono text-charcoal/70 italic;
+  margin-top: 0.5rem;
+}
+
+/* Module progress bar */
+.module-progress {
+  @apply w-full h-1 bg-charcoal/10;
+  border-radius: 0;
+}
+
+.module-progress-fill {
+  @apply h-full bg-oxblood;
+  transition: width 0.3s ease-out;
+}
+
+/* Form micro-feedback */
+.field-feedback {
+  @apply text-xs font-mono text-charcoal/60 mt-1 italic;
+}
+
+.field-feedback.warning {
+  color: #722f37;
+}
+
+/* Formal buttons - less friendly, more authoritative */
+.btn-formal {
+  @apply bg-charcoal/80 text-white px-6 py-3 border border-charcoal;
+  border-radius: 0;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.btn-formal:hover {
+  @apply bg-charcoal border-charcoal;
+}
+
+.btn-formal:active {
+  @apply bg-ink;
+  transform: none;
+}
+
+.btn-formal:disabled {
+  @apply opacity-50 cursor-not-allowed;
+}
+
+/* Status change animation */
+@keyframes status-appear {
+  from {
+    opacity: 0;
+    transform: translateY(-2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.status-change {
+  animation: status-appear 0.3s ease-out;
+}
