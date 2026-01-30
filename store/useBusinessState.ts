@@ -42,12 +42,16 @@ export const useBusinessState = create<BusinessStateStore>((set) => ({
       const worksheets = output.worksheets
         ? { ...(existing?.worksheets || {}), ...output.worksheets }
         : existing?.worksheets;
-      const { worksheets: _w, ...rest } = output;
+      const requiredOutputs = output.requiredOutputs
+        ? { ...(existing?.requiredOutputs || {}), ...output.requiredOutputs }
+        : existing?.requiredOutputs;
+      const { worksheets: _w, requiredOutputs: _ro, ...rest } = output;
       const merged = {
         ...existing,
         moduleId,
         ...rest,
         ...(worksheets && { worksheets }),
+        ...(requiredOutputs && { requiredOutputs }),
         timestamp: new Date().toISOString(),
       };
       return {

@@ -18,6 +18,7 @@ import FiveCsFramework from '@/components/FiveCsFramework';
 import ModuleQuiz from '@/components/ModuleQuiz';
 import { WorksheetData } from '@/types';
 import { getCaseStudyById } from '@/data/caseStudies';
+import { jsPDF } from 'jspdf';
 
 export default function ModulePage() {
   const params = useParams();
@@ -70,6 +71,60 @@ export default function ModulePage() {
     updateModuleOutput(moduleId, {
       redTeamResponse: response,
     });
+  };
+
+  const handleExportPDF = () => {
+    if (!moduleData) return;
+    const doc = new jsPDF({ format: 'a4', unit: 'pt' });
+    const margin = 40;
+    let y = margin;
+    const lineHeight = 14;
+    const addText = (text: string, fontSize = 10, bold = false) => {
+      doc.setFontSize(fontSize);
+      doc.setFont('helvetica', bold ? 'bold' : 'normal');
+      const lines = doc.splitTextToSize(text, doc.internal.pageSize.getWidth() - margin * 2);
+      lines.forEach((line: string) => {
+        if (y > doc.internal.pageSize.getHeight() - 40) {
+          doc.addPage();
+          y = margin;
+        }
+        doc.text(line, margin, y);
+        y += lineHeight;
+      });
+    };
+    doc.setFillColor(26, 26, 26);
+    doc.rect(0, 0, doc.internal.pageSize.getWidth(), 52, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(18);
+    doc.setFont('helvetica', 'bold');
+    doc.text('IVY WORKBOOK', margin, 34);
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'normal');
+    doc.text('Marketing as Value Architecture | Ivy-branded module summary', margin, 46);
+    doc.setTextColor(0, 0, 0);
+    y = 70;
+    addText(`${moduleData.pillar === 'pillar-1' ? 'PILLAR I' : moduleData.pillar === 'pillar-2' ? 'PILLAR II' : 'PILLAR III'} — MODULE ${moduleData.order}`, 10, true);
+    addText(moduleData.title, 14, true);
+    y += 8;
+    addText(moduleData.thesis, 10);
+    y += 12;
+    addText('WHY THIS MODULE EXISTS', 10, true);
+    addText(`Academic: ${moduleData.whyExists.academic}`, 9);
+    addText(`Operator: ${moduleData.whyExists.operator}`, 9);
+    y += 8;
+    moduleData.frameworks.forEach((fw) => {
+      addText(fw.title, 10, true);
+      addText(fw.description, 9);
+      y += 4;
+    });
+    addText('REQUIRED OUTPUTS', 10, true);
+    moduleData.requiredOutputs.forEach((req) => {
+      const val = req.source
+        ? (state.moduleOutputs[moduleId]?.worksheets?.[req.source]?.fields?.[req.id] ?? '—')
+        : (state.moduleOutputs[moduleId]?.requiredOutputs?.[req.id] ?? '—');
+      addText(`${req.label}: ${String(val)}`, 9);
+    });
+    doc.save(`Ivy-Workbook-${moduleData.title.replace(/\s+/g, '-')}-${moduleId}.pdf`);
   };
 
   const handleCompleteModule = () => {
@@ -148,13 +203,23 @@ export default function ModulePage() {
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
         {/* Header */}
         <div className="mb-6 sm:mb-8">
-          <button
-            onClick={() => router.push('/')}
-            className="text-charcoal/60 hover:text-ink mb-4 text-sm min-h-[44px] touch-manipulation inline-flex items-center gap-2"
-          >
-            <Image src="/logo.png" alt="" width={32} height={32} className="h-8 w-8 object-contain" />
-            ← Back to Modules
-          </button>
+          <div className="flex flex-wrap items-center gap-2 mb-4">
+            <button
+              onClick={() => router.push('/')}
+              className="text-charcoal/60 hover:text-ink text-sm min-h-[44px] touch-manipulation inline-flex items-center gap-2"
+            >
+              <Image src="/logo.png" alt="" width={32} height={32} className="h-8 w-8 object-contain" />
+              ← Back to Modules
+            </button>
+            <button
+              type="button"
+              onClick={handleExportPDF}
+              className="label-small-caps border border-charcoal/25 hover:bg-charcoal/5 px-3 py-2 text-sm min-h-[44px]"
+              style={{ borderRadius: 0 }}
+            >
+              Save as Ivy PDF
+            </button>
+          </div>
           <div className="label-small-caps mb-2">
             {moduleData.pillar === 'pillar-1' ? 'PILLAR I' : moduleData.pillar === 'pillar-2' ? 'PILLAR II' : 'PILLAR III'} — MODULE {moduleData.order}
           </div>
@@ -346,33 +411,80 @@ export default function ModulePage() {
 
         {/* Required Outputs */}
         <div className="mb-8">
-          <h3 className="tier-2-instruction text-lg mb-4">REQUIRED OUTPUTS TO ADVANCE</h3>
-          <ul className="space-y-3">
+          <h3 className="tier-2-instruction text-lg mb-2">REQUIRED OUTPUTS TO ADVANCE</h3>
+          <p className="tier-3-guidance text-sm mb-4 long-text">
+            Fill out each item below. These are the concrete outputs boards and investors expect. When every item has a submitted answer, the module is marked BOARD-READY and you can advance. Items tied to a worksheet are completed when you finish that worksheet.
+          </p>
+          <ul className="space-y-4">
             {moduleData.requiredOutputs.map((req) => {
-              const isComplete = req.source
-                ? worksheetData[req.source]?.fields?.[req.id] !== undefined
-                : moduleOutput?.requiredOutputs?.[req.id] !== undefined;
-              
-              // Rotate between "UNPROVEN" and "NOT DEFENSIBLE" for incomplete
+              const fromWorksheet = Boolean(req.source);
+              const worksheetVal = req.source ? (worksheetData[req.source] ?? state.moduleOutputs[moduleId]?.worksheets?.[req.source])?.fields?.[req.id] : undefined;
+              const directVal = moduleOutput?.requiredOutputs?.[req.id];
+              const isComplete = fromWorksheet
+                ? worksheetVal !== undefined && worksheetVal !== '' && (Array.isArray(worksheetVal) ? worksheetVal.length > 0 : true)
+                : directVal !== undefined && directVal !== '';
               const incompleteLabels = ['UNPROVEN', 'NOT DEFENSIBLE'];
               const incompleteLabel = incompleteLabels[moduleData.requiredOutputs.indexOf(req) % 2];
-              
               return (
-                <li key={req.id} className="flex items-start gap-3">
-                  {isComplete ? (
-                    <span className="incomplete-flag board-ready status-change mt-0">
-                      <span className="text-green-700">✓</span>
-                      <span className="label-small-caps text-green-700">BOARD-READY</span>
+                <li key={req.id} className="border border-charcoal/15 p-4" style={{ borderRadius: 0 }}>
+                  <div className="flex items-start gap-3 mb-2">
+                    {isComplete ? (
+                      <span className="incomplete-flag board-ready status-change mt-0 shrink-0">
+                        <span className="text-green-700">✓</span>
+                        <span className="label-small-caps text-green-700">BOARD-READY</span>
+                      </span>
+                    ) : (
+                      <span className="incomplete-flag mt-0 shrink-0">
+                        <span className="text-orange-600">○</span>
+                        <span className="label-small-caps text-orange-700">{incompleteLabel}</span>
+                      </span>
+                    )}
+                    <span className={`${isComplete ? 'text-charcoal/70' : 'text-charcoal font-medium'} long-text`}>
+                      {req.label}
                     </span>
+                  </div>
+                  {fromWorksheet ? (
+                    <p className="text-xs text-charcoal/50 mt-1">
+                      Completed via worksheet. Fill the worksheet above to satisfy this output.
+                    </p>
                   ) : (
-                    <span className="incomplete-flag mt-0">
-                      <span className="text-orange-600">○</span>
-                      <span className="label-small-caps text-orange-700">{incompleteLabel}</span>
-                    </span>
+                    <div className="mt-2">
+                      {req.type === 'number' ? (
+                        <input
+                          type="number"
+                          className="w-full border border-charcoal/20 px-3 py-2 text-sm bg-cream min-h-[44px]"
+                          style={{ borderRadius: 0 }}
+                          placeholder={`Enter: ${req.label}`}
+                          value={directVal !== undefined && directVal !== '' ? String(directVal) : ''}
+                          onChange={(e) => {
+                            const v = e.target.value === '' ? undefined : Number(e.target.value);
+                            updateModuleOutput(moduleId, { requiredOutputs: { [req.id]: v } });
+                          }}
+                        />
+                      ) : (
+                        <textarea
+                          className="w-full border border-charcoal/20 px-3 py-2 text-sm bg-cream min-h-[80px] resize-y"
+                          style={{ borderRadius: 0 }}
+                          placeholder={`Enter: ${req.label}. State facts only; no adjectives.`}
+                          value={typeof directVal === 'string' ? directVal : ''}
+                          onChange={(e) => updateModuleOutput(moduleId, { requiredOutputs: { [req.id]: e.target.value } })}
+                        />
+                      )}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const current = moduleOutput?.requiredOutputs?.[req.id];
+                          if (req.type === 'number' && (current === undefined || current === '')) return;
+                          if (req.type !== 'number' && (!current || String(current).trim() === '')) return;
+                          updateModuleOutput(moduleId, { requiredOutputs: { [req.id]: moduleOutput?.requiredOutputs?.[req.id] ?? (req.type === 'number' ? 0 : '') } });
+                        }}
+                        className="label-small-caps mt-2 px-3 py-1.5 border border-charcoal/25 hover:bg-charcoal/5 text-sm"
+                        style={{ borderRadius: 0 }}
+                      >
+                        Save this output
+                      </button>
+                    </div>
                   )}
-                  <span className={`${isComplete ? 'text-charcoal/70' : 'text-charcoal font-medium'} long-text`}>
-                    {req.label}
-                  </span>
                 </li>
               );
             })}

@@ -7,7 +7,7 @@ import { useBusinessState } from '@/store/useBusinessState';
 import { useProgress } from '@/store/useProgress';
 import { useProjectStore } from '@/store/useProjectStore';
 import { getModulesByPillar } from '@/data/all-modules';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import ValueWedge from '@/components/ValueWedge';
 import StrategicTrajectoryGraph from '@/components/StrategicTrajectoryGraph';
 import LiveValuationCAC from '@/components/LiveValuationCAC';
@@ -22,6 +22,8 @@ export default function Home() {
   const setCurrentProjectId = useProjectStore((s) => s.setCurrentProjectId);
   const [mounted, setMounted] = useState(false);
   const [hydrating, setHydrating] = useState(false);
+  const [showAllModules, setShowAllModules] = useState(false);
+  const dashboardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -75,8 +77,8 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-cream">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
+    <div className="min-h-screen bg-cream overflow-x-hidden">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 min-w-0">
         {/* Header */}
         <header className="mb-8 sm:mb-12">
           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-4">
@@ -102,17 +104,24 @@ export default function Home() {
               </p>
               </div>
             </div>
-            <div className="flex items-center gap-4">
+            <div className="flex flex-wrap items-center justify-end gap-2 sm:gap-4 ml-auto sm:ml-0">
             <Link
               href="/dashboard"
               className="label-small-caps text-charcoal/60 hover:text-ink text-sm"
             >
               Back to Dashboard
             </Link>
+            <button
+              type="button"
+              onClick={() => dashboardRef.current?.scrollIntoView({ behavior: 'smooth' })}
+              className="label-small-caps text-charcoal/60 hover:text-ink text-sm"
+            >
+              View Dashboard
+            </button>
             {state.applicationContext && (
-              <div className="command-center px-4 py-2">
-                <p className="label-small-caps mb-1 text-charcoal/50">CONTEXT</p>
-                <p className="tier-2-instruction text-sm">
+              <div className="ml-auto sm:ml-0 flex items-center border-l-2 border-charcoal/25 pl-2 sm:pl-3 py-0.5 min-h-[28px] sm:command-center sm:px-4 sm:py-2 sm:border sm:border-charcoal/15 sm:bg-parchment/50 sm:border-l-0 sm:pl-4">
+                <p className="label-small-caps text-charcoal/50 text-[10px] sm:text-xs hidden sm:block sm:mb-0.5">CONTEXT</p>
+                <p className="tier-2-instruction text-[11px] sm:text-sm truncate max-w-[90px] sm:max-w-[140px] md:max-w-none">
                   {state.applicationContext.type === 'my-company' && state.applicationContext.companyName}
                   {state.applicationContext.type === 'case-study' && (() => {
                     const caseId = state.applicationContext?.type === 'case-study' ? (state.applicationContext as { caseId: string }).caseId : '';
@@ -161,6 +170,17 @@ export default function Home() {
           </div>
         </div>
 
+        <button
+          type="button"
+          onClick={() => setShowAllModules((v) => !v)}
+          className="label-small-caps text-charcoal/70 hover:text-ink border border-charcoal/20 px-4 py-2 mb-6 w-full sm:w-auto"
+          style={{ borderRadius: 0 }}
+        >
+          {showAllModules ? 'Hide modules' : 'View all modules'}
+        </button>
+
+        {showAllModules && (
+        <>
         {/* Pillar I Modules */}
         <div className="space-y-4 mb-12">
           <h3 className="label-small-caps mb-6">PILLAR I MODULES</h3>
@@ -374,17 +394,19 @@ export default function Home() {
             );
           })}
         </div>
+        </>
+        )}
 
         {/* Live Dashboard — reactive to answers and quiz */}
-        <div className="mt-12 pt-8 border-t border-charcoal/20">
+        <div ref={dashboardRef} id="live-dashboard" className="mt-12 pt-8 border-t border-charcoal/20 scroll-mt-8">
           <h3 className="font-serif text-2xl mb-2">Live Dashboard</h3>
           <p className="tier-3-guidance mb-6">
             Valuation and CAC respond to answer quality (keywords, specificity) and correct quiz answers.
           </p>
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-            <LiveValuationCAC />
-            <ValueWedge />
-            <StrategicTrajectoryGraph />
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6 min-w-0">
+            <div className="min-w-0"><LiveValuationCAC /></div>
+            <div className="min-w-0"><ValueWedge /></div>
+            <div className="min-w-0"><StrategicTrajectoryGraph /></div>
           </div>
         </div>
 

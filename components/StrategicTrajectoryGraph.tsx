@@ -36,12 +36,13 @@ export default function StrategicTrajectoryGraph() {
   }));
 
   return (
-    <div className="command-center p-6 border border-charcoal/20" style={{ borderRadius: 0 }}>
+    <div className="command-center p-4 sm:p-6 border border-charcoal/20 w-full max-w-full overflow-hidden box-border" style={{ borderRadius: 0 }}>
       <h3 className="font-serif text-xl mb-1">Strategic Trajectory</h3>
       <p className="text-xs text-charcoal/60 font-mono mb-4">
         Reactive: profit impact from answer quality and strategic keywords across completed modules.
       </p>
-      <svg width={width} height={height} className="border border-charcoal/10" style={{ borderRadius: 0 }}>
+      <div className="w-full max-w-full overflow-hidden box-border" style={{ aspectRatio: `${width} / ${height}` }}>
+        <svg viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="xMidYMid meet" className="w-full h-full min-w-0 border border-charcoal/10" style={{ borderRadius: 0 }}>
         <line x1={margin.left} y1={margin.top} x2={margin.left} y2={margin.top + chartHeight} stroke="#1a1a1a" strokeWidth="2" />
         <line x1={margin.left} y1={margin.top + chartHeight} x2={margin.left + chartWidth} y2={margin.top + chartHeight} stroke="#1a1a1a" strokeWidth="2" />
         {[minP, 0, maxP].filter((v, i, a) => a.indexOf(v) === i).map((val) => {
@@ -77,6 +78,7 @@ export default function StrategicTrajectoryGraph() {
           <circle key={i} cx={point.x} cy={point.y} r="4" fill="#722f37" />
         ))}
       </svg>
+      </div>
     </div>
   );
 }
