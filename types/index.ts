@@ -70,8 +70,36 @@ export interface BusinessState {
   /** Strategic Thesis Ledger (Brown): max 10 lines. "We believe ___ because ___; we will prove it by ___." */
   strategicThesisLedger?: string[];
 
+  /** Studio Mode: memo submitted for peer critique. */
+  studioSubmission?: StudioSubmission;
+  /** Studio Mode: critiques you have given (peerId -> critique). Completing 2 grants credibility bonus. */
+  peerCritiquesGiven?: Record<string, PeerCritique>;
+  /** Studio Mode: credibility bonus already applied (so we don't double-apply). */
+  studioCredibilityBonusApplied?: boolean;
+
   // Timestamp
   lastUpdated: string;
+}
+
+/** Snapshot of memo when user submits to Studio for peer critique. */
+export interface StudioSubmission {
+  memoSnapshot: string;
+  submittedAt: string;
+}
+
+/** Peer critique rubric dimensions (1–5 each). */
+export type PeerCritiqueDimension =
+  | 'thesisClarity'
+  | 'evidenceStrength'
+  | 'tradeoffHonesty'
+  | 'riskAcknowledgment'
+  | 'actionability';
+
+/** A single peer critique: rubric scores + optional written feedback. */
+export interface PeerCritique {
+  rubricScores: Record<PeerCritiqueDimension, number>;
+  writtenFeedback?: string;
+  completedAt: string;
 }
 
 export interface StrategyNote {
@@ -125,6 +153,14 @@ export interface ModuleOutput {
   synthesisResponse?: string;
   /** Reading spine completed (optional but rewarded). */
   readingSpineCompleted?: boolean;
+  /** Reading Companion: which books user has checked off (bookId -> true). */
+  readingCompanionBooksCompleted?: Record<string, boolean>;
+  /** Reading Companion: honors Apply response (one paragraph). */
+  readingCompanionApplyResponse?: string;
+  /** Reading Companion: user completed Listen (read-aloud). */
+  readingCompanionListenCompleted?: boolean;
+  /** Reading Companion: user completed Essentials or Listen (unlocks Apply). */
+  readingCompanionEssentialsCompleted?: boolean;
   timestamp: string;
 }
 
@@ -181,8 +217,38 @@ export interface Module {
     counterpointReading: { title: string; description?: string; url?: string };
     operatorArtifact: { title: string; description?: string; url?: string };
   };
+  /** Reading Companion (in-app): Essentials, Key Ideas, Listen, Apply, book check-off + extra credit. */
+  readingCompanion?: ReadingCompanion;
   /** Synthesis prompt: connect to one other discipline. */
   synthesisDisciplines?: string[];
+}
+
+/** One book/resource in the Reading Companion list (check-off, extra credit). */
+export interface ReadingCompanionBook {
+  id: string;
+  title: string;
+  author?: string;
+  url?: string;
+  type: 'canon' | 'counterpoint' | 'artifact';
+}
+
+export interface ReadingCompanion {
+  /** Essentials (10 min): canon, counterpoint, operator artifact. */
+  essentials: {
+    canon: { title: string; author?: string; url?: string; coreIdea: string; whyMatters: string };
+    counterpoint: { title: string; author?: string; url?: string; coreIdea: string; whyMatters: string };
+    operatorArtifact: { title: string; description?: string; url?: string; templateFields?: string[] };
+  };
+  /** Key Ideas (scan mode). */
+  keyIdeas: string[];
+  /** Key excerpt: quote + professor note. */
+  keyExcerpt?: { quote: string; professorNote?: string };
+  /** Listen: read-aloud script (audio-ready). */
+  listenScript: string;
+  /** Apply: honors prompt (unlocked when reading/listen completed). */
+  applyPrompt?: string;
+  /** Reading list: check off books; extra credit per book + comprehension. */
+  booksList: ReadingCompanionBook[];
 }
 
 export interface Framework {
@@ -237,8 +303,12 @@ export interface ContradictionCheck {
 export interface RequiredOutput {
   id: string;
   label: string;
-  type: 'text' | 'number' | 'boolean' | 'worksheet';
+  type: 'text' | 'number' | 'boolean' | 'worksheet' | 'select';
   source?: string; // worksheet ID or module output key
+  /** For type 'select': options for the dropdown. */
+  options?: string[];
+  /** Constraint or placeholder text (e.g. "You may NOT name a direct competitor..."). */
+  placeholder?: string;
 }
 
 export interface Progress {

@@ -9,12 +9,13 @@ import StakeholderMap from '@/components/StakeholderMap';
 import BoardPushbackCards from '@/components/BoardPushbackCards';
 import ColdCallDefense from '@/components/ColdCallDefense';
 import ThesisLedger from '@/components/ThesisLedger';
+import StudioMode from '@/components/StudioMode';
 
 export default function BoardMemoPage() {
   const { state } = useBusinessState();
   const modules = getModulesInOrder();
   const [memo, setMemo] = useState('');
-  const [activeTab, setActiveTab] = useState<'memo' | 'strategy-note' | 'stakeholder' | 'pushback' | 'thesis-ledger'>('memo');
+  const [activeTab, setActiveTab] = useState<'memo' | 'strategy-note' | 'stakeholder' | 'pushback' | 'thesis-ledger' | 'studio'>('memo');
 
   const generateMemo = () => {
     let memoContent = `# Strategic Board Memo\n\n`;
@@ -240,6 +241,13 @@ export default function BoardMemoPage() {
           >
             Thesis Ledger
           </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab('studio')}
+            className={`label-small-caps px-3 py-2 text-xs sm:px-4 sm:py-2 sm:text-sm ${activeTab === 'studio' ? 'border-b-2 border-ink text-ink' : 'text-charcoal/60 hover:text-ink'}`}
+          >
+            Studio
+          </button>
         </div>
 
         {activeTab === 'strategy-note' && (
@@ -261,6 +269,11 @@ export default function BoardMemoPage() {
         {activeTab === 'thesis-ledger' && (
           <div className="command-center p-6 mb-6 border border-charcoal/20" style={{ borderRadius: 0 }}>
             <ThesisLedger />
+          </div>
+        )}
+        {activeTab === 'studio' && (
+          <div className="mb-6">
+            <StudioMode memoContent={memo} />
           </div>
         )}
 

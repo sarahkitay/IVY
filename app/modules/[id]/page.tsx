@@ -110,8 +110,10 @@ export default function ModulePage() {
         const val = worksheet.fields?.[req.id];
         return Boolean(worksheet?.completed && val !== undefined && val !== '' && (Array.isArray(val) ? (val as unknown[]).length > 0 : true));
       }
-      if (moduleOutput?.requiredOutputs?.[req.id] !== undefined && moduleOutput.requiredOutputs[req.id] !== '') return true;
-      return allWorksheetsComplete;
+      const val = moduleOutput?.requiredOutputs?.[req.id];
+      if (val === undefined || val === '') return false;
+      if (req.type === 'select' && req.options?.length && !req.options.includes(String(val))) return false;
+      return true;
     });
 
     if (allWorksheetsComplete && allOutputsPresent) {
@@ -537,7 +539,7 @@ export default function ModulePage() {
               const directVal = moduleOutput?.requiredOutputs?.[req.id];
               const isComplete = fromWorksheet
                 ? worksheetVal !== undefined && worksheetVal !== '' && (Array.isArray(worksheetVal) ? worksheetVal.length > 0 : true)
-                : directVal !== undefined && directVal !== '';
+                : directVal !== undefined && directVal !== '' && (req.type !== 'select' || !req.options?.length || (req.options as string[]).includes(String(directVal)));
               const incompleteLabels = ['UNPROVEN', 'NOT DEFENSIBLE'];
               const incompleteLabel = incompleteLabels[moduleData.requiredOutputs.indexOf(req) % 2];
               return (
@@ -576,29 +578,64 @@ export default function ModulePage() {
                             updateModuleOutput(moduleId, { requiredOutputs: { [req.id]: v } });
                           }}
                         />
+                      ) : req.type === 'select' && req.options?.length ? (
+                        <>
+                          <select
+                            className="w-full border border-charcoal/20 px-3 py-2 text-sm bg-cream min-h-[44px]"
+                            style={{ borderRadius: 0 }}
+                            value={typeof directVal === 'string' && req.options.includes(directVal) ? directVal : ''}
+                            onChange={(e) => {
+                              const v = e.target.value || undefined;
+                              updateModuleOutput(moduleId, { requiredOutputs: { [req.id]: v } });
+                            }}
+                          >
+                            <option value="">Select…</option>
+                            {req.options.map((opt) => (
+                              <option key={opt} value={opt}>{opt}</option>
+                            ))}
+                          </select>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const current = moduleOutput?.requiredOutputs?.[req.id];
+                              if (current && req.options?.includes(String(current)))
+                                updateModuleOutput(moduleId, { requiredOutputs: { [req.id]: current } });
+                            }}
+                            className="label-small-caps mt-2 px-3 py-1.5 border border-charcoal/25 hover:bg-charcoal/5 text-sm disabled:opacity-70"
+                            style={{ borderRadius: 0 }}
+                            disabled={isComplete}
+                          >
+                            {isComplete ? 'Saved' : 'Save this output'}
+                          </button>
+                        </>
                       ) : (
-                        <textarea
-                          className="w-full border border-charcoal/20 px-3 py-2 text-sm bg-cream min-h-[80px] resize-y"
-                          style={{ borderRadius: 0 }}
-                          placeholder={`Enter: ${req.label}. State facts only; no adjectives.`}
-                          value={typeof directVal === 'string' ? directVal : ''}
-                          onChange={(e) => updateModuleOutput(moduleId, { requiredOutputs: { [req.id]: e.target.value } })}
-                        />
+                        <>
+                          <textarea
+                            className="w-full border border-charcoal/20 px-3 py-2 text-sm bg-cream min-h-[80px] resize-y"
+                            style={{ borderRadius: 0 }}
+                            placeholder={req.placeholder ?? `Enter: ${req.label}. State facts only; no adjectives.`}
+                            value={typeof directVal === 'string' ? directVal : ''}
+                            onChange={(e) => updateModuleOutput(moduleId, { requiredOutputs: { [req.id]: e.target.value } })}
+                          />
+                          {req.placeholder && (
+                            <p className="text-xs text-charcoal/55 mt-1.5" aria-hidden="true">❗ {req.placeholder}</p>
+                          )}
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const current = moduleOutput?.requiredOutputs?.[req.id];
+                              if (req.type === 'number' && (current === undefined || current === '')) return;
+                              if (req.type !== 'number' && (!current || String(current).trim() === '')) return;
+                              updateModuleOutput(moduleId, { requiredOutputs: { [req.id]: moduleOutput?.requiredOutputs?.[req.id] ?? (req.type === 'number' ? 0 : '') } });
+                            }}
+                            className="label-small-caps mt-2 px-3 py-1.5 border border-charcoal/25 hover:bg-charcoal/5 text-sm disabled:opacity-70"
+                            style={{ borderRadius: 0 }}
+                            disabled={isComplete}
+                          >
+                            {isComplete ? 'Saved' : 'Save this output'}
+                          </button>
+                        </>
                       )}
-                      <button
-                        type="button"
-                        onClick={() => {
-                          const current = moduleOutput?.requiredOutputs?.[req.id];
-                          if (req.type === 'number' && (current === undefined || current === '')) return;
-                          if (req.type !== 'number' && (!current || String(current).trim() === '')) return;
-                          updateModuleOutput(moduleId, { requiredOutputs: { [req.id]: moduleOutput?.requiredOutputs?.[req.id] ?? (req.type === 'number' ? 0 : '') } });
-                        }}
-                        className="label-small-caps mt-2 px-3 py-1.5 border border-charcoal/25 hover:bg-charcoal/5 text-sm disabled:opacity-70"
-                        style={{ borderRadius: 0 }}
-                        disabled={isComplete}
-                      >
-                        {isComplete ? 'Saved' : 'Save this output'}
-                      </button>
                     </div>
                   )}
                 </li>
@@ -606,6 +643,22 @@ export default function ModulePage() {
             })}
           </ul>
         </div>
+
+        {/* Reading Companion: Essentials, Key Ideas, Listen, Apply, book check-off + extra credit */}
+        {moduleData.readingCompanion && (
+          <div className="command-center p-6 mb-8 border border-charcoal/20" style={{ borderRadius: 0 }}>
+            <h3 className="tier-2-instruction text-xl mb-2">READING COMPANION</h3>
+            <p className="label-small-caps text-charcoal/60 mb-4">
+              Essentials • Key Ideas • Listen • Apply • Reading list (check off books for extra credit)
+            </p>
+            <a
+              href={`/modules/${moduleId}/reading`}
+              className="inline-block btn-formal"
+            >
+              Open Reading tab
+            </a>
+          </div>
+        )}
 
         {/* Key concepts check: separate page (no scrolling back to module) */}
         {getQuizForModule(moduleId) && (

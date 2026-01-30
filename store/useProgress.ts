@@ -80,14 +80,14 @@ export const useProgress = create<ProgressStore>((set, get) => ({
           }
         }
       } else if (moduleId.startsWith('p2-module-')) {
-        // Pillar 2
+        // Pillar 2 (15 modules)
         const moduleNum = parseInt(moduleId.split('-')[2]);
-        if (moduleNum < 10) {
+        if (moduleNum < 15) {
           nextModuleId = `p2-module-${moduleNum + 1}`;
           if (!unlocked.includes(nextModuleId)) {
             unlocked.push(nextModuleId);
           }
-        } else if (moduleNum === 10) {
+        } else if (moduleNum === 15) {
           // Unlock first Pillar 3 module when Pillar 2 is complete
           nextModuleId = 'p3-module-1';
           if (!unlocked.includes(nextModuleId)) {
@@ -95,9 +95,9 @@ export const useProgress = create<ProgressStore>((set, get) => ({
           }
         }
       } else if (moduleId.startsWith('p3-module-')) {
-        // Pillar 3
+        // Pillar 3 (15 modules)
         const moduleNum = parseInt(moduleId.split('-')[2]);
-        if (moduleNum < 10) {
+        if (moduleNum < 15) {
           nextModuleId = `p3-module-${moduleNum + 1}`;
           if (!unlocked.includes(nextModuleId)) {
             unlocked.push(nextModuleId);
@@ -117,15 +117,15 @@ export const useProgress = create<ProgressStore>((set, get) => ({
           unlockedModules: unlocked,
           currentModule: nextModuleId || store.progress.currentModule,
           pillar1Progress: (pillar1Completed / 15) * 100,
-          pillar2Progress: (pillar2Completed / 10) * 100,
-          pillar3Progress: (pillar3Completed / 10) * 100,
+          pillar2Progress: (pillar2Completed / 15) * 100,
+          pillar3Progress: (pillar3Completed / 15) * 100,
         },
       };
     }),
   
   getOverallProgress: () => {
     const { progress } = get();
-    // Total modules: 15 (Pillar 1) + 10 (Pillar 2) + 10 (Pillar 3) = 35
-    return (progress.completedModules.length / 35) * 100;
+    // Total modules: 15 (Pillar 1) + 15 (Pillar 2) + 15 (Pillar 3) = 45
+    return (progress.completedModules.length / 45) * 100;
   },
 }));

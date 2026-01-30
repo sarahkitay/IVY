@@ -61,9 +61,27 @@ function getQualityIndex(state: BusinessState): { answerQuality: number; quizQua
   return { answerQuality, quizQuality };
 }
 
+/** Extra credit per Reading Companion book completed (same as in-app display). */
+const EXTRA_CREDIT_PER_BOOK = 5;
+/** Max reading extra credit points that count toward valuation (e.g. 10 books = 50 pts = 1.0). */
+const MAX_READING_PTS = 50;
+
 /**
- * Valuation and CAC reactive to answer quality and quiz performance.
- * Good answers and correct quiz answers → valuation up, CAC down.
+ * Reading Companion: books completed across all modules → 0–1 index.
+ * Extra credit per book; caps at MAX_READING_PTS for valuation boost.
+ */
+function getReadingIndex(state: BusinessState): number {
+  let totalPts = 0;
+  Object.values(state.moduleOutputs ?? {}).forEach((output) => {
+    const completed = output.readingCompanionBooksCompleted ?? {};
+    totalPts += Object.values(completed).filter(Boolean).length * EXTRA_CREDIT_PER_BOOK;
+  });
+  return Math.min(1, totalPts / MAX_READING_PTS);
+}
+
+/**
+ * Valuation and CAC reactive to answer quality, quiz performance, writing, and Reading Companion.
+ * Good answers, quizzes, Strategy Note, and books completed → valuation up, CAC down.
  */
 export function getReactiveValuationAndCAC(state: BusinessState): {
   valuation: number;
@@ -75,9 +93,11 @@ export function getReactiveValuationAndCAC(state: BusinessState): {
   const qualityIndex = answerQuality;
   const quizIndex = quizQuality;
 
-  // Writing (Strategy Note rubric) weighs more than quizzes—elite programs reward coherent thinking
+  // Writing (Strategy Note rubric) and Reading Companion extra credit
   const writingIndex = (state.boardMemoRubricScore ?? 0) / 100;
-  const combined = qualityIndex * 0.5 + quizIndex * 0.2 + writingIndex * 0.3;
+  const readingIndex = getReadingIndex(state);
+  const combined =
+    qualityIndex * 0.45 + quizIndex * 0.2 + writingIndex * 0.25 + readingIndex * 0.1;
   const valuation = Math.round(
     BASE_VALUATION + MAX_VALUATION_BOOST * (0.15 + 0.85 * combined)
   );

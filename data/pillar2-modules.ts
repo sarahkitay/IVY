@@ -1,4 +1,5 @@
 import { Module } from '@/types';
+import type { ReadingCompanion } from '@/types';
 
 export const pillar2Modules: Module[] = [
   {
@@ -113,6 +114,20 @@ If you don't set the reference point, the market will — poorly.`,
       { id: 'free-or-risk-removal', label: 'Identified one place free or risk removal matters', type: 'text' },
       { id: 'reframe-loss-to-safety', label: 'Written one sentence that reframes loss into safety', type: 'text' },
     ],
+    readingCompanion: {
+      essentials: {
+        canon: { title: 'Competing Against Luck', author: 'Christensen et al.', coreIdea: 'Customers don\'t buy products. They hire solutions to make progress in a specific moment.', whyMatters: 'Jobs-to-be-done beats personas for explaining why people choose, stay, and pay.' },
+        counterpoint: { title: 'Demand-Side Sales 101', author: 'Bob Moesta', coreIdea: 'Demand is created by progress, not messaging. Sales is helping people make the change they already want.', whyMatters: 'Creation is about triggering existing struggle, not inventing desire.' },
+        operatorArtifact: { title: 'JTBD Stack', description: 'Functional → emotional → social → risk (all four required).' },
+      },
+      keyIdeas: ['Customers hire solutions to make progress, not to buy products.', 'Jobs are progress in a specific moment.', 'Functional, emotional, social, and risk layers all matter.'],
+      listenScript: 'Customers don\'t buy products. They hire solutions to make progress in a specific moment.',
+      booksList: [
+        { id: 'p2m1-canon', title: 'Competing Against Luck', author: 'Christensen et al.', type: 'canon' },
+        { id: 'p2m1-counterpoint', title: 'Demand-Side Sales 101', author: 'Bob Moesta', type: 'counterpoint' },
+        { id: 'p2m1-artifact', title: 'JTBD Stack', type: 'artifact' },
+      ],
+    } as ReadingCompanion,
     order: 1,
   },
   {
@@ -201,6 +216,20 @@ The number did not change. The mental bucket did.`,
       { id: 'harmful-comparison', label: 'Eliminated one harmful comparison', type: 'text' },
       { id: 'non-price-anchor', label: 'Designed one non-price anchor to lead with', type: 'text' },
     ],
+    readingCompanion: {
+      essentials: {
+        canon: { title: 'How We Decide', author: 'Jonah Lehrer', coreIdea: 'Decisions are emotional first; reason justifies. Demand spikes around moments of tension.', whyMatters: 'Demand is rarely continuous. It spikes around moments of tension.' },
+        counterpoint: { title: 'Hooked', author: 'Nir Eyal', coreIdea: 'Habit-forming products use trigger, action, reward, investment. Moments of pull drive behavior.', whyMatters: 'Triggers make inaction feel unacceptable.' },
+        operatorArtifact: { title: 'Trigger Timeline', description: 'What event makes inaction unacceptable.' },
+      },
+      keyIdeas: ['Demand is rarely continuous. It spikes around moments of tension.', 'Triggers make inaction unacceptable.', 'What event makes the buyer act now?'],
+      listenScript: 'Demand is rarely continuous. It spikes around moments of tension.',
+      booksList: [
+        { id: 'p2m2-canon', title: 'How We Decide', author: 'Jonah Lehrer', type: 'canon' },
+        { id: 'p2m2-counterpoint', title: 'Hooked', author: 'Nir Eyal', type: 'counterpoint' },
+        { id: 'p2m2-artifact', title: 'Trigger Timeline', type: 'artifact' },
+      ],
+    } as ReadingCompanion,
     order: 2,
   },
   {
@@ -294,6 +323,20 @@ Modern elite markets favor inconspicuous status.`,
       { id: 'quiet-status-signal', label: 'A quiet status signal', type: 'text' },
       { id: 'who-this-is-not-for', label: 'A sentence that explains who this is not for', type: 'text' },
     ],
+    readingCompanion: {
+      essentials: {
+        canon: { title: "The Innovator's Solution", author: 'Clayton Christensen', coreIdea: 'Incumbents are disrupted when they optimize for the wrong job. Switching costs and inertia define defensibility.', whyMatters: 'The biggest competitor is almost always "do nothing."' },
+        counterpoint: { title: '7 Powers', author: 'Hamilton Helmer', coreIdea: 'Sustainable advantage requires a power that compounds. Switching costs are one such power.', whyMatters: 'Inertia is a moat when you design for it.' },
+        operatorArtifact: { title: 'Inertia Map', description: 'Habit, fear, sunk cost, social exposure.' },
+      },
+      keyIdeas: ['The biggest competitor is almost always "do nothing."', 'Inertia: habit, fear, sunk cost, social exposure.', 'Switching costs define defensibility.'],
+      listenScript: 'The biggest competitor is almost always "do nothing."',
+      booksList: [
+        { id: 'p2m3-canon', title: "The Innovator's Solution", author: 'Clayton Christensen', type: 'canon' },
+        { id: 'p2m3-counterpoint', title: '7 Powers', author: 'Hamilton Helmer', type: 'counterpoint' },
+        { id: 'p2m3-artifact', title: 'Inertia Map', type: 'artifact' },
+      ],
+    } as ReadingCompanion,
     order: 3,
   },
   {
@@ -385,6 +428,20 @@ This is why white-glove services win, defaults dominate, "done for you" outperfo
       { id: 'improved-prompt-timing', label: 'Improved prompt timing', type: 'text' },
       { id: 'reduced-cognitive-load', label: 'Reduced cognitive load somewhere', type: 'text' },
     ],
+    readingCompanion: {
+      essentials: {
+        canon: { title: 'Thinking, Fast and Slow', author: 'Daniel Kahneman', coreIdea: 'System 1 is automatic and loss-averse; System 2 is effortful. People fear losses more than they desire gains.', whyMatters: 'People fear losses more than they desire gains.' },
+        counterpoint: { title: 'Predictably Irrational', author: 'Dan Ariely', coreIdea: 'Behavior is systematic and context-dependent. Risk and loss aversion can be designed for.', whyMatters: 'Trust and risk reversal change willingness to act.' },
+        operatorArtifact: { title: 'Risk Reversal Stack', description: 'Guarantees, proof, reversibility.' },
+      },
+      keyIdeas: ['People fear losses more than they desire gains.', 'Risk reversal: guarantees, proof, reversibility.', 'Trust reduces perceived loss.'],
+      listenScript: 'People fear losses more than they desire gains.',
+      booksList: [
+        { id: 'p2m4-canon', title: 'Thinking, Fast and Slow', author: 'Daniel Kahneman', type: 'canon' },
+        { id: 'p2m4-counterpoint', title: 'Predictably Irrational', author: 'Dan Ariely', type: 'counterpoint' },
+        { id: 'p2m4-artifact', title: 'Risk Reversal Stack', type: 'artifact' },
+      ],
+    } as ReadingCompanion,
     order: 4,
   },
   {
@@ -466,6 +523,20 @@ Random order is amateur hour.`,
       { id: 'reorder-decision-flow', label: 'Reorder at least one decision flow', type: 'text' },
       { id: 'asymmetrical-effort', label: 'Make effort asymmetrical', type: 'text' },
     ],
+    readingCompanion: {
+      essentials: {
+        canon: { title: 'The Presentation of Self in Everyday Life', author: 'Erving Goffman', coreIdea: 'People perform identity. Many purchases are about who the buyer gets to be.', whyMatters: 'Many purchases are about who the buyer gets to be.' },
+        counterpoint: { title: 'Status Anxiety', author: 'Alain de Botton', coreIdea: 'Status drives behavior; anxiety drives consumption. Signaling is central to choice.', whyMatters: 'Social identity and signaling shape WTP.' },
+        operatorArtifact: { title: 'Identity Claim', description: 'What buying signals to others.' },
+      },
+      keyIdeas: ['Many purchases are about who the buyer gets to be.', 'Identity claim: what buying signals to others.', 'Status and belonging drive choice.'],
+      listenScript: 'Many purchases are about who the buyer gets to be.',
+      booksList: [
+        { id: 'p2m5-canon', title: 'The Presentation of Self in Everyday Life', author: 'Erving Goffman', type: 'canon' },
+        { id: 'p2m5-counterpoint', title: 'Status Anxiety', author: 'Alain de Botton', type: 'counterpoint' },
+        { id: 'p2m5-artifact', title: 'Identity Claim', type: 'artifact' },
+      ],
+    } as ReadingCompanion,
     order: 5,
   },
   {
@@ -549,6 +620,20 @@ People return to brands that treated them well when leaving.`,
       { id: 'memory-sentence', label: 'Rewrite the memory sentence', type: 'text' },
       { id: 'remove-meaningless-step', label: 'Remove one meaningless step', type: 'text' },
     ],
+    readingCompanion: {
+      essentials: {
+        canon: { title: 'The Strategy and Tactics of Pricing', author: 'Thomas Nagle et al.', coreIdea: 'Price is a strategic and psychological lever. It frames quality, risk, and status.', whyMatters: 'Price is never neutral. It frames quality, risk, and status.' },
+        counterpoint: { title: 'Priceless', author: 'William Poundstone', coreIdea: 'Price perception is constructed. Context and anchors determine what feels fair.', whyMatters: 'Price meaning is designed, not discovered.' },
+        operatorArtifact: { title: 'Price Meaning Test', description: 'What your price implies unintentionally.' },
+      },
+      keyIdeas: ['Price is never neutral. It frames quality, risk, and status.', 'Price meaning: what your price implies unintentionally.', 'Context determines what feels fair.'],
+      listenScript: 'Price is never neutral. It frames quality, risk, and status.',
+      booksList: [
+        { id: 'p2m6-canon', title: 'The Strategy and Tactics of Pricing', author: 'Thomas Nagle et al.', type: 'canon' },
+        { id: 'p2m6-counterpoint', title: 'Priceless', author: 'William Poundstone', type: 'counterpoint' },
+        { id: 'p2m6-artifact', title: 'Price Meaning Test', type: 'artifact' },
+      ],
+    } as ReadingCompanion,
     order: 6,
   },
   {
@@ -616,6 +701,20 @@ Distinctiveness reduces CAC over time by increasing recall per impression.`,
       { id: 'remove-generic-element', label: 'Remove one generic element', type: 'text' },
       { id: 'validate-contrast-trust', label: 'Validate that contrast doesn\'t reduce trust', type: 'text' },
     ],
+    readingCompanion: {
+      essentials: {
+        canon: { title: 'Marketing Management', author: 'Kotler et al.', coreIdea: 'Value is created and captured in the customer\'s perception. Delivered value must translate into perceived value.', whyMatters: 'Value only exists in the customer\'s perception.' },
+        counterpoint: { title: 'Obviously Awesome', author: 'April Dunford', coreIdea: 'Positioning is context-setting. Value translation: feature → outcome → belief.', whyMatters: 'Features don\'t sell; outcomes and beliefs do.' },
+        operatorArtifact: { title: 'Value Translation Map', description: 'Feature → outcome → belief.' },
+      },
+      keyIdeas: ['Value only exists in the customer\'s perception.', 'Value translation: feature → outcome → belief.', 'Delivered value must become perceived value.'],
+      listenScript: 'Value only exists in the customer\'s perception.',
+      booksList: [
+        { id: 'p2m7-canon', title: 'Marketing Management', author: 'Kotler et al.', type: 'canon' },
+        { id: 'p2m7-counterpoint', title: 'Obviously Awesome', author: 'April Dunford', type: 'counterpoint' },
+        { id: 'p2m7-artifact', title: 'Value Translation Map', type: 'artifact' },
+      ],
+    } as ReadingCompanion,
     order: 7,
   },
   {
@@ -695,6 +794,20 @@ Examples:
       { id: 'remove-rational-explanation', label: 'Remove one rational explanation from your page', type: 'text' },
       { id: 'confirm-copy-respectful', label: 'Confirm copy still feels respectful', type: 'text' },
     ],
+    readingCompanion: {
+      essentials: {
+        canon: { title: 'The Paradox of Choice', author: 'Barry Schwartz', coreIdea: 'More choices increase anxiety and decision paralysis. Too many choices feels like risk.', whyMatters: 'Too many choices feels like risk.' },
+        counterpoint: { title: 'Nudge', author: 'Thaler & Sunstein', coreIdea: 'Choice architecture shapes behavior without removing freedom. Defaults and framing matter.', whyMatters: 'Decision path: clicks, choices, drop-off points.' },
+        operatorArtifact: { title: 'Decision Path Audit', description: 'Clicks, choices, drop-off points.' },
+      },
+      keyIdeas: ['Too many choices feels like risk.', 'Decision path audit: clicks, choices, drop-off points.', 'Choice architecture shapes behavior.'],
+      listenScript: 'Too many choices feels like risk.',
+      booksList: [
+        { id: 'p2m8-canon', title: 'The Paradox of Choice', author: 'Barry Schwartz', type: 'canon' },
+        { id: 'p2m8-counterpoint', title: 'Nudge', author: 'Thaler & Sunstein', type: 'counterpoint' },
+        { id: 'p2m8-artifact', title: 'Decision Path Audit', type: 'artifact' },
+      ],
+    } as ReadingCompanion,
     order: 8,
   },
   {
@@ -761,6 +874,20 @@ Not everyone is meant to understand.`,
       { id: 'wrong-customers-excluded', label: 'Ensure wrong customers feel subtly excluded', type: 'text' },
       { id: 'right-customers-recognized', label: 'Confirm right customers feel recognized', type: 'text' },
     ],
+    readingCompanion: {
+      essentials: {
+        canon: { title: 'Atomic Habits', author: 'James Clear', coreIdea: 'Habits are cue, action, reward, reinforcement. Retention is behavior design, not reminders.', whyMatters: 'Retention is behavior design, not reminders.' },
+        counterpoint: { title: 'Hooked', author: 'Nir Eyal', coreIdea: 'Habit-forming products use trigger, action, variable reward, investment. One-off use vs habit is design.', whyMatters: 'Habit loop: cue → action → reward → reinforcement.' },
+        operatorArtifact: { title: 'Habit Loop', description: 'Cue → action → reward → reinforcement.' },
+      },
+      keyIdeas: ['Retention is behavior design, not reminders.', 'Habit loop: cue → action → reward → reinforcement.', 'One-off use vs habit is design.'],
+      listenScript: 'Retention is behavior design, not reminders.',
+      booksList: [
+        { id: 'p2m9-canon', title: 'Atomic Habits', author: 'James Clear', type: 'canon' },
+        { id: 'p2m9-counterpoint', title: 'Hooked', author: 'Nir Eyal', type: 'counterpoint' },
+        { id: 'p2m9-artifact', title: 'Habit Loop', type: 'artifact' },
+      ],
+    } as ReadingCompanion,
     order: 9,
   },
   {
@@ -822,7 +949,162 @@ Elite brands do not need desperation.`,
       { id: 'reread-from-buyer-perspective', label: 'Re-read your copy from the buyer\'s perspective', type: 'text' },
       { id: 'confirm-mutual-relationship', label: 'Confirm the relationship feels mutual, not extractive', type: 'text' },
     ],
+    readingCompanion: {
+      essentials: {
+        canon: { title: 'The Loyalty Effect', author: 'Frederick Reichheld', coreIdea: 'Churn is usually emotional before it is functional. Last meaningful win before churn matters.', whyMatters: 'Most churn is emotional before it is functional.' },
+        counterpoint: { title: 'Lean Analytics', author: 'Alistair Croll & Benjamin Yoskovitz', coreIdea: 'Cohort and behavior data reveal why people leave. Silent failure: no single moment, slow drift.', whyMatters: 'Silent failure map: last meaningful win before churn.' },
+        operatorArtifact: { title: 'Silent Failure Map', description: 'Last meaningful win before churn.' },
+      },
+      keyIdeas: ['Most churn is emotional before it is functional.', 'Silent failure map: last meaningful win before churn.', 'Why people quietly leave.'],
+      listenScript: 'Most churn is emotional before it is functional.',
+      booksList: [
+        { id: 'p2m10-canon', title: 'The Loyalty Effect', author: 'Frederick Reichheld', type: 'canon' },
+        { id: 'p2m10-counterpoint', title: 'Lean Analytics', author: 'Alistair Croll & Benjamin Yoskovitz', type: 'counterpoint' },
+        { id: 'p2m10-artifact', title: 'Silent Failure Map', type: 'artifact' },
+      ],
+    } as ReadingCompanion,
     order: 10,
+  },
+  // Pillar II modules 11–15 (reading spine from syllabus)
+  {
+    id: 'p2-module-11',
+    pillar: 'pillar-2',
+    title: 'Trust Transfer & Social Proof',
+    thesis: 'Borrowed trust often converts better than earned trust. Social proof and proof hierarchy shape choice.',
+    whyExists: {
+      academic: 'Yale Moral Psychology × Trust Research',
+      operator: 'Elite brands use proof hierarchy: peer > expert > brand > claim.',
+    },
+    frameworks: [{ id: 'p2-framework-11-1', title: 'Proof Hierarchy', description: 'Peer > expert > brand > claim.', content: 'Borrowed trust often converts better than earned trust.' }],
+    worksheets: [{ id: 'p2-worksheet-11-1', title: 'Proof Hierarchy', description: 'Map your proof sources.', fields: [{ id: 'proof-source', label: 'Proof Source', type: 'text', required: true }] }],
+    requiredOutputs: [{ id: 'proof-hierarchy', label: 'Proof hierarchy for your offer', type: 'text' }],
+    readingCompanion: {
+      essentials: {
+        canon: { title: 'Influence', author: 'Robert Cialdini', coreIdea: 'Social proof, authority, scarcity, and reciprocity drive compliance. Borrowed trust converts.', whyMatters: 'Borrowed trust often converts better than earned trust.' },
+        counterpoint: { title: 'Alchemy', author: 'Rory Sutherland', coreIdea: 'Perception and framing create value. Proof is constructed, not discovered.', whyMatters: 'Proof hierarchy: peer > expert > brand > claim.' },
+        operatorArtifact: { title: 'Proof Hierarchy', description: 'Peer > expert > brand > claim.' },
+      },
+      keyIdeas: ['Borrowed trust often converts better than earned trust.', 'Proof hierarchy: peer > expert > brand > claim.', 'Social proof shapes choice.'],
+      listenScript: 'Borrowed trust often converts better than earned trust.',
+      booksList: [
+        { id: 'p2m11-canon', title: 'Influence', author: 'Robert Cialdini', type: 'canon' },
+        { id: 'p2m11-counterpoint', title: 'Alchemy', author: 'Rory Sutherland', type: 'counterpoint' },
+        { id: 'p2m11-artifact', title: 'Proof Hierarchy', type: 'artifact' },
+      ],
+    } as ReadingCompanion,
+    order: 11,
+  },
+  {
+    id: 'p2-module-12',
+    pillar: 'pillar-2',
+    title: 'Emotional Payoff & Relief',
+    thesis: 'Relief is a stronger motivator than excitement. After-state definition shapes perceived value.',
+    whyExists: {
+      academic: 'Psychology of motivation × Experience design',
+      operator: 'Elite brands define the after-state: what feels different post-purchase.',
+    },
+    frameworks: [{ id: 'p2-framework-12-1', title: 'After-State', description: 'What feels different post-purchase.', content: 'Relief is a stronger motivator than excitement.' }],
+    worksheets: [{ id: 'p2-worksheet-12-1', title: 'After-State Definition', description: 'What feels different post-purchase.', fields: [{ id: 'after-state', label: 'After-State', type: 'textarea', required: true }] }],
+    requiredOutputs: [{ id: 'after-state', label: 'After-state definition', type: 'text' }],
+    readingCompanion: {
+      essentials: {
+        canon: { title: 'Desire', author: 'William B. Irvine', coreIdea: 'Desire and relief drive behavior. Relief is often stronger than excitement.', whyMatters: 'Relief is a stronger motivator than excitement.' },
+        counterpoint: { title: 'The Power of Moments', author: 'Chip & Dan Heath', coreIdea: 'Peak moments and transitions define experience. After-state matters.', whyMatters: 'After-state definition: what feels different post-purchase.' },
+        operatorArtifact: { title: 'After-State Definition', description: 'What feels different post-purchase.' },
+      },
+      keyIdeas: ['Relief is a stronger motivator than excitement.', 'After-state definition: what feels different post-purchase.', 'Emotional payoff shapes loyalty.'],
+      listenScript: 'Relief is a stronger motivator than excitement.',
+      booksList: [
+        { id: 'p2m12-canon', title: 'Desire', author: 'William B. Irvine', type: 'canon' },
+        { id: 'p2m12-counterpoint', title: 'The Power of Moments', author: 'Chip & Dan Heath', type: 'counterpoint' },
+        { id: 'p2m12-artifact', title: 'After-State Definition', type: 'artifact' },
+      ],
+    } as ReadingCompanion,
+    order: 12,
+  },
+  {
+    id: 'p2-module-13',
+    pillar: 'pillar-2',
+    title: 'Culture, Norms, and Adoption Curves',
+    thesis: 'Adoption spreads through social permission. Early adopters legitimize; crossing the chasm requires different playbooks.',
+    whyExists: {
+      academic: 'Diffusion of innovations × Market design',
+      operator: 'Elite strategy asks: who legitimizes you first?',
+    },
+    frameworks: [{ id: 'p2-framework-13-1', title: 'Early Adopter Signal', description: 'Who legitimizes you first.', content: 'Adoption spreads through social permission.' }],
+    worksheets: [{ id: 'p2-worksheet-13-1', title: 'Early Adopter Signal', description: 'Who legitimizes you first.', fields: [{ id: 'early-adopter', label: 'Early Adopter', type: 'text', required: true }] }],
+    requiredOutputs: [{ id: 'early-adopter-signal', label: 'Early adopter signal', type: 'text' }],
+    readingCompanion: {
+      essentials: {
+        canon: { title: 'Diffusion of Innovations', author: 'Everett Rogers', coreIdea: 'Adoption spreads through social networks and permission. Innovators, early adopters, early majority, late majority, laggards.', whyMatters: 'Adoption spreads through social permission.' },
+        counterpoint: { title: 'Crossing the Chasm', author: 'Geoffrey Moore', coreIdea: 'Early market and mainstream require different playbooks. The chasm is the gap.', whyMatters: 'Early adopter signal: who legitimizes you first.' },
+        operatorArtifact: { title: 'Early Adopter Signal', description: 'Who legitimizes you first.' },
+      },
+      keyIdeas: ['Adoption spreads through social permission.', 'Early adopter signal: who legitimizes you first.', 'Culture and norms shape adoption curves.'],
+      listenScript: 'Adoption spreads through social permission.',
+      booksList: [
+        { id: 'p2m13-canon', title: 'Diffusion of Innovations', author: 'Everett Rogers', type: 'canon' },
+        { id: 'p2m13-counterpoint', title: 'Crossing the Chasm', author: 'Geoffrey Moore', type: 'counterpoint' },
+        { id: 'p2m13-artifact', title: 'Early Adopter Signal', type: 'artifact' },
+      ],
+    } as ReadingCompanion,
+    order: 13,
+  },
+  {
+    id: 'p2-module-14',
+    pillar: 'pillar-2',
+    title: 'Moral Licensing & Justification',
+    thesis: 'People want to feel good about why they bought. Justification scripts shape post-purchase satisfaction and referral.',
+    whyExists: {
+      academic: 'Moral psychology × Consumer behavior',
+      operator: 'Elite brands design the justification script: what buyers tell themselves.',
+    },
+    frameworks: [{ id: 'p2-framework-14-1', title: 'Justification Script', description: 'What buyers tell themselves.', content: 'People want to feel good about why they bought.' }],
+    worksheets: [{ id: 'p2-worksheet-14-1', title: 'Justification Script', description: 'What buyers tell themselves.', fields: [{ id: 'justification', label: 'Justification', type: 'textarea', required: true }] }],
+    requiredOutputs: [{ id: 'justification-script', label: 'Justification script', type: 'text' }],
+    readingCompanion: {
+      essentials: {
+        canon: { title: 'The Righteous Mind', author: 'Jonathan Haidt', coreIdea: 'Moral intuition precedes reason. People want to feel good about why they bought.', whyMatters: 'People want to feel good about why they bought.' },
+        counterpoint: { title: 'Buyology', author: 'Martin Lindstrom', coreIdea: 'Unconscious drivers and justification shape purchase. Stories matter more than features.', whyMatters: 'Justification script: what buyers tell themselves.' },
+        operatorArtifact: { title: 'Justification Script', description: 'What buyers tell themselves.' },
+      },
+      keyIdeas: ['People want to feel good about why they bought.', 'Justification script: what buyers tell themselves.', 'Moral licensing shapes referral and retention.'],
+      listenScript: 'People want to feel good about why they bought.',
+      booksList: [
+        { id: 'p2m14-canon', title: 'The Righteous Mind', author: 'Jonathan Haidt', type: 'canon' },
+        { id: 'p2m14-counterpoint', title: 'Buyology', author: 'Martin Lindstrom', type: 'counterpoint' },
+        { id: 'p2m14-artifact', title: 'Justification Script', type: 'artifact' },
+      ],
+    } as ReadingCompanion,
+    order: 14,
+  },
+  {
+    id: 'p2-module-15',
+    pillar: 'pillar-2',
+    title: 'Consumer Myths & Self-Deception',
+    thesis: 'Stories feel true even when they\'re wrong. Belief audits reveal which narratives you rely on emotionally.',
+    whyExists: {
+      academic: 'Narrative psychology × Decision under uncertainty',
+      operator: 'Elite strategy audits beliefs: which narratives you rely on emotionally.',
+    },
+    frameworks: [{ id: 'p2-framework-15-1', title: 'Belief Audit', description: 'Which narratives you rely on emotionally.', content: 'Stories feel true even when they\'re wrong.' }],
+    worksheets: [{ id: 'p2-worksheet-15-1', title: 'Belief Audit', description: 'Which narratives you rely on emotionally.', fields: [{ id: 'belief', label: 'Belief', type: 'textarea', required: true }] }],
+    requiredOutputs: [{ id: 'belief-audit', label: 'Belief audit', type: 'text' }],
+    readingCompanion: {
+      essentials: {
+        canon: { title: 'The Black Swan', author: 'Nassim Taleb', coreIdea: 'Rare events and narrative bias shape perception. Stories feel true even when they\'re wrong.', whyMatters: 'Stories feel true even when they\'re wrong.' },
+        counterpoint: { title: 'Thinking in Bets', author: 'Annie Duke', coreIdea: 'Decisions under uncertainty; separating quality of decision from outcome. Beliefs need stress-testing.', whyMatters: 'Belief audit: which narratives you rely on emotionally.' },
+        operatorArtifact: { title: 'Belief Audit', description: 'Which narratives you rely on emotionally.' },
+      },
+      keyIdeas: ['Stories feel true even when they\'re wrong.', 'Belief audit: which narratives you rely on emotionally.', 'Consumer myths and self-deception shape choice.'],
+      listenScript: 'Stories feel true even when they\'re wrong.',
+      booksList: [
+        { id: 'p2m15-canon', title: 'The Black Swan', author: 'Nassim Taleb', type: 'canon' },
+        { id: 'p2m15-counterpoint', title: 'Thinking in Bets', author: 'Annie Duke', type: 'counterpoint' },
+        { id: 'p2m15-artifact', title: 'Belief Audit', type: 'artifact' },
+      ],
+    } as ReadingCompanion,
+    order: 15,
   },
 ];
 

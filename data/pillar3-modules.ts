@@ -1,4 +1,5 @@
 import { Module } from '@/types';
+import type { ReadingCompanion } from '@/types';
 
 export const pillar3Modules: Module[] = [
   {
@@ -82,6 +83,20 @@ You must know both.`,
       { id: 'sensitivity-analysis', label: 'Sensitivity analysis identifying which variable breaks first', type: 'text' },
       { id: 'cac-inflation-scenario', label: 'CAC inflation scenario (+25%, +50%)', type: 'text' },
     ],
+    readingCompanion: {
+      essentials: {
+        canon: { title: 'The Lean Startup', author: 'Eric Ries', coreIdea: 'Build–Measure–Learn. Growth is emergent from a system, not a tactic.', whyMatters: 'Growth is not marketing activity. Growth is the emergent behavior of a system.' },
+        counterpoint: { title: 'Good Strategy/Bad Strategy', author: 'Richard Rumelt', coreIdea: 'Strategy is diagnosis, guiding policy, coherent action. Growth without system is motion.', whyMatters: 'Growth tactics without system thinking confuse motion with progress.' },
+        operatorArtifact: { title: 'Growth System Map', description: 'Demand source → conversion → retention → monetization → referral.' },
+      },
+      keyIdeas: ['Growth is not marketing activity. Growth is the emergent behavior of a system.', 'Demand source → conversion → retention → monetization → referral.', 'Growth tactics without system thinking confuse motion with progress.'],
+      listenScript: 'Growth is not marketing activity. Growth is the emergent behavior of a system.',
+      booksList: [
+        { id: 'p3m1-canon', title: 'The Lean Startup', author: 'Eric Ries', type: 'canon' },
+        { id: 'p3m1-counterpoint', title: 'Good Strategy/Bad Strategy', author: 'Richard Rumelt', type: 'counterpoint' },
+        { id: 'p3m1-artifact', title: 'Growth System Map', type: 'artifact' },
+      ],
+    } as ReadingCompanion,
     order: 1,
   },
   {
@@ -136,6 +151,20 @@ Supporting metrics explain why the North Star moves.`,
       { id: 'event-taxonomy', label: 'Customer Journey Data Map (events + properties + tools)', type: 'text' },
       { id: 'north-star-metric', label: 'North Star Metric definition', type: 'text' },
     ],
+    readingCompanion: {
+      essentials: {
+        canon: { title: 'Marketing Metrics', author: 'Farris et al.', coreIdea: 'CAC, LTV, payback, and cohort metrics. High CAC is often a symptom, not a channel problem.', whyMatters: 'High CAC is not a channel problem. It\'s a value or trust problem upstream.' },
+        counterpoint: { title: 'Lean Analytics', author: 'Alistair Croll & Benjamin Yoskovitz', coreIdea: 'One metric that matters; cohort over aggregate. CAC decomposition reveals root cause.', whyMatters: 'CAC decomposition: trust gap, friction, targeting error, price mismatch.' },
+        operatorArtifact: { title: 'CAC Decomposition', description: 'Trust gap, friction, targeting error, price mismatch.' },
+      },
+      keyIdeas: ['High CAC is not a channel problem. It\'s a value or trust problem upstream.', 'CAC decomposition: trust gap, friction, targeting error, price mismatch.', 'CAC is a lagging indicator.'],
+      listenScript: 'High CAC is not a channel problem. It\'s a value or trust problem upstream.',
+      booksList: [
+        { id: 'p3m2-canon', title: 'Marketing Metrics', author: 'Farris et al.', type: 'canon' },
+        { id: 'p3m2-counterpoint', title: 'Lean Analytics', author: 'Alistair Croll & Benjamin Yoskovitz', type: 'counterpoint' },
+        { id: 'p3m2-artifact', title: 'CAC Decomposition', type: 'artifact' },
+      ],
+    } as ReadingCompanion,
     order: 2,
   },
   {
@@ -228,6 +257,20 @@ Anything below 1.0 is value destruction.`,
       { id: 'budget-reallocation', label: 'One budget reallocation decision backed by iROAS', type: 'text' },
       { id: 'risk-statement', label: 'One risk statement explaining uncertainty', type: 'text' },
     ],
+    readingCompanion: {
+      essentials: {
+        canon: { title: 'Traction', author: 'Gabriel Weinberg', coreIdea: 'Channels work when they match how buyers already behave. No channel works universally.', whyMatters: 'No channel works universally. Channels work when they match how buyers already behave.' },
+        counterpoint: { title: 'Obviously Awesome', author: 'April Dunford', coreIdea: 'Positioning is context-setting. Channel fit depends on urgency, trust, complexity.', whyMatters: 'Channel Fit Grid: urgency × trust × complexity.' },
+        operatorArtifact: { title: 'Channel Fit Grid', description: 'Urgency × trust × complexity.' },
+      },
+      keyIdeas: ['No channel works universally. Channels work when they match how buyers already behave.', 'Channel Fit Grid: urgency × trust × complexity.', 'Channel–market fit precedes scale.'],
+      listenScript: 'No channel works universally. Channels work when they match how buyers already behave.',
+      booksList: [
+        { id: 'p3m3-canon', title: 'Traction', author: 'Gabriel Weinberg', type: 'canon' },
+        { id: 'p3m3-counterpoint', title: 'Obviously Awesome', author: 'April Dunford', type: 'counterpoint' },
+        { id: 'p3m3-artifact', title: 'Channel Fit Grid', type: 'artifact' },
+      ],
+    } as ReadingCompanion,
     order: 3,
   },
   {
@@ -322,6 +365,20 @@ Without stored investment, there is no compounding.`,
       { id: 'loop-health-metric', label: 'One loop health metric', type: 'text' },
       { id: 'kill-criterion', label: 'One kill criterion (when to abandon it)', type: 'text' },
     ],
+    readingCompanion: {
+      essentials: {
+        canon: { title: 'Crossing the Chasm', author: 'Geoffrey Moore', coreIdea: 'Early markets require creation; mainstream requires capture. Capture converts existing intent.', whyMatters: 'Capture converts existing intent. Creation manufactures intent — slowly and expensively.' },
+        counterpoint: { title: 'Demand-Side Sales 101', author: 'Bob Moesta', coreIdea: 'Demand is created by progress. Intent source: where intent already exists vs where you\'re inventing it.', whyMatters: 'Intent Source Audit: where intent already exists vs where you\'re inventing it.' },
+        operatorArtifact: { title: 'Intent Source Audit', description: 'Where intent already exists vs where you\'re inventing it.' },
+      },
+      keyIdeas: ['Capture converts existing intent. Creation manufactures intent — slowly and expensively.', 'Intent Source Audit: where intent already exists vs where you\'re inventing it.', 'Demand capture vs demand creation (revisited).'],
+      listenScript: 'Capture converts existing intent. Creation manufactures intent — slowly and expensively.',
+      booksList: [
+        { id: 'p3m4-canon', title: 'Crossing the Chasm', author: 'Geoffrey Moore', type: 'canon' },
+        { id: 'p3m4-counterpoint', title: 'Demand-Side Sales 101', author: 'Bob Moesta', type: 'counterpoint' },
+        { id: 'p3m4-artifact', title: 'Intent Source Audit', type: 'artifact' },
+      ],
+    } as ReadingCompanion,
     order: 4,
   },
   {
@@ -428,6 +485,20 @@ Customers churn before they consciously decide to leave because:
       { id: 'churn-reduction-opportunity', label: 'One quantified churn reduction opportunity', type: 'text' },
       { id: 'month-3-intervention', label: 'One Month-3 intervention hypothesis', type: 'text' },
     ],
+    readingCompanion: {
+      essentials: {
+        canon: { title: 'Advertising Management', author: 'Keller et al.', coreIdea: 'Ads amplify what already works. They do not fix broken value propositions.', whyMatters: 'Ads amplify what already works. They do not fix broken value propositions.' },
+        counterpoint: { title: 'Alchemy', author: 'Rory Sutherland', coreIdea: 'Perception and framing create value. Paid readiness: proof, clarity, offer strength, margin buffer.', whyMatters: 'Paid Readiness Checklist: proof, clarity, offer strength, margin buffer.' },
+        operatorArtifact: { title: 'Paid Readiness Checklist', description: 'Proof, clarity, offer strength, margin buffer.' },
+      },
+      keyIdeas: ['Ads amplify what already works. They do not fix broken value propositions.', 'Paid Readiness Checklist: proof, clarity, offer strength, margin buffer.', 'Paid channels when ads actually work.'],
+      listenScript: 'Ads amplify what already works. They do not fix broken value propositions.',
+      booksList: [
+        { id: 'p3m5-canon', title: 'Advertising Management', author: 'Keller et al.', type: 'canon' },
+        { id: 'p3m5-counterpoint', title: 'Alchemy', author: 'Rory Sutherland', type: 'counterpoint' },
+        { id: 'p3m5-artifact', title: 'Paid Readiness Checklist', type: 'artifact' },
+      ],
+    } as ReadingCompanion,
     order: 5,
   },
   {
@@ -522,6 +593,20 @@ Not everyone deserves convenience.`,
       { id: 'differential-service', label: 'A differential service plan', type: 'text' },
       { id: 'deprioritized-segment', label: 'One segment you intentionally deprioritize', type: 'text' },
     ],
+    readingCompanion: {
+      essentials: {
+        canon: { title: 'Content Inc.', author: 'Joe Pulizzi', coreIdea: 'Organic growth compounds when content creates switching costs or habit. Organic growth compounds only if it creates switching costs or habit.', whyMatters: 'Organic growth compounds only if it creates switching costs or habit.' },
+        counterpoint: { title: '7 Powers', author: 'Hamilton Helmer', coreIdea: 'Sustainable advantage requires a power that compounds. Compounding test: does this asset get cheaper or more valuable over time?', whyMatters: 'Compounding Test: does this asset get cheaper or more valuable over time?' },
+        operatorArtifact: { title: 'Compounding Test', description: 'Does this asset get cheaper or more valuable over time?' },
+      },
+      keyIdeas: ['Organic growth compounds only if it creates switching costs or habit.', 'Compounding Test: does this asset get cheaper or more valuable over time?', 'Organic channels & compounding advantage.'],
+      listenScript: 'Organic growth compounds only if it creates switching costs or habit.',
+      booksList: [
+        { id: 'p3m6-canon', title: 'Content Inc.', author: 'Joe Pulizzi', type: 'canon' },
+        { id: 'p3m6-counterpoint', title: '7 Powers', author: 'Hamilton Helmer', type: 'counterpoint' },
+        { id: 'p3m6-artifact', title: 'Compounding Test', type: 'artifact' },
+      ],
+    } as ReadingCompanion,
     order: 6,
   },
   {
@@ -612,6 +697,20 @@ Stopping early is lying to yourself.`,
       { id: 'killed-experiment', label: 'One killed experiment', type: 'text' },
       { id: 'learning-memo', label: 'One learning memo', type: 'text' },
     ],
+    readingCompanion: {
+      essentials: {
+        canon: { title: 'Contagious', author: 'Jonah Berger', coreIdea: 'Virality is a byproduct of value, not a feature. Social transmission follows STEPPS.', whyMatters: 'Virality is a byproduct of value, not a feature.' },
+        counterpoint: { title: 'Hooked', author: 'Nir Eyal', coreIdea: 'Habit-forming products use trigger, action, reward, investment. Share triggers: when sharing makes the user look good or feel relief.', whyMatters: 'Share Trigger Map: when sharing makes the user look good or feel relief.' },
+        operatorArtifact: { title: 'Share Trigger Map', description: 'When sharing makes the user look good or feel relief.' },
+      },
+      keyIdeas: ['Virality is a byproduct of value, not a feature.', 'Share Trigger Map: when sharing makes the user look good or feel relief.', 'Virality, referral, and social spread.'],
+      listenScript: 'Virality is a byproduct of value, not a feature.',
+      booksList: [
+        { id: 'p3m7-canon', title: 'Contagious', author: 'Jonah Berger', type: 'canon' },
+        { id: 'p3m7-counterpoint', title: 'Hooked', author: 'Nir Eyal', type: 'counterpoint' },
+        { id: 'p3m7-artifact', title: 'Share Trigger Map', type: 'artifact' },
+      ],
+    } as ReadingCompanion,
     order: 7,
   },
   {
@@ -708,6 +807,20 @@ The premium tier should:
       { id: 'tier-redesign', label: 'One tier redesign', type: 'text' },
       { id: 'pricing-experiment', label: 'One pricing experiment with guardrails', type: 'text' },
     ],
+    readingCompanion: {
+      essentials: {
+        canon: { title: 'Sales Management', author: 'Churchill et al.', coreIdea: 'Sales and product solve different trust problems. Sales-led vs product-led growth.', whyMatters: 'Sales and product are not rivals. They solve different trust problems.' },
+        counterpoint: { title: 'Product-Led Growth', author: 'Wes Bush', coreIdea: 'PLG: value before sales. Trust burden: what must be explained vs what must be experienced.', whyMatters: 'Trust Burden Test: what must be explained vs what must be experienced.' },
+        operatorArtifact: { title: 'Trust Burden Test', description: 'What must be explained vs what must be experienced.' },
+      },
+      keyIdeas: ['Sales and product are not rivals. They solve different trust problems.', 'Trust Burden Test: what must be explained vs what must be experienced.', 'Sales-led vs product-led growth.'],
+      listenScript: 'Sales and product are not rivals. They solve different trust problems.',
+      booksList: [
+        { id: 'p3m8-canon', title: 'Sales Management', author: 'Churchill et al.', type: 'canon' },
+        { id: 'p3m8-counterpoint', title: 'Product-Led Growth', author: 'Wes Bush', type: 'counterpoint' },
+        { id: 'p3m8-artifact', title: 'Trust Burden Test', type: 'artifact' },
+      ],
+    } as ReadingCompanion,
     order: 8,
   },
   {
@@ -773,6 +886,20 @@ Small retention improvements compound into massive value.`,
       { id: 'streak-mechanic', label: 'One streak or endowed progress mechanic', type: 'text' },
       { id: 'retention-roi-calculation', label: 'One retention ROI calculation', type: 'text' },
     ],
+    readingCompanion: {
+      essentials: {
+        canon: { title: 'Consumer Behavior', author: 'Solomon et al.', coreIdea: 'Funnels are abstractions. People are not linear. Drop-off truth: why people actually leave at each step.', whyMatters: 'Funnels are abstractions. People are not linear.' },
+        counterpoint: { title: 'Thinking, Fast and Slow', author: 'Daniel Kahneman', coreIdea: 'System 1 and System 2. Decision paths are non-linear; drop-off points reveal real friction.', whyMatters: 'Drop-Off Truth Table: why people actually leave at each step.' },
+        operatorArtifact: { title: 'Drop-Off Truth Table', description: 'Why people actually leave at each step.' },
+      },
+      keyIdeas: ['Funnels are abstractions. People are not linear.', 'Drop-Off Truth Table: why people actually leave at each step.', 'Funnel myths & conversion illusions.'],
+      listenScript: 'Funnels are abstractions. People are not linear.',
+      booksList: [
+        { id: 'p3m9-canon', title: 'Consumer Behavior', author: 'Solomon et al.', type: 'canon' },
+        { id: 'p3m9-counterpoint', title: 'Thinking, Fast and Slow', author: 'Daniel Kahneman', type: 'counterpoint' },
+        { id: 'p3m9-artifact', title: 'Drop-Off Truth Table', type: 'artifact' },
+      ],
+    } as ReadingCompanion,
     order: 9,
   },
   {
@@ -852,7 +979,162 @@ Wait when:
       { id: 'governance-policy', label: 'One data governance policy', type: 'text' },
       { id: 'vendor-decision', label: 'One build vs buy decision', type: 'text' },
     ],
+    readingCompanion: {
+      essentials: {
+        canon: { title: 'The Loyalty Effect', author: 'Frederick Reichheld', coreIdea: 'Retention multiplies every dollar you spend on acquisition. First-win moment: when value is first realized.', whyMatters: 'Retention multiplies every dollar you spend on acquisition.' },
+        counterpoint: { title: 'Atomic Habits', author: 'James Clear', coreIdea: 'Habits are cue, action, reward, reinforcement. Retention is behavior design; first-win moment matters.', whyMatters: 'First-Win Moment: the moment value is first realized.' },
+        operatorArtifact: { title: 'First-Win Moment', description: 'The moment value is first realized.' },
+      },
+      keyIdeas: ['Retention multiplies every dollar you spend on acquisition.', 'First-Win Moment: the moment value is first realized.', 'Retention as growth.'],
+      listenScript: 'Retention multiplies every dollar you spend on acquisition.',
+      booksList: [
+        { id: 'p3m10-canon', title: 'The Loyalty Effect', author: 'Frederick Reichheld', type: 'canon' },
+        { id: 'p3m10-counterpoint', title: 'Atomic Habits', author: 'James Clear', type: 'counterpoint' },
+        { id: 'p3m10-artifact', title: 'First-Win Moment', type: 'artifact' },
+      ],
+    } as ReadingCompanion,
     order: 10,
+  },
+  // Pillar III modules 11–15 (reading spine from syllabus)
+  {
+    id: 'p3-module-11',
+    pillar: 'pillar-3',
+    title: 'Growth Loops vs Funnels',
+    thesis: 'Funnels close deals. Loops build businesses. Primary loop: action → value → reinforcement → repeat.',
+    whyExists: {
+      academic: 'Platform economics × Systems thinking',
+      operator: 'Elite strategy maps the primary loop; funnels are one step inside it.',
+    },
+    frameworks: [{ id: 'p3-framework-11-1', title: 'Primary Loop Map', description: 'Action → value → reinforcement → repeat.', content: 'Funnels close deals. Loops build businesses.' }],
+    worksheets: [{ id: 'p3-worksheet-11-1', title: 'Primary Loop Map', description: 'Action → value → reinforcement → repeat.', fields: [{ id: 'loop-step', label: 'Loop Step', type: 'text', required: true }] }],
+    requiredOutputs: [{ id: 'primary-loop', label: 'Primary loop map', type: 'text' }],
+    readingCompanion: {
+      essentials: {
+        canon: { title: 'Platform Revolution', author: 'Geoffrey Parker et al.', coreIdea: 'Platforms grow via loops: action creates value that reinforces action. Funnels close deals; loops build businesses.', whyMatters: 'Funnels close deals. Loops build businesses.' },
+        counterpoint: { title: 'Rework', author: 'Jason Fried & DHH', coreIdea: 'Simplicity and focus. One loop done well beats many half-built funnels.', whyMatters: 'Primary Loop Map: action → value → reinforcement → repeat.' },
+        operatorArtifact: { title: 'Primary Loop Map', description: 'Action → value → reinforcement → repeat.' },
+      },
+      keyIdeas: ['Funnels close deals. Loops build businesses.', 'Primary Loop Map: action → value → reinforcement → repeat.', 'Growth loops vs funnels.'],
+      listenScript: 'Funnels close deals. Loops build businesses.',
+      booksList: [
+        { id: 'p3m11-canon', title: 'Platform Revolution', author: 'Geoffrey Parker et al.', type: 'canon' },
+        { id: 'p3m11-counterpoint', title: 'Rework', author: 'Jason Fried & DHH', type: 'counterpoint' },
+        { id: 'p3m11-artifact', title: 'Primary Loop Map', type: 'artifact' },
+      ],
+    } as ReadingCompanion,
+    order: 11,
+  },
+  {
+    id: 'p3-module-12',
+    pillar: 'pillar-3',
+    title: 'Unit Economics Under Scale',
+    thesis: 'Scale exposes weaknesses. It does not fix them. Scale stress test: what breaks at 10× volume?',
+    whyExists: {
+      academic: 'Finance × Operations',
+      operator: 'Elite strategy stress-tests unit economics before scaling.',
+    },
+    frameworks: [{ id: 'p3-framework-12-1', title: 'Scale Stress Test', description: 'What breaks at 10× volume?', content: 'Scale exposes weaknesses. It does not fix them.' }],
+    worksheets: [{ id: 'p3-worksheet-12-1', title: 'Scale Stress Test', description: 'What breaks at 10× volume?', fields: [{ id: 'stress-point', label: 'Stress Point', type: 'textarea', required: true }] }],
+    requiredOutputs: [{ id: 'scale-stress-test', label: 'Scale stress test', type: 'text' }],
+    readingCompanion: {
+      essentials: {
+        canon: { title: 'Financial Intelligence', author: 'Karen Berman & Joe Knight', coreIdea: 'Unit economics under scale. Scale exposes weaknesses; it does not fix them.', whyMatters: 'Scale exposes weaknesses. It does not fix them.' },
+        counterpoint: { title: 'The Hard Thing About Hard Things', author: 'Ben Horowitz', coreIdea: 'Scaling is brutal. Scale stress test: what breaks at 10× volume?', whyMatters: 'Scale Stress Test: what breaks at 10× volume?' },
+        operatorArtifact: { title: 'Scale Stress Test', description: 'What breaks at 10× volume?' },
+      },
+      keyIdeas: ['Scale exposes weaknesses. It does not fix them.', 'Scale Stress Test: what breaks at 10× volume?', 'Unit economics under scale.'],
+      listenScript: 'Scale exposes weaknesses. It does not fix them.',
+      booksList: [
+        { id: 'p3m12-canon', title: 'Financial Intelligence', author: 'Karen Berman & Joe Knight', type: 'canon' },
+        { id: 'p3m12-counterpoint', title: 'The Hard Thing About Hard Things', author: 'Ben Horowitz', type: 'counterpoint' },
+        { id: 'p3m12-artifact', title: 'Scale Stress Test', type: 'artifact' },
+      ],
+    } as ReadingCompanion,
+    order: 12,
+  },
+  {
+    id: 'p3-module-13',
+    pillar: 'pillar-3',
+    title: 'Channel Saturation & Diminishing Returns',
+    thesis: 'Every channel eventually gets crowded. Saturation signal: rising CAC with flat conversion.',
+    whyExists: {
+      academic: 'Competitive strategy × Channel economics',
+      operator: 'Elite strategy detects saturation before doubling down.',
+    },
+    frameworks: [{ id: 'p3-framework-13-1', title: 'Saturation Signal', description: 'Rising CAC with flat conversion.', content: 'Every channel eventually gets crowded.' }],
+    worksheets: [{ id: 'p3-worksheet-13-1', title: 'Saturation Signal', description: 'Rising CAC with flat conversion.', fields: [{ id: 'signal', label: 'Signal', type: 'text', required: true }] }],
+    requiredOutputs: [{ id: 'saturation-signal', label: 'Saturation signal', type: 'text' }],
+    readingCompanion: {
+      essentials: {
+        canon: { title: 'Competitive Strategy', author: 'Michael Porter', coreIdea: 'Industry structure and rivalry. Every channel eventually gets crowded.', whyMatters: 'Every channel eventually gets crowded.' },
+        counterpoint: { title: 'Zero to One', author: 'Peter Thiel', coreIdea: 'Competition is for losers; monopoly is progress. Saturation signal: rising CAC with flat conversion.', whyMatters: 'Saturation Signal: rising CAC with flat conversion.' },
+        operatorArtifact: { title: 'Saturation Signal', description: 'Rising CAC with flat conversion.' },
+      },
+      keyIdeas: ['Every channel eventually gets crowded.', 'Saturation Signal: rising CAC with flat conversion.', 'Channel saturation & diminishing returns.'],
+      listenScript: 'Every channel eventually gets crowded.',
+      booksList: [
+        { id: 'p3m13-canon', title: 'Competitive Strategy', author: 'Michael Porter', type: 'canon' },
+        { id: 'p3m13-counterpoint', title: 'Zero to One', author: 'Peter Thiel', type: 'counterpoint' },
+        { id: 'p3m13-artifact', title: 'Saturation Signal', type: 'artifact' },
+      ],
+    } as ReadingCompanion,
+    order: 13,
+  },
+  {
+    id: 'p3-module-14',
+    pillar: 'pillar-3',
+    title: 'Growth Illusions & Vanity Metrics',
+    thesis: 'Metrics exist to reduce uncertainty, not impress investors. Metric Truth Test: what decision does this metric change?',
+    whyExists: {
+      academic: 'Measurement theory × Decision science',
+      operator: 'Elite strategy asks what decision each metric changes.',
+    },
+    frameworks: [{ id: 'p3-framework-14-1', title: 'Metric Truth Test', description: 'What decision does this metric change?', content: 'Metrics exist to reduce uncertainty, not impress investors.' }],
+    worksheets: [{ id: 'p3-worksheet-14-1', title: 'Metric Truth Test', description: 'What decision does this metric change?', fields: [{ id: 'metric', label: 'Metric', type: 'text', required: true }] }],
+    requiredOutputs: [{ id: 'metric-truth-test', label: 'Metric truth test', type: 'text' }],
+    readingCompanion: {
+      essentials: {
+        canon: { title: 'How to Measure Anything', author: 'Douglas Hubbard', coreIdea: 'Measurement reduces uncertainty. Metrics exist to reduce uncertainty, not impress investors.', whyMatters: 'Metrics exist to reduce uncertainty, not impress investors.' },
+        counterpoint: { title: 'Bullshit Jobs', author: 'David Graeber', coreIdea: 'Many metrics serve ritual, not decision. Metric Truth Test: what decision does this metric change?', whyMatters: 'Metric Truth Test: what decision does this metric change?' },
+        operatorArtifact: { title: 'Metric Truth Test', description: 'What decision does this metric change?' },
+      },
+      keyIdeas: ['Metrics exist to reduce uncertainty, not impress investors.', 'Metric Truth Test: what decision does this metric change?', 'Growth illusions & vanity metrics.'],
+      listenScript: 'Metrics exist to reduce uncertainty, not impress investors.',
+      booksList: [
+        { id: 'p3m14-canon', title: 'How to Measure Anything', author: 'Douglas Hubbard', type: 'canon' },
+        { id: 'p3m14-counterpoint', title: 'Bullshit Jobs', author: 'David Graeber', type: 'counterpoint' },
+        { id: 'p3m14-artifact', title: 'Metric Truth Test', type: 'artifact' },
+      ],
+    } as ReadingCompanion,
+    order: 14,
+  },
+  {
+    id: 'p3-module-15',
+    pillar: 'pillar-3',
+    title: 'Sustainable Growth Boundaries',
+    thesis: 'Winning strategies define where not to grow. Growth Kill Criteria: when to stop scaling a channel.',
+    whyExists: {
+      academic: 'Strategy × Decision under uncertainty',
+      operator: 'Elite strategy defines growth kill criteria in advance.',
+    },
+    frameworks: [{ id: 'p3-framework-15-1', title: 'Growth Kill Criteria', description: 'When to stop scaling a channel.', content: 'Winning strategies define where not to grow.' }],
+    worksheets: [{ id: 'p3-worksheet-15-1', title: 'Growth Kill Criteria', description: 'When to stop scaling a channel.', fields: [{ id: 'criterion', label: 'Criterion', type: 'textarea', required: true }] }],
+    requiredOutputs: [{ id: 'growth-kill-criteria', label: 'Growth kill criteria', type: 'text' }],
+    readingCompanion: {
+      essentials: {
+        canon: { title: 'Playing to Win', author: 'A.G. Lafley & Roger Martin', coreIdea: 'Strategy is choice. Where to play and how to win. Winning strategies define where not to grow.', whyMatters: 'Winning strategies define where not to grow.' },
+        counterpoint: { title: 'Thinking in Bets', author: 'Annie Duke', coreIdea: 'Decisions under uncertainty. Growth kill criteria: when to stop scaling a channel.', whyMatters: 'Growth Kill Criteria: when to stop scaling a channel.' },
+        operatorArtifact: { title: 'Growth Kill Criteria', description: 'When to stop scaling a channel.' },
+      },
+      keyIdeas: ['Winning strategies define where not to grow.', 'Growth Kill Criteria: when to stop scaling a channel.', 'Sustainable growth boundaries.'],
+      listenScript: 'Winning strategies define where not to grow.',
+      booksList: [
+        { id: 'p3m15-canon', title: 'Playing to Win', author: 'A.G. Lafley & Roger Martin', type: 'canon' },
+        { id: 'p3m15-counterpoint', title: 'Thinking in Bets', author: 'Annie Duke', type: 'counterpoint' },
+        { id: 'p3m15-artifact', title: 'Growth Kill Criteria', type: 'artifact' },
+      ],
+    } as ReadingCompanion,
+    order: 15,
   },
 ];
 
