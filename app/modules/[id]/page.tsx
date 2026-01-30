@@ -18,7 +18,7 @@ import FiveCsFramework from '@/components/FiveCsFramework';
 import ModuleQuiz from '@/components/ModuleQuiz';
 import { WorksheetData } from '@/types';
 import { getCaseStudyById } from '@/data/caseStudies';
-import { exportModulePDF } from '@/utils/exportModulePDF';
+import { exportModulePDFWithCorner } from '@/utils/exportModulePDF';
 
 export default function ModulePage() {
   const params = useParams();
@@ -75,7 +75,7 @@ export default function ModulePage() {
 
   const handleExportPDF = () => {
     if (!moduleData) return;
-    exportModulePDF(moduleData, moduleId, state);
+    exportModulePDFWithCorner(moduleData, moduleId, state);
   };
 
   const handleCompleteModule = () => {

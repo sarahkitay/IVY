@@ -8,7 +8,7 @@ import { useProjectStore } from '@/store/useProjectStore';
 import { getModulesByPillar, getModuleById, getModulesInOrder } from '@/data/all-modules';
 import { useEffect, useState, useRef } from 'react';
 import dynamic from 'next/dynamic';
-import { exportModulePDF } from '@/utils/exportModulePDF';
+import { exportModulePDFWithCorner } from '@/utils/exportModulePDF';
 import { caseStudies } from '@/data/caseStudies';
 
 const ValueWedge = dynamic(() => import('@/components/ValueWedge'), { ssr: false });
@@ -159,7 +159,7 @@ export default function Home() {
               type="button"
               onClick={(e) => {
                 e.stopPropagation();
-                if (moduleData) exportModulePDF(moduleData, module.id, state);
+                if (moduleData) exportModulePDFWithCorner(moduleData, module.id, state);
               }}
               className="label-small-caps border border-charcoal/25 hover:bg-charcoal/5 px-3 py-2 text-sm"
               style={{ borderRadius: 0 }}
