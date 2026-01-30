@@ -5,7 +5,7 @@ import { useBusinessState } from '@/store/useBusinessState';
 import { useProgress } from '@/store/useProgress';
 import { useProjectStore } from '@/store/useProjectStore';
 
-const DEBOUNCE_MS = 2000;
+const DEBOUNCE_MS = 600;
 
 export default function FirebaseSync() {
   const { state } = useBusinessState();

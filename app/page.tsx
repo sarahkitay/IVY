@@ -78,12 +78,12 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 min-w-0">
           <header className="mb-8">
             <div className="flex items-start gap-4">
-              <a href="/" className="shrink-0" aria-label="Ivy home">
+              <a href="/" className="shrink-0 self-start mt-[-2px]" aria-label="Ivy home">
                 <img src="/ivy-corner-logo.png" alt="IVY" className="h-14 w-14 sm:h-16 sm:w-16 object-contain" />
               </a>
               <div className="min-w-0">
                 <h1 className="overflow-hidden inline-block mb-2">
-                  <span className="ivy-fade-in inline-block font-cinzel-decorative font-bold text-ink uppercase tracking-wide text-3xl sm:text-5xl">
+                  <span className="ivy-fade-in inline-block font-cinzel-decorative font-bold text-ink uppercase text-3xl sm:text-5xl" style={{ letterSpacing: '0.2em' }}>
                     IVY
                   </span>
                 </h1>
@@ -170,7 +170,7 @@ export default function Home() {
               <button
                 type="button"
                 onClick={() => router.push(`/modules/${module.id}`)}
-                className="label-small-caps bg-charcoal text-cream hover:bg-ink hover:text-cream px-3 py-2 text-sm"
+                className="label-small-caps bg-charcoal text-cream hover:bg-gold px-3 py-2 text-sm transition-colors [color:var(--cream)]"
                 style={{ borderRadius: 0 }}
               >
                 Open
@@ -189,12 +189,12 @@ export default function Home() {
         <header className="mb-8 sm:mb-12">
           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-4">
             <div className="flex items-start gap-4">
-              <a href="/" className="shrink-0" aria-label="Ivy home">
+              <a href="/" className="shrink-0 self-start mt-[-2px]" aria-label="Ivy home">
                 <img src="/ivy-corner-logo.png" alt="IVY" className="h-14 w-14 sm:h-16 sm:w-16 object-contain" />
               </a>
               <div className="min-w-0">
                 <h1 className="overflow-hidden inline-block mb-2">
-                  <span className="ivy-fade-in inline-block font-cinzel-decorative text-3xl sm:text-5xl font-bold text-ink uppercase tracking-wide">
+                  <span className="ivy-fade-in inline-block font-cinzel-decorative text-3xl sm:text-5xl font-bold text-ink uppercase" style={{ letterSpacing: '0.2em' }}>
                     IVY
                   </span>
                 </h1>
@@ -221,8 +221,8 @@ export default function Home() {
               View Dashboard
             </button>
             {state.applicationContext && (
-              <div className="ml-auto sm:ml-0 flex items-center border-l-2 border-charcoal/25 pl-2 sm:pl-3 py-0.5 min-h-[28px] sm:command-center sm:px-4 sm:py-2 sm:border sm:border-charcoal/15 sm:bg-parchment/50 sm:border-l-0 sm:pl-4">
-                <p className="label-small-caps text-charcoal/50 text-[10px] sm:text-xs hidden sm:block sm:mb-0.5">CONTEXT</p>
+              <div className="ml-auto sm:ml-0 flex flex-col border-l-2 border-charcoal/25 pl-2 sm:pl-3 py-0.5 min-h-[28px] sm:command-center sm:flex-col sm:px-4 sm:py-2 sm:border sm:border-charcoal/15 sm:bg-parchment/50 sm:border-l-0 sm:pl-4 sm:gap-0.5">
+                <p className="label-small-caps text-charcoal/50 text-[10px] sm:text-xs">CONTEXT</p>
                 <p className="tier-2-instruction text-[11px] sm:text-sm truncate max-w-[90px] sm:max-w-[140px] md:max-w-none">
                   {state.applicationContext.type === 'my-company' && state.applicationContext.companyName}
                   {state.applicationContext.type === 'case-study' && (() => {

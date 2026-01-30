@@ -429,10 +429,11 @@ export default function ModulePage() {
                           if (req.type !== 'number' && (!current || String(current).trim() === '')) return;
                           updateModuleOutput(moduleId, { requiredOutputs: { [req.id]: moduleOutput?.requiredOutputs?.[req.id] ?? (req.type === 'number' ? 0 : '') } });
                         }}
-                        className="label-small-caps mt-2 px-3 py-1.5 border border-charcoal/25 hover:bg-charcoal/5 text-sm"
+                        className="label-small-caps mt-2 px-3 py-1.5 border border-charcoal/25 hover:bg-charcoal/5 text-sm disabled:opacity-70"
                         style={{ borderRadius: 0 }}
+                        disabled={isComplete}
                       >
-                        Save this output
+                        {isComplete ? 'Saved' : 'Save this output'}
                       </button>
                     </div>
                   )}

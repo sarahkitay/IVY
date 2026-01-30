@@ -22,6 +22,7 @@ const config: Config = {
         cream: '#faf8f3',
         parchment: '#f5f1e8',
         oxblood: '#722f37',
+        gold: '#c9a227',
       },
     },
   },

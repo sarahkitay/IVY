@@ -71,7 +71,7 @@ export const useProjectStore = create<ProjectStore>()(
             ),
           ]);
           set({ currentProjectId: id });
-          await get().syncCurrentProjectToFirebase();
+          get().syncCurrentProjectToFirebase();
         } catch (_e) {
           id = `local-${Date.now()}`;
           set({ currentProjectId: id });
