@@ -2,13 +2,9 @@ import { initializeApp, getApps, FirebaseApp } from 'firebase/app';
 import { getFirestore, Firestore } from 'firebase/firestore';
 
 /**
- * Firebase config — matches the script snippet from Firebase Console:
- * <script type="module">
- *   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-app.js";
- *   const firebaseConfig = { ... };
- *   const app = initializeApp(firebaseConfig);
- * </script>
- * Override with NEXT_PUBLIC_FIREBASE_* env vars if needed.
+ * Firebase config. For production, set NEXT_PUBLIC_FIREBASE_API_KEY,
+ * NEXT_PUBLIC_FIREBASE_PROJECT_ID, etc. in your host (e.g. Vercel) so
+ * no keys are committed. Fallbacks here are for local dev only.
  */
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY ?? 'AIzaSyCo0CQEx4dHESNv5Z2p5HfVeSUqx6XvoMA',

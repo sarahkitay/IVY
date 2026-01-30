@@ -10,13 +10,19 @@ import { getProject } from '@/lib/projects';
 export default function DashboardPage() {
   const router = useRouter();
   const currentProjectId = useProjectStore((s) => s.currentProjectId);
+  const cachedProjects = useProjectStore((s) => s.cachedProjects);
   const { listProjects, loadProject, setCurrentProjectId } = useProjectStore();
-  const [projects, setProjects] = useState<IvyProject[]>([]);
+  const [projects, setProjects] = useState<IvyProject[]>(cachedProjects ?? []);
   const [currentProject, setCurrentProject] = useState<IvyProject | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!cachedProjects?.length);
 
   useEffect(() => {
     let cancelled = false;
+    const cached = useProjectStore.getState().cachedProjects;
+    if (cached?.length) {
+      setProjects(cached);
+      setLoading(false);
+    }
     listProjects()
       .then((list) => { if (!cancelled) setProjects(list); })
       .catch(() => { if (!cancelled) setProjects([]); })
@@ -82,12 +88,13 @@ export default function DashboardPage() {
     <div className="min-h-screen bg-cream">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
         <div className="mb-8">
-          <a href="/" className="inline-flex items-center gap-3 mb-6">
-            <img src="/ivy-corner-logo.png" alt="IVY" className="h-12 w-12 object-contain" />
+          <a href="/" className="inline-flex items-center gap-3 mb-6" aria-label="IVY home">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/ivy-corner-logo.png" alt="" className="h-12 w-12 object-contain" />
             <span className="font-cinzel-decorative font-bold text-xl uppercase text-ink">IVY</span>
           </a>
           <h1 className="tier-1-gravitas text-2xl sm:text-4xl mb-2">Dashboard</h1>
-          <p className="tier-2-instruction text-lg text-charcoal/80">
+          <p className="text-sm font-normal text-charcoal/55">
             Open a project or start a new one. Each project keeps its own data.
           </p>
         </div>

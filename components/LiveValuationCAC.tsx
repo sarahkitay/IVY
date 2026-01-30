@@ -19,8 +19,11 @@ export default function LiveValuationCAC() {
   return (
     <div className="command-center p-6 border border-charcoal/20" style={{ borderRadius: 0 }}>
       <h3 className="font-serif text-xl mb-2">Valuation & CAC</h3>
-      <p className="text-xs font-mono text-charcoal/60 mb-4">
+      <p className="text-xs font-mono text-charcoal/60 mb-2">
         Reactive to answer quality and quiz performance. Better answers → higher valuation, lower CAC.
+      </p>
+      <p className="text-xs text-charcoal/50 mb-4 italic">
+        This is a directional simulation, not a valuation engine.
       </p>
       <div className="grid grid-cols-2 gap-6">
         <div>

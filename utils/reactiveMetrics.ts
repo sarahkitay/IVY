@@ -75,7 +75,9 @@ export function getReactiveValuationAndCAC(state: BusinessState): {
   const qualityIndex = answerQuality;
   const quizIndex = quizQuality;
 
-  const combined = qualityIndex * 0.75 + quizIndex * 0.25;
+  // Writing (Strategy Note rubric) weighs more than quizzes—elite programs reward coherent thinking
+  const writingIndex = (state.boardMemoRubricScore ?? 0) / 100;
+  const combined = qualityIndex * 0.5 + quizIndex * 0.2 + writingIndex * 0.3;
   const valuation = Math.round(
     BASE_VALUATION + MAX_VALUATION_BOOST * (0.15 + 0.85 * combined)
   );

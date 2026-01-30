@@ -16,6 +16,7 @@ interface ProjectStore {
   loadProject: (projectId: string) => Promise<boolean>;
   createProject: (name: string, context: ApplicationContext) => Promise<string>;
   listProjects: () => Promise<IvyProject[]>;
+  cachedProjects: IvyProject[] | null;
   syncCurrentProjectToFirebase: () => Promise<void>;
 }
 
@@ -23,6 +24,7 @@ export const useProjectStore = create<ProjectStore>()(
   persist(
     (set, get) => ({
       currentProjectId: null,
+      cachedProjects: null,
 
       setCurrentProjectId: (id) => set({ currentProjectId: id }),
 
@@ -61,29 +63,28 @@ export const useProjectStore = create<ProjectStore>()(
         const state = useBusinessState.getState().state;
         const progress = useProgress.getState().progress;
 
-        const FIREBASE_TIMEOUT_MS = 15000;
-        let id: string;
-        try {
-          id = await Promise.race([
-            createProjectInFirebase(name, context, state, progress),
-            new Promise<string>((_, reject) =>
-              setTimeout(() => reject(new Error('timeout')), FIREBASE_TIMEOUT_MS)
-            ),
-          ]);
-          set({ currentProjectId: id });
-          get().syncCurrentProjectToFirebase();
-        } catch (_e) {
-          id = `local-${Date.now()}`;
-          set({ currentProjectId: id });
-        }
-        return id;
+        const localId = `local-${Date.now()}`;
+        set({ currentProjectId: localId });
+
+        createProjectInFirebase(name, context, state, progress)
+          .then((realId) => {
+            set({ currentProjectId: realId });
+            get().syncCurrentProjectToFirebase();
+          })
+          .catch(() => {});
+
+        return localId;
       },
 
-      listProjects: () => listProjectsFromFirebase(30),
+      listProjects: async () => {
+        const list = await listProjectsFromFirebase(30);
+        set({ cachedProjects: list });
+        return list;
+      },
 
       syncCurrentProjectToFirebase: async () => {
         const { currentProjectId } = get();
-        if (!currentProjectId) return;
+        if (!currentProjectId || String(currentProjectId).startsWith('local-')) return;
         const { state } = useBusinessState.getState();
         const { progress } = useProgress.getState();
         await updateProjectInFirebase(

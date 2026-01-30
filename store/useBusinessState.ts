@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { BusinessState, ModuleOutput, Experiment } from '@/types';
 import { ApplicationContext } from '@/types/context';
+import type { CaseMode } from '@/types/case';
 
 interface BusinessStateStore {
   state: BusinessState;
@@ -9,6 +10,7 @@ interface BusinessStateStore {
   addExperiment: (experiment: Experiment) => void;
   updateBoardCredibility: (delta: number) => void;
   setApplicationContext: (context: ApplicationContext) => void;
+  setCaseMode: (mode: CaseMode, casePackId?: string) => void;
   replaceState: (state: Partial<BusinessState>) => void;
   reset: () => void;
 }
@@ -18,6 +20,8 @@ const initialState: BusinessState = {
   moduleOutputs: {},
   boardCredibilityScore: 0,
   applicationContext: undefined,
+  caseMode: 'my-company',
+  activeCasePackId: undefined,
   lastUpdated: new Date().toISOString(),
 };
 
@@ -96,6 +100,16 @@ export const useBusinessState = create<BusinessStateStore>((set) => ({
       state: {
         ...store.state,
         applicationContext: context,
+        lastUpdated: new Date().toISOString(),
+      },
+    })),
+
+  setCaseMode: (mode, casePackId) =>
+    set((store) => ({
+      state: {
+        ...store.state,
+        caseMode: mode,
+        activeCasePackId: mode === 'case' ? casePackId : undefined,
         lastUpdated: new Date().toISOString(),
       },
     })),

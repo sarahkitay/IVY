@@ -85,7 +85,7 @@ export default function ContextSelectionPage() {
       router.push('/');
     } catch (e) {
       console.error(e);
-      alert('Failed to create project. Check console.');
+      alert('Failed to create project. You can try again or start without saving to the cloud.');
     } finally {
       setSaving(false);
     }
@@ -111,8 +111,9 @@ export default function ContextSelectionPage() {
     <div className="min-h-screen bg-cream">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
         <div className="mb-6 sm:mb-8">
-          <a href="/dashboard" className="inline-flex items-center gap-3 mb-6">
-            <img src="/ivy-corner-logo.png" alt="IVY" className="h-12 w-12 object-contain" />
+          <a href="/dashboard" className="inline-flex items-center gap-3 mb-6" aria-label="IVY dashboard">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/ivy-corner-logo.png" alt="" className="h-12 w-12 object-contain" />
             <span className="font-cinzel-decorative font-bold text-xl uppercase text-ink">IVY</span>
           </a>
           <a href="/dashboard" className="label-small-caps text-charcoal/60 hover:text-ink text-sm block mb-4">

@@ -15,7 +15,7 @@ import RedTeamValidator from '@/components/RedTeamValidator';
 import ChurnSlider from '@/components/ChurnSlider';
 import HindsightGraph from '@/components/HindsightGraph';
 import FiveCsFramework from '@/components/FiveCsFramework';
-import ModuleQuiz from '@/components/ModuleQuiz';
+import { getQuizForModule } from '@/data/moduleQuizzes';
 import { WorksheetData } from '@/types';
 import { getCaseStudyById } from '@/data/caseStudies';
 import { exportModulePDFWithCorner } from '@/utils/exportModulePDF';
@@ -156,10 +156,13 @@ export default function ModulePage() {
         <div className="mb-6 sm:mb-8">
           <div className="flex flex-wrap items-center gap-2 mb-4">
             <button
+              type="button"
               onClick={() => router.push('/')}
               className="text-charcoal/60 hover:text-ink text-sm min-h-[44px] touch-manipulation inline-flex items-center gap-2"
+              aria-label="Back to modules"
             >
-              <img src="/ivy-corner-logo.png" alt="IVY" className="h-8 w-8 object-contain" />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/ivy-corner-logo.png" alt="" className="h-8 w-8 object-contain" />
               ← Back to Modules
             </button>
             <button
@@ -261,6 +264,103 @@ export default function ModulePage() {
             )}
           </div>
         ))}
+
+        {/* Professor Notes (Faculty layer: what students get wrong, A+ smell, the trap) */}
+        {moduleData.professorNotes && (
+          <div className="mb-8 border border-charcoal/20 bg-parchment/30 p-6" style={{ borderRadius: 0 }}>
+            <h2 className="tier-2-instruction text-xl mb-4">PROFESSOR NOTES</h2>
+            <div className="space-y-4">
+              <div>
+                <p className="label-small-caps text-charcoal/60 mb-1">What students get wrong</p>
+                <p className="tier-3-guidance text-sm">{moduleData.professorNotes.whatStudentsGetWrong}</p>
+              </div>
+              <div>
+                <p className="label-small-caps text-charcoal/60 mb-1">What the A+ answer smells like</p>
+                <p className="tier-3-guidance text-sm">{moduleData.professorNotes.whatAplusSmellsLike}</p>
+              </div>
+              <div>
+                <p className="label-small-caps text-charcoal/60 mb-1">The trap</p>
+                <p className="tier-3-guidance text-sm">{moduleData.professorNotes.theTrap}</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Sample answers: one strong (why), one weak (why it fails) */}
+        {moduleData.sampleAnswers && (
+          <div className="mb-8 border border-sage/30 bg-parchment/20 p-6" style={{ borderRadius: 0 }}>
+            <h2 className="tier-2-instruction text-xl mb-4">SAMPLE ANSWERS</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <p className="label-small-caps text-sage mb-2">Strong</p>
+                <p className="tier-3-guidance text-sm mb-2">{moduleData.sampleAnswers.strong.text}</p>
+                <p className="text-xs text-charcoal/70 italic">Why: {moduleData.sampleAnswers.strong.why}</p>
+              </div>
+              <div>
+                <p className="label-small-caps text-oxblood mb-2">Weak</p>
+                <p className="tier-3-guidance text-sm mb-2">{moduleData.sampleAnswers.weak.text}</p>
+                <p className="text-xs text-charcoal/70 italic">Why it fails: {moduleData.sampleAnswers.weak.whyFails}</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Legitimacy Lens (Yale): who could attack, exploitative risk, implicit promise */}
+        {moduleData.legitimacyLens && (
+          <div className="mb-8 border-l-2 border-charcoal/30 bg-parchment/20 p-6" style={{ borderRadius: 0 }}>
+            <h2 className="tier-2-instruction text-xl mb-4">LEGITIMACY LENS</h2>
+            <p className="tier-3-guidance text-sm text-charcoal/80 mb-4">
+              Legitimacy and long-term trust affect pricing power and resilience.
+            </p>
+            <div className="space-y-4">
+              <div>
+                <label className="label-small-caps block mb-2">{moduleData.legitimacyLens.whoCouldAttack}</label>
+                <textarea
+                  value={moduleOutput?.legitimacyLensResponses?.whoCouldAttack ?? ''}
+                  onChange={(e) => updateModuleOutput(moduleId, {
+                    legitimacyLensResponses: {
+                      ...moduleOutput?.legitimacyLensResponses,
+                      whoCouldAttack: e.target.value,
+                    },
+                  })}
+                  placeholder="One sentence."
+                  className="w-full worksheet-field min-h-[72px]"
+                  style={{ borderRadius: 0 }}
+                />
+              </div>
+              <div>
+                <label className="label-small-caps block mb-2">{moduleData.legitimacyLens.whatLooksExploitative}</label>
+                <textarea
+                  value={moduleOutput?.legitimacyLensResponses?.whatLooksExploitative ?? ''}
+                  onChange={(e) => updateModuleOutput(moduleId, {
+                    legitimacyLensResponses: {
+                      ...moduleOutput?.legitimacyLensResponses,
+                      whatLooksExploitative: e.target.value,
+                    },
+                  })}
+                  placeholder="One sentence."
+                  className="w-full worksheet-field min-h-[72px]"
+                  style={{ borderRadius: 0 }}
+                />
+              </div>
+              <div>
+                <label className="label-small-caps block mb-2">{moduleData.legitimacyLens.implicitPromise}</label>
+                <textarea
+                  value={moduleOutput?.legitimacyLensResponses?.implicitPromise ?? ''}
+                  onChange={(e) => updateModuleOutput(moduleId, {
+                    legitimacyLensResponses: {
+                      ...moduleOutput?.legitimacyLensResponses,
+                      implicitPromise: e.target.value,
+                    },
+                  })}
+                  placeholder="One sentence."
+                  className="w-full worksheet-field min-h-[72px]"
+                  style={{ borderRadius: 0 }}
+                />
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Interactive Calculator for P3 Module 1 */}
         {moduleId === 'p3-module-1' && (
@@ -443,13 +543,36 @@ export default function ModulePage() {
           </ul>
         </div>
 
-        {/* Post-module quiz (Ivy syllabus key concepts) */}
-        <ModuleQuiz
-          moduleId={moduleId}
-          onQuizComplete={(correctCount, total) => {
-            updateModuleOutput(moduleId, { quizScore: correctCount, quizTotal: total });
-          }}
-        />
+        {/* Key concepts check: separate page (no scrolling back to module) */}
+        {getQuizForModule(moduleId) && (
+          <div className="command-center p-6 mb-8 border border-charcoal/20" style={{ borderRadius: 0 }}>
+            <h3 className="tier-2-instruction text-xl mb-2">KEY CONCEPTS CHECK</h3>
+            <p className="label-small-caps text-charcoal/60 mb-4">
+              Ivy syllabus: {getQuizForModule(moduleId)?.title}. Taken on its own page — you cannot refer back to the module.
+            </p>
+            {moduleOutput?.quizScore !== undefined && moduleOutput?.quizTotal !== undefined ? (
+              <div className="flex flex-wrap items-center gap-4">
+                <p className="font-mono text-sm text-charcoal/80">
+                  Score: {moduleOutput.quizScore} / {moduleOutput.quizTotal}
+                  {moduleOutput.quizScore === moduleOutput.quizTotal && ' — Board-ready.'}
+                </p>
+                <a
+                  href={`/modules/${moduleId}/quiz`}
+                  className="label-small-caps text-charcoal/70 hover:text-ink underline"
+                >
+                  Retake
+                </a>
+              </div>
+            ) : (
+              <a
+                href={`/modules/${moduleId}/quiz`}
+                className="inline-block btn-formal"
+              >
+                Take key concepts check
+              </a>
+            )}
+          </div>
+        )}
 
         {/* Hindsight Graph (future projections) */}
         <HindsightGraph currentModuleId={moduleId} />
@@ -459,6 +582,21 @@ export default function ModulePage() {
           moduleOutput={moduleOutput}
           moduleData={moduleData}
         />
+
+        {/* What would you do Monday? — Converts case learning into operator behavior. */}
+        {!state.applicationContext || state.applicationContext.type !== 'observer' ? (
+          <div className="mt-8 p-4 border border-charcoal/20 bg-parchment/30" style={{ borderRadius: 0 }}>
+            <p className="label-small-caps text-charcoal/60 mb-2">What would you do Monday?</p>
+            <p className="tier-3-guidance text-sm mb-3">In the next 7 days, what changes in the world if you&apos;re right?</p>
+            <textarea
+              value={moduleOutput?.whatWouldChangeIn7Days ?? ''}
+              onChange={(e) => updateModuleOutput(moduleId, { whatWouldChangeIn7Days: e.target.value })}
+              placeholder="One sentence or a few bullets."
+              className="w-full worksheet-field min-h-[80px]"
+              style={{ borderRadius: 0 }}
+            />
+          </div>
+        ) : null}
 
         {/* Complete Button */}
         <div className="flex flex-col-reverse sm:flex-row justify-end gap-3 sm:gap-4 mt-6">

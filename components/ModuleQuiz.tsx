@@ -6,9 +6,11 @@ import { getQuizForModule } from '@/data/moduleQuizzes';
 interface ModuleQuizProps {
   moduleId: string;
   onQuizComplete?: (correctCount: number, total: number) => void;
+  /** When true, used on dedicated quiz page—larger spacing, no surrounding module. */
+  standalone?: boolean;
 }
 
-export default function ModuleQuiz({ moduleId, onQuizComplete }: ModuleQuizProps) {
+export default function ModuleQuiz({ moduleId, onQuizComplete, standalone = false }: ModuleQuizProps) {
   const quiz = getQuizForModule(moduleId);
   const [selected, setSelected] = useState<{ [qId: string]: number }>({});
   const [submitted, setSubmitted] = useState(false);
@@ -25,20 +27,20 @@ export default function ModuleQuiz({ moduleId, onQuizComplete }: ModuleQuizProps
   const allAnswered = quiz.questions.every((q) => selected[q.id] !== undefined);
 
   return (
-    <div className="command-center p-6 mb-8 border border-charcoal/20 vertical-rule" style={{ borderRadius: 0 }}>
+    <div className={`command-center p-6 ${standalone ? 'py-8 px-6 sm:py-10' : 'mb-8'} border border-charcoal/20 vertical-rule`} style={{ borderRadius: 0 }}>
       <h3 className="tier-2-instruction text-xl mb-2">KEY CONCEPTS CHECK</h3>
       <p className="label-small-caps text-charcoal/60 mb-4">
         Ivy syllabus: {quiz.title}
       </p>
 
-      <div className="space-y-6">
+      <div className={standalone ? 'space-y-8' : 'space-y-6'}>
         {quiz.questions.map((q) => {
           const userChoice = selected[q.id];
           const isCorrect = userChoice === q.correctIndex;
           const showResult = submitted;
 
           return (
-            <div key={q.id} className="border-b border-charcoal/10 pb-4 last:border-0">
+            <div key={q.id} className={`border-b border-charcoal/10 ${standalone ? 'pb-6' : 'pb-4'} last:border-0`}>
               <p className="tier-2-instruction text-base mb-3">{q.question}</p>
               <div className="space-y-2">
                 {q.options.map((opt, idx) => {

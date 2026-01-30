@@ -4,17 +4,44 @@ import { useBusinessState } from '@/store/useBusinessState';
 import { getModulesInOrder } from '@/data/all-modules';
 import { useState } from 'react';
 import { jsPDF } from 'jspdf';
+import StrategyNoteForm from '@/components/StrategyNoteForm';
+import StakeholderMap from '@/components/StakeholderMap';
+import BoardPushbackCards from '@/components/BoardPushbackCards';
+import ColdCallDefense from '@/components/ColdCallDefense';
 
 export default function BoardMemoPage() {
   const { state } = useBusinessState();
   const modules = getModulesInOrder();
   const [memo, setMemo] = useState('');
+  const [activeTab, setActiveTab] = useState<'memo' | 'strategy-note' | 'stakeholder' | 'pushback'>('memo');
 
   const generateMemo = () => {
     let memoContent = `# Strategic Board Memo\n\n`;
     memoContent += `Generated: ${new Date().toLocaleDateString()}\n\n`;
-    memoContent += `Board Credibility Score: ${state.boardCredibilityScore}/100\n\n`;
-    memoContent += `---\n\n`;
+    memoContent += `Board Credibility Score: ${state.boardCredibilityScore}/100\n`;
+    if (state.boardMemoRubricScore != null) {
+      memoContent += `Strategy Note Rubric Score: ${state.boardMemoRubricScore}/100\n`;
+    }
+    memoContent += `\n---\n\n`;
+
+    // Strategy Note (2-page locked form)
+    if (state.strategyNote) {
+      memoContent += `## Strategy Note\n\n`;
+      memoContent += `**Thesis:** ${state.strategyNote.thesis}\n\n`;
+      memoContent += `**Evidence:**\n`;
+      (state.strategyNote.evidence || []).forEach((e) => { memoContent += `- ${e}\n`; });
+      memoContent += `\n**Tradeoffs:**\n`;
+      (state.strategyNote.tradeoffs || []).forEach((t) => { memoContent += `- ${t}\n`; });
+      memoContent += `\n**Risks:**\n`;
+      (state.strategyNote.risks || []).forEach((r) => { memoContent += `- ${r}\n`; });
+      memoContent += `\n**Mitigations:**\n`;
+      (state.strategyNote.mitigations || []).forEach((m) => { memoContent += `- ${m}\n`; });
+      memoContent += `\n**Decision:** ${state.strategyNote.decision}\n`;
+      if (state.strategyNote.whatWouldChangeIn7Days) {
+        memoContent += `\n**What would you do Monday?** ${state.strategyNote.whatWouldChangeIn7Days}\n`;
+      }
+      memoContent += `\n---\n\n`;
+    }
 
     // Executive Summary
     memoContent += `## Executive Summary\n\n`;
@@ -165,8 +192,56 @@ export default function BoardMemoPage() {
   return (
     <div className="min-h-screen bg-cream p-8">
       <div className="max-w-4xl mx-auto">
-        <h1 className="font-serif text-4xl text-ink mb-8">Board Memo Generator</h1>
-        
+        <h1 className="font-serif text-4xl text-ink mb-8">Board Memo & Strategy Note</h1>
+
+        <div className="flex flex-wrap gap-1 border-b border-charcoal/20 mb-6">
+          <button
+            type="button"
+            onClick={() => setActiveTab('memo')}
+            className={`label-small-caps px-3 py-2 text-xs sm:px-4 sm:py-2 sm:text-sm ${activeTab === 'memo' ? 'border-b-2 border-ink text-ink' : 'text-charcoal/60 hover:text-ink'}`}
+          >
+            Board Memo
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab('strategy-note')}
+            className={`label-small-caps px-3 py-2 text-xs sm:px-4 sm:py-2 sm:text-sm ${activeTab === 'strategy-note' ? 'border-b-2 border-ink text-ink' : 'text-charcoal/60 hover:text-ink'}`}
+          >
+            Strategy Note
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab('stakeholder')}
+            className={`label-small-caps px-3 py-2 text-xs sm:px-4 sm:py-2 sm:text-sm ${activeTab === 'stakeholder' ? 'border-b-2 border-ink text-ink' : 'text-charcoal/60 hover:text-ink'}`}
+          >
+            Stakeholder Map
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab('pushback')}
+            className={`label-small-caps px-3 py-2 text-xs sm:px-4 sm:py-2 sm:text-sm ${activeTab === 'pushback' ? 'border-b-2 border-ink text-ink' : 'text-charcoal/60 hover:text-ink'}`}
+          >
+            Board Pushback
+          </button>
+        </div>
+
+        {activeTab === 'strategy-note' && (
+          <div className="command-center p-6 mb-6 border border-charcoal/20" style={{ borderRadius: 0 }}>
+            <StrategyNoteForm />
+            <ColdCallDefense />
+          </div>
+        )}
+        {activeTab === 'stakeholder' && (
+          <div className="command-center p-6 mb-6 border border-charcoal/20" style={{ borderRadius: 0 }}>
+            <StakeholderMap />
+          </div>
+        )}
+        {activeTab === 'pushback' && (
+          <div className="command-center p-6 mb-6 border border-charcoal/20" style={{ borderRadius: 0 }}>
+            <BoardPushbackCards />
+          </div>
+        )}
+
         <div className="command-center rounded-lg p-6 mb-6">
           <button
             onClick={generateMemo}

@@ -73,6 +73,7 @@ export async function createProject(
 }
 
 export async function getProject(projectId: string): Promise<IvyProject | null> {
+  if (String(projectId).startsWith('local-')) return null;
   const ref = doc(db, PROJECTS_COLLECTION, projectId);
   const snap = await getDoc(ref);
   if (!snap.exists()) return null;
@@ -84,6 +85,7 @@ export async function updateProject(
   state: Pick<BusinessState, 'moduleOutputs' | 'boardCredibilityScore' | 'economicConstraints' | 'controlLogic'>,
   progress: Progress
 ): Promise<void> {
+  if (String(projectId).startsWith('local-')) return;
   const ref = doc(db, PROJECTS_COLLECTION, projectId);
   await setDoc(
     ref,

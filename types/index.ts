@@ -1,9 +1,14 @@
 // Core Data Models for Strategic Logic Engine
 import { ApplicationContext } from './context';
+import type { CaseMode } from './case';
 
 export interface BusinessState {
   // Application Context (required before starting)
   applicationContext?: ApplicationContext;
+  /** Case Method Immersion: My Company vs Case Mode (HBS-style). */
+  caseMode?: CaseMode;
+  /** When caseMode === 'case', which case pack is active. */
+  activeCasePackId?: string;
   // Pillar I: Foundations
   economicConstraints: {
     unitEconomics?: {
@@ -48,9 +53,43 @@ export interface BusinessState {
   
   // Credibility score (affected by Cold Calls)
   boardCredibilityScore: number;
-  
+
+  /** 2-page Strategy Note (Yale/HBS): claim → evidence → tradeoffs → risks → decision. Rubric-scored. */
+  strategyNote?: StrategyNote;
+  /** Rubric score 0–100: specificity, falsifiability, tradeoff clarity, evidence linkage, risk honesty. */
+  boardMemoRubricScore?: number;
+
+  /** Stakeholder map + org friction (Execution Under Incentives). */
+  stakeholderMap?: StakeholderEntry[];
+  /** Boardroom pushback responses: CFO, Sales, Ops (3 bullets each). */
+  boardPushbackResponses?: Record<string, string[]>;
+
+  /** Cold Call Defense: 3 follow-ups after Strategy Note. */
+  coldCallDefenseResponses?: Record<string, string>;
+
   // Timestamp
   lastUpdated: string;
+}
+
+export interface StrategyNote {
+  thesis: string;
+  evidence: string[]; // 3 bullets, each with "because"
+  tradeoffs: string[]; // 2 bullets
+  risks: string[]; // top 2
+  mitigations: string[]; // 1 per risk
+  decision: string;
+  whatWouldChangeIn7Days?: string; // "What would you do Monday?"
+}
+
+export interface StakeholderEntry {
+  id: string;
+  name: string;
+  role: string;
+  power: 1 | 2 | 3 | 4 | 5;
+  incentiveAlignment: number; // -2 to +2
+  vetoAbility: boolean;
+  fearsLosing: string;
+  wantsToGain: string;
 }
 
 export interface Experiment {
@@ -75,6 +114,10 @@ export interface ModuleOutput {
   redTeamResponse?: string;
   quizScore?: number;
   quizTotal?: number;
+  /** "What would you do Monday?" — In the next 7 days, what changes in the world if you're right? */
+  whatWouldChangeIn7Days?: string;
+  /** Legitimacy lens answers (Yale): who could attack, exploitative risk, implicit promise. */
+  legitimacyLensResponses?: Record<string, string>;
   timestamp: string;
 }
 
@@ -84,6 +127,19 @@ export interface WorksheetData {
     [key: string]: string | number | boolean;
   };
   completed: boolean;
+}
+
+/** Professor Notes: what elite courses do better than frameworks. */
+export interface ProfessorNotes {
+  whatStudentsGetWrong: string;
+  whatAplusSmellsLike: string;
+  theTrap: string;
+}
+
+/** Sample answers for Socratic feedback. */
+export interface SampleAnswers {
+  strong: { text: string; why: string };
+  weak: { text: string; whyFails: string };
 }
 
 export interface Module {
@@ -102,6 +158,16 @@ export interface Module {
   boardLens?: string;
   requiredOutputs: RequiredOutput[];
   order: number;
+  /** Faculty layer: what students get wrong, A+ smell, the trap. */
+  professorNotes?: ProfessorNotes;
+  /** Two sample answers: one strong (why), one weak (why it fails). */
+  sampleAnswers?: SampleAnswers;
+  /** Legitimacy lens (Yale): who could attack, what looks exploitative, implicit promise. */
+  legitimacyLens?: {
+    whoCouldAttack: string;
+    whatLooksExploitative: string;
+    implicitPromise: string;
+  };
 }
 
 export interface Framework {

@@ -3,6 +3,7 @@ import './globals.css'
 import Providers from '@/components/Providers'
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? 'https://ivy-workbook.vercel.app'),
   title: 'Ivy Workbook',
   description: 'Marketing as Value Architecture - A Strategic Decision-Making Environment',
   icons: {

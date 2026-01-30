@@ -10,6 +10,7 @@ import { useEffect, useState, useRef } from 'react';
 import dynamic from 'next/dynamic';
 import { exportModulePDFWithCorner } from '@/utils/exportModulePDF';
 import { caseStudies } from '@/data/caseStudies';
+import { casePacks, getCasePackById } from '@/data/casePacks';
 
 const ValueWedge = dynamic(() => import('@/components/ValueWedge'), { ssr: false });
 const LiveValuationCAC = dynamic(() => import('@/components/LiveValuationCAC'), { ssr: false });
@@ -17,7 +18,7 @@ const StrategicTrajectoryGraph = dynamic(() => import('@/components/StrategicTra
 
 export default function Home() {
   const router = useRouter();
-  const { state } = useBusinessState();
+  const { state, setCaseMode } = useBusinessState();
   const { progress } = useProgress();
   const currentProjectId = useProjectStore((s) => s.currentProjectId);
   const loadProject = useProjectStore((s) => s.loadProject);
@@ -79,6 +80,7 @@ export default function Home() {
           <header className="mb-8">
             <div className="flex items-start gap-4">
               <a href="/" className="shrink-0 self-start mt-[-2px]" aria-label="Ivy home">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src="/ivy-corner-logo.png" alt="IVY" className="h-14 w-14 sm:h-16 sm:w-16 object-contain" />
               </a>
               <div className="min-w-0">
@@ -170,7 +172,7 @@ export default function Home() {
               <button
                 type="button"
                 onClick={() => router.push(`/modules/${module.id}`)}
-                className="label-small-caps bg-charcoal text-cream hover:bg-gold px-3 py-2 text-sm transition-colors [color:var(--cream)]"
+                className="label-small-caps bg-charcoal !text-cream hover:bg-gold hover:!text-ink px-3 py-2 text-sm transition-colors"
                 style={{ borderRadius: 0 }}
               >
                 Open
@@ -190,6 +192,7 @@ export default function Home() {
           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-4">
             <div className="flex items-start gap-4">
               <a href="/" className="shrink-0 self-start mt-[-2px]" aria-label="Ivy home">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src="/ivy-corner-logo.png" alt="IVY" className="h-14 w-14 sm:h-16 sm:w-16 object-contain" />
               </a>
               <div className="min-w-0">
@@ -207,6 +210,28 @@ export default function Home() {
               </div>
             </div>
             <div className="flex flex-wrap items-center justify-end gap-2 sm:gap-4 ml-auto sm:ml-0">
+            {/* Case Mode toggle: My Company | Case Mode (HBS-style immersion) */}
+            <div className="flex border border-charcoal/20" style={{ borderRadius: 0 }}>
+              <button
+                type="button"
+                onClick={() => setCaseMode('my-company')}
+                className={`label-small-caps px-3 py-2 text-xs transition-colors ${state.caseMode !== 'case' ? 'bg-ink text-cream' : 'bg-cream text-charcoal/70 hover:bg-parchment/50'}`}
+              >
+                My Company
+              </button>
+              <button
+                type="button"
+                onClick={() => setCaseMode('case', casePacks[0]?.id)}
+                className={`label-small-caps px-3 py-2 text-xs transition-colors ${state.caseMode === 'case' ? 'bg-ink text-cream' : 'bg-cream text-charcoal/70 hover:bg-parchment/50'}`}
+              >
+                Case Mode
+              </button>
+            </div>
+            {state.caseMode === 'case' && state.activeCasePackId && (
+              <span className="label-small-caps text-charcoal/60 text-xs">
+                {getCasePackById(state.activeCasePackId)?.company_name ?? 'Case'}
+              </span>
+            )}
             <Link
               href="/dashboard"
               className="label-small-caps text-charcoal/60 hover:text-ink text-sm"
