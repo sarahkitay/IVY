@@ -2,16 +2,18 @@
 
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import Image from 'next/image';
 import { useBusinessState } from '@/store/useBusinessState';
 import { useProgress } from '@/store/useProgress';
 import { useProjectStore } from '@/store/useProjectStore';
-import { getModulesByPillar } from '@/data/all-modules';
+import { getModulesByPillar, getModuleById, getModulesInOrder } from '@/data/all-modules';
 import { useEffect, useState, useRef } from 'react';
-import ValueWedge from '@/components/ValueWedge';
-import StrategicTrajectoryGraph from '@/components/StrategicTrajectoryGraph';
-import LiveValuationCAC from '@/components/LiveValuationCAC';
+import dynamic from 'next/dynamic';
+import { exportModulePDF } from '@/utils/exportModulePDF';
 import { caseStudies } from '@/data/caseStudies';
+
+const ValueWedge = dynamic(() => import('@/components/ValueWedge'), { ssr: false });
+const LiveValuationCAC = dynamic(() => import('@/components/LiveValuationCAC'), { ssr: false });
+const StrategicTrajectoryGraph = dynamic(() => import('@/components/StrategicTrajectoryGraph'), { ssr: false });
 
 export default function Home() {
   const router = useRouter();
@@ -64,17 +66,119 @@ export default function Home() {
     );
   }
 
-  if (hydrating || (currentProjectId && !state.applicationContext && !String(currentProjectId).startsWith('local-'))) {
-    return (
-      <div className="min-h-screen bg-cream flex items-center justify-center">
-        <p className="text-charcoal">Loading project…</p>
-      </div>
-    );
-  }
+  const stillHydrating = currentProjectId && !state.applicationContext && !String(currentProjectId).startsWith('local-');
 
   if (!currentProjectId) {
     return null; // Will redirect to dashboard
   }
+
+  if (stillHydrating) {
+    return (
+      <div className="min-h-screen bg-cream overflow-x-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 min-w-0">
+          <header className="mb-8">
+            <div className="flex items-start gap-4">
+              <a href="/" className="shrink-0 overflow-hidden w-14 h-14 sm:w-16 sm:h-16" aria-label="Ivy home">
+                <img src="/IVY.svg" alt="IVY" className="h-14 w-14 sm:h-16 sm:w-16 object-contain object-left ivy-logo-wipe" />
+              </a>
+              <div className="min-w-0 overflow-hidden">
+                <div className="ivy-logo-wipe overflow-hidden inline-block max-w-[200px] sm:max-w-[280px] mb-2">
+                  <img src="/IVY.svg" alt="IVY" className="h-10 sm:h-12 w-auto object-contain object-left" />
+                </div>
+                <p className="tier-2-instruction text-lg">Marketing as Value Architecture</p>
+              </div>
+            </div>
+          </header>
+          <div className="flex items-center justify-center py-16">
+            <p className="text-charcoal/70">Loading project…</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const modulesInOrder = getModulesInOrder();
+  const nextModule = modulesInOrder.find((m) => progress.unlockedModules.includes(m.id) && !progress.completedModules.includes(m.id))
+    ?? modulesInOrder.filter((m) => progress.unlockedModules.includes(m.id)).pop() ?? modulesInOrder[0];
+
+  const renderModuleCard = (module: ReturnType<typeof getModulesInOrder>[0]) => {
+    const isCompleted = progress.completedModules.includes(module.id);
+    const isUnlocked = progress.unlockedModules.includes(module.id);
+    const moduleOutput = state.moduleOutputs[module.id];
+    const hasIncompleteOutputs = module.requiredOutputs.some((req) => {
+      if (req.source) {
+        const worksheet = moduleOutput?.worksheets?.[req.source];
+        return !worksheet?.fields?.[req.id];
+      }
+      return !moduleOutput?.requiredOutputs?.[req.id];
+    });
+    const moduleData = getModuleById(module.id);
+    return (
+      <div
+        key={module.id}
+        className={`command-center p-6 transition-all border-l-4 ${
+          isCompleted ? 'border-sage' : hasIncompleteOutputs ? 'border-orange-300' : 'border-transparent'
+        } ${isUnlocked ? 'hover:shadow-md' : 'opacity-50'}`}
+        style={{ borderRadius: 0 }}
+      >
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <button
+            type="button"
+            onClick={() => isUnlocked && router.push(`/modules/${module.id}`)}
+            disabled={!isUnlocked}
+            className="flex-1 text-left min-w-0"
+          >
+            <div className="flex items-center gap-3 mb-2">
+              <p className="label-small-caps">MODULE {module.order}</p>
+              {hasIncompleteOutputs && !isCompleted && (
+                <span className="incomplete-flag">
+                  <span className="label-small-caps text-orange-700">
+                    {module.order % 2 === 0 ? 'UNPROVEN' : 'NOT DEFENSIBLE'}
+                  </span>
+                </span>
+              )}
+              {isCompleted && (
+                <span className="incomplete-flag board-ready status-change">
+                  <span className="label-small-caps text-green-700">BOARD-READY</span>
+                </span>
+              )}
+            </div>
+            <h4 className="tier-1-gravitas text-xl mb-1">{module.title}</h4>
+            {hasIncompleteOutputs && !isCompleted && (
+              <p className="tier-3-guidance mt-1">Founders who skip this section usually blame execution later.</p>
+            )}
+            <div className="mt-2">
+              {isCompleted && <span className="text-sage text-sm">✓ Completed</span>}
+              {!isUnlocked && <span className="text-charcoal/40 text-sm">Locked</span>}
+            </div>
+          </button>
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                if (moduleData) exportModulePDF(moduleData, module.id, state);
+              }}
+              className="label-small-caps border border-charcoal/25 hover:bg-charcoal/5 px-3 py-2 text-sm"
+              style={{ borderRadius: 0 }}
+            >
+              Save as PDF
+            </button>
+            {isUnlocked && (
+              <button
+                type="button"
+                onClick={() => router.push(`/modules/${module.id}`)}
+                className="label-small-caps bg-charcoal text-white hover:bg-ink px-3 py-2 text-sm"
+                style={{ borderRadius: 0 }}
+              >
+                Open
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   return (
     <div className="min-h-screen bg-cream overflow-x-hidden">
@@ -83,19 +187,13 @@ export default function Home() {
         <header className="mb-8 sm:mb-12">
           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-4">
             <div className="flex items-start gap-4">
-              <a href="/" className="shrink-0" aria-label="Ivy Workbook home">
-                <Image
-                  src="/logo.png"
-                  alt="Ivy Workbook"
-                  width={72}
-                  height={72}
-                  className="h-14 w-14 sm:h-16 sm:w-16 object-contain"
-                />
+              <a href="/" className="shrink-0 overflow-hidden w-14 h-14 sm:w-16 sm:h-16" aria-label="Ivy home">
+                <img src="/IVY.svg" alt="IVY" className="h-14 w-14 sm:h-16 sm:w-16 object-contain object-left ivy-logo-wipe" />
               </a>
-              <div>
-                <h1 className="tier-1-gravitas text-3xl sm:text-5xl mb-2">
-                  IVY WORKBOOK
-                </h1>
+              <div className="min-w-0 overflow-hidden">
+                <div className="ivy-logo-wipe overflow-hidden inline-block max-w-[200px] sm:max-w-[280px] mb-2">
+                  <img src="/IVY.svg" alt="IVY" className="h-10 sm:h-12 w-auto object-contain object-left" />
+                </div>
               <p className="tier-2-instruction text-lg">
                 Marketing as Value Architecture
               </p>
@@ -170,6 +268,13 @@ export default function Home() {
           </div>
         </div>
 
+        {/* Next / current module only — expand to see all */}
+        <h3 className="label-small-caps mb-3">
+          {progress.completedModules.includes(nextModule.id) ? 'Current module' : 'Next module'}
+        </h3>
+        <div className="mb-4">
+          {renderModuleCard(nextModule)}
+        </div>
         <button
           type="button"
           onClick={() => setShowAllModules((v) => !v)}
@@ -181,218 +286,31 @@ export default function Home() {
 
         {showAllModules && (
         <>
-        {/* Pillar I Modules */}
         <div className="space-y-4 mb-12">
           <h3 className="label-small-caps mb-6">PILLAR I MODULES</h3>
-          {getModulesByPillar('pillar-1').map((module) => {
-            const isCompleted = progress.completedModules.includes(module.id);
-            const isUnlocked = progress.unlockedModules.includes(module.id);
-            const moduleOutput = state.moduleOutputs[module.id];
-            const hasIncompleteOutputs = module.requiredOutputs.some((req) => {
-              if (req.source) {
-                const worksheet = moduleOutput?.worksheets?.[req.source];
-                return !worksheet?.fields?.[req.id];
-              }
-              return !moduleOutput?.requiredOutputs?.[req.id];
-            });
-            
-            return (
-              <button
-                key={module.id}
-                onClick={() => router.push(`/modules/${module.id}`)}
-                disabled={!isUnlocked}
-                className={`w-full text-left command-center p-6 transition-all ${
-                  isUnlocked
-                    ? 'hover:shadow-md cursor-pointer'
-                    : 'opacity-50 cursor-not-allowed'
-                } ${isCompleted ? 'border-l-4 border-sage' : hasIncompleteOutputs ? 'border-l-4 border-orange-300' : ''}`}
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2">
-                      <p className="label-small-caps">MODULE {module.order}</p>
-                      {hasIncompleteOutputs && !isCompleted && (
-                        <span className="incomplete-flag">
-                          <span className="label-small-caps text-orange-700">
-                            {module.order % 2 === 0 ? 'UNPROVEN' : 'NOT DEFENSIBLE'}
-                          </span>
-                        </span>
-                      )}
-                      {isCompleted && (
-                        <span className="incomplete-flag board-ready status-change">
-                          <span className="label-small-caps text-green-700">BOARD-READY</span>
-                        </span>
-                      )}
-                    </div>
-                    <h4 className="tier-1-gravitas text-xl mb-1">{module.title}</h4>
-                    {hasIncompleteOutputs && !isCompleted && (
-                      <p className="tier-3-guidance mt-1">
-                        Founders who skip this section usually blame execution later.
-                      </p>
-                    )}
-                  </div>
-                  <div className="text-right">
-                    {isCompleted && (
-                      <span className="text-sage text-sm">✓ Completed</span>
-                    )}
-                    {!isUnlocked && (
-                      <span className="text-charcoal/40 text-sm">Locked</span>
-                    )}
-                  </div>
-                </div>
-              </button>
-            );
-          })}
+          {getModulesByPillar('pillar-1').map((m) => renderModuleCard(m))}
         </div>
-
-        {/* Pillar II Header - Tier A */}
         <div className="mb-8">
           <div className="tier-a text-center py-12">
             <p className="label-small-caps mb-2">PILLAR II</p>
             <h2 className="font-serif text-4xl text-ink mb-4">CONSUMER BEHAVIOR & PSYCHOGRAPHICS</h2>
-            <p className="tier-a-statement text-lg">
-              Engineering Perceived Value
-            </p>
+            <p className="tier-a-statement text-lg">Engineering Perceived Value</p>
           </div>
         </div>
-
-        {/* Pillar II Modules */}
         <div className="space-y-4 mb-12">
           <h3 className="label-small-caps mb-6">PILLAR II MODULES</h3>
-          {getModulesByPillar('pillar-2').map((module) => {
-            const isCompleted = progress.completedModules.includes(module.id);
-            const isUnlocked = progress.unlockedModules.includes(module.id);
-            const moduleOutput = state.moduleOutputs[module.id];
-            const hasIncompleteOutputs = module.requiredOutputs.some((req) => {
-              if (req.source) {
-                const worksheet = moduleOutput?.worksheets?.[req.source];
-                return !worksheet?.fields?.[req.id];
-              }
-              return !moduleOutput?.requiredOutputs?.[req.id];
-            });
-            
-            return (
-              <button
-                key={module.id}
-                onClick={() => router.push(`/modules/${module.id}`)}
-                disabled={!isUnlocked}
-                className={`w-full text-left command-center p-6 transition-all ${
-                  isUnlocked
-                    ? 'hover:shadow-md cursor-pointer'
-                    : 'opacity-50 cursor-not-allowed'
-                } ${isCompleted ? 'border-l-4 border-sage' : hasIncompleteOutputs ? 'border-l-4 border-orange-300' : ''}`}
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2">
-                      <p className="label-small-caps">MODULE {module.order}</p>
-                      {hasIncompleteOutputs && !isCompleted && (
-                        <span className="incomplete-flag">
-                          <span className="label-small-caps text-orange-700">
-                            {module.order % 2 === 0 ? 'UNPROVEN' : 'NOT DEFENSIBLE'}
-                          </span>
-                        </span>
-                      )}
-                      {isCompleted && (
-                        <span className="incomplete-flag board-ready status-change">
-                          <span className="label-small-caps text-green-700">BOARD-READY</span>
-                        </span>
-                      )}
-                    </div>
-                    <h4 className="tier-1-gravitas text-xl mb-1">{module.title}</h4>
-                    {hasIncompleteOutputs && !isCompleted && (
-                      <p className="tier-3-guidance mt-1">
-                        Founders who skip this section usually blame execution later.
-                      </p>
-                    )}
-                  </div>
-                  <div className="text-right">
-                    {isCompleted && (
-                      <span className="text-sage text-sm">✓ Completed</span>
-                    )}
-                    {!isUnlocked && (
-                      <span className="text-charcoal/40 text-sm">Locked</span>
-                    )}
-                  </div>
-                </div>
-              </button>
-            );
-          })}
+          {getModulesByPillar('pillar-2').map((m) => renderModuleCard(m))}
         </div>
-
-        {/* Pillar III Header - Tier A */}
         <div className="mb-8">
           <div className="tier-a text-center py-12">
             <p className="label-small-caps mb-2">PILLAR III</p>
             <h2 className="font-serif text-4xl text-ink mb-4">GROWTH SYSTEMS & DATA SCIENCE</h2>
-            <p className="tier-a-statement text-lg">
-              Wharton / Stanford / HBS Lens
-            </p>
+            <p className="tier-a-statement text-lg">Wharton / Stanford / HBS Lens</p>
           </div>
         </div>
-
-        {/* Pillar III Modules */}
         <div className="space-y-4">
           <h3 className="label-small-caps mb-6">PILLAR III MODULES</h3>
-          {getModulesByPillar('pillar-3').map((module) => {
-            const isCompleted = progress.completedModules.includes(module.id);
-            const isUnlocked = progress.unlockedModules.includes(module.id);
-            const moduleOutput = state.moduleOutputs[module.id];
-            const hasIncompleteOutputs = module.requiredOutputs.some((req) => {
-              if (req.source) {
-                const worksheet = moduleOutput?.worksheets?.[req.source];
-                return !worksheet?.fields?.[req.id];
-              }
-              return !moduleOutput?.requiredOutputs?.[req.id];
-            });
-            
-            return (
-              <button
-                key={module.id}
-                onClick={() => router.push(`/modules/${module.id}`)}
-                disabled={!isUnlocked}
-                className={`w-full text-left command-center p-6 transition-all ${
-                  isUnlocked
-                    ? 'hover:shadow-md cursor-pointer'
-                    : 'opacity-50 cursor-not-allowed'
-                } ${isCompleted ? 'border-l-4 border-sage' : hasIncompleteOutputs ? 'border-l-4 border-orange-300' : ''}`}
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2">
-                      <p className="label-small-caps">MODULE {module.order}</p>
-                      {hasIncompleteOutputs && !isCompleted && (
-                        <span className="incomplete-flag">
-                          <span className="label-small-caps text-orange-700">
-                            {module.order % 2 === 0 ? 'UNPROVEN' : 'NOT DEFENSIBLE'}
-                          </span>
-                        </span>
-                      )}
-                      {isCompleted && (
-                        <span className="incomplete-flag board-ready status-change">
-                          <span className="label-small-caps text-green-700">BOARD-READY</span>
-                        </span>
-                      )}
-                    </div>
-                    <h4 className="tier-1-gravitas text-xl mb-1">{module.title}</h4>
-                    {hasIncompleteOutputs && !isCompleted && (
-                      <p className="tier-3-guidance mt-1">
-                        Founders who skip this section usually blame execution later.
-                      </p>
-                    )}
-                  </div>
-                  <div className="text-right">
-                    {isCompleted && (
-                      <span className="text-sage text-sm">✓ Completed</span>
-                    )}
-                    {!isUnlocked && (
-                      <span className="text-charcoal/40 text-sm">Locked</span>
-                    )}
-                  </div>
-                </div>
-              </button>
-            );
-          })}
+          {getModulesByPillar('pillar-3').map((m) => renderModuleCard(m))}
         </div>
         </>
         )}

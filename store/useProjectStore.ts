@@ -61,7 +61,7 @@ export const useProjectStore = create<ProjectStore>()(
         const state = useBusinessState.getState().state;
         const progress = useProgress.getState().progress;
 
-        const FIREBASE_TIMEOUT_MS = 8000;
+        const FIREBASE_TIMEOUT_MS = 15000;
         let id: string;
         try {
           id = await Promise.race([
@@ -70,10 +70,12 @@ export const useProjectStore = create<ProjectStore>()(
               setTimeout(() => reject(new Error('timeout')), FIREBASE_TIMEOUT_MS)
             ),
           ]);
+          set({ currentProjectId: id });
+          await get().syncCurrentProjectToFirebase();
         } catch (_e) {
           id = `local-${Date.now()}`;
+          set({ currentProjectId: id });
         }
-        set({ currentProjectId: id });
         return id;
       },
 

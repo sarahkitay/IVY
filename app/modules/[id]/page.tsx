@@ -18,7 +18,7 @@ import FiveCsFramework from '@/components/FiveCsFramework';
 import ModuleQuiz from '@/components/ModuleQuiz';
 import { WorksheetData } from '@/types';
 import { getCaseStudyById } from '@/data/caseStudies';
-import { jsPDF } from 'jspdf';
+import { exportModulePDF } from '@/utils/exportModulePDF';
 
 export default function ModulePage() {
   const params = useParams();
@@ -75,56 +75,7 @@ export default function ModulePage() {
 
   const handleExportPDF = () => {
     if (!moduleData) return;
-    const doc = new jsPDF({ format: 'a4', unit: 'pt' });
-    const margin = 40;
-    let y = margin;
-    const lineHeight = 14;
-    const addText = (text: string, fontSize = 10, bold = false) => {
-      doc.setFontSize(fontSize);
-      doc.setFont('helvetica', bold ? 'bold' : 'normal');
-      const lines = doc.splitTextToSize(text, doc.internal.pageSize.getWidth() - margin * 2);
-      lines.forEach((line: string) => {
-        if (y > doc.internal.pageSize.getHeight() - 40) {
-          doc.addPage();
-          y = margin;
-        }
-        doc.text(line, margin, y);
-        y += lineHeight;
-      });
-    };
-    doc.setFillColor(26, 26, 26);
-    doc.rect(0, 0, doc.internal.pageSize.getWidth(), 52, 'F');
-    doc.setTextColor(255, 255, 255);
-    doc.setFontSize(18);
-    doc.setFont('helvetica', 'bold');
-    doc.text('IVY WORKBOOK', margin, 34);
-    doc.setFontSize(9);
-    doc.setFont('helvetica', 'normal');
-    doc.text('Marketing as Value Architecture | Ivy-branded module summary', margin, 46);
-    doc.setTextColor(0, 0, 0);
-    y = 70;
-    addText(`${moduleData.pillar === 'pillar-1' ? 'PILLAR I' : moduleData.pillar === 'pillar-2' ? 'PILLAR II' : 'PILLAR III'} — MODULE ${moduleData.order}`, 10, true);
-    addText(moduleData.title, 14, true);
-    y += 8;
-    addText(moduleData.thesis, 10);
-    y += 12;
-    addText('WHY THIS MODULE EXISTS', 10, true);
-    addText(`Academic: ${moduleData.whyExists.academic}`, 9);
-    addText(`Operator: ${moduleData.whyExists.operator}`, 9);
-    y += 8;
-    moduleData.frameworks.forEach((fw) => {
-      addText(fw.title, 10, true);
-      addText(fw.description, 9);
-      y += 4;
-    });
-    addText('REQUIRED OUTPUTS', 10, true);
-    moduleData.requiredOutputs.forEach((req) => {
-      const val = req.source
-        ? (state.moduleOutputs[moduleId]?.worksheets?.[req.source]?.fields?.[req.id] ?? '—')
-        : (state.moduleOutputs[moduleId]?.requiredOutputs?.[req.id] ?? '—');
-      addText(`${req.label}: ${String(val)}`, 9);
-    });
-    doc.save(`Ivy-Workbook-${moduleData.title.replace(/\s+/g, '-')}-${moduleId}.pdf`);
+    exportModulePDF(moduleData, moduleId, state);
   };
 
   const handleCompleteModule = () => {
@@ -208,7 +159,7 @@ export default function ModulePage() {
               onClick={() => router.push('/')}
               className="text-charcoal/60 hover:text-ink text-sm min-h-[44px] touch-manipulation inline-flex items-center gap-2"
             >
-              <Image src="/logo.png" alt="" width={32} height={32} className="h-8 w-8 object-contain" />
+              <img src="/IVY.svg" alt="IVY" className="h-8 w-8 object-contain" />
               ← Back to Modules
             </button>
             <button

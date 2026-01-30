@@ -1,26 +1,58 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { useProjectStore } from '@/store/useProjectStore';
 import { IvyProject } from '@/types/project';
 import { caseStudies } from '@/data/caseStudies';
+import { getProject } from '@/lib/projects';
 
 export default function DashboardPage() {
   const router = useRouter();
+  const currentProjectId = useProjectStore((s) => s.currentProjectId);
   const { listProjects, loadProject, setCurrentProjectId } = useProjectStore();
   const [projects, setProjects] = useState<IvyProject[]>([]);
+  const [currentProject, setCurrentProject] = useState<IvyProject | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    let cancelled = false;
     listProjects()
-      .then(setProjects)
-      .catch(() => setProjects([]))
-      .finally(() => setLoading(false));
+      .then((list) => { if (!cancelled) setProjects(list); })
+      .catch(() => { if (!cancelled) setProjects([]); })
+      .finally(() => { if (!cancelled) setLoading(false); });
+    return () => { cancelled = true; };
   }, [listProjects]);
 
+  useEffect(() => {
+    if (!currentProjectId) {
+      setCurrentProject(null);
+      return;
+    }
+    let cancelled = false;
+    if (String(currentProjectId).startsWith('local-')) {
+      setCurrentProject({
+        id: currentProjectId,
+        name: 'Current session (not saved to cloud)',
+        applicationContext: { type: 'observer' },
+        state: { moduleOutputs: {}, boardCredibilityScore: 0, economicConstraints: {}, controlLogic: {} },
+        progress: { currentModule: 'module-1', completedModules: [], unlockedModules: ['module-1'], overallProgress: 0, pillar1Progress: 0, pillar2Progress: 0, pillar3Progress: 0 },
+        createdAt: '',
+        updatedAt: '',
+      });
+      return;
+    }
+    getProject(currentProjectId)
+      .then((p) => { if (!cancelled && p) setCurrentProject(p); })
+      .catch(() => { if (!cancelled) setCurrentProject(null); });
+    return () => { cancelled = true; };
+  }, [currentProjectId]);
+
   const handleOpenProject = async (projectId: string) => {
+    if (projectId === currentProjectId) {
+      router.push('/');
+      return;
+    }
     const ok = await loadProject(projectId);
     if (ok) router.push('/');
   };
@@ -51,7 +83,7 @@ export default function DashboardPage() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
         <div className="mb-8">
           <a href="/" className="inline-flex items-center gap-3 mb-6">
-            <Image src="/logo.png" alt="Ivy Workbook" width={48} height={48} className="h-12 w-12 object-contain" />
+            <img src="/IVY.svg" alt="IVY" className="h-12 w-12 object-contain" />
             <span className="tier-1-gravitas text-xl">Ivy Workbook</span>
           </a>
           <h1 className="tier-1-gravitas text-2xl sm:text-4xl mb-2">Dashboard</h1>
@@ -79,14 +111,34 @@ export default function DashboardPage() {
         </div>
 
         <div>
+          {currentProject && (
+            <div className="mb-6">
+              <h2 className="tier-2-instruction text-xl mb-4">Current session</h2>
+              <button
+                onClick={() => handleOpenProject(currentProject.id)}
+                className="w-full command-center p-4 text-left hover:shadow-md transition-all flex items-center justify-between border-2 border-oxblood/30"
+                style={{ borderRadius: 0 }}
+              >
+                <div>
+                  <p className="tier-2-instruction font-medium">{getProjectLabel(currentProject)}</p>
+                  <p className="tier-3-guidance text-xs text-charcoal/60">
+                    {getProjectTypeLabel(currentProject)} · {currentProject.progress.completedModules.length} / 35 modules · Board: {currentProject.state?.boardCredibilityScore ?? 0}
+                  </p>
+                </div>
+                <span className="label-small-caps text-oxblood">Open</span>
+              </button>
+            </div>
+          )}
           <h2 className="tier-2-instruction text-xl mb-4">Your projects</h2>
           {loading ? (
             <p className="tier-3-guidance">Loading…</p>
-          ) : projects.length === 0 ? (
+          ) : projects.length === 0 && !currentProject ? (
             <p className="tier-3-guidance text-charcoal/70">No projects yet. Start a new one above.</p>
+          ) : projects.length === 0 && currentProject ? (
+            <p className="tier-3-guidance text-charcoal/70">No other projects in the cloud. Your current session is above.</p>
           ) : (
             <ul className="space-y-3">
-              {projects.map((p) => (
+              {projects.filter((p) => p.id !== currentProjectId).map((p) => (
                 <li key={p.id}>
                   <button
                     onClick={() => handleOpenProject(p.id)}

@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Image from 'next/image';
 import { useProjectStore } from '@/store/useProjectStore';
 import { ApplicationContext, CaseStudy } from '@/types/context';
 import { caseStudies } from '@/data/caseStudies';
@@ -113,7 +112,7 @@ export default function ContextSelectionPage() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
         <div className="mb-6 sm:mb-8">
           <a href="/dashboard" className="inline-flex items-center gap-3 mb-6">
-            <Image src="/logo.png" alt="Ivy Workbook" width={48} height={48} className="h-12 w-12 object-contain" />
+            <img src="/IVY.svg" alt="IVY" className="h-12 w-12 object-contain" />
             <span className="tier-1-gravitas text-xl">Ivy Workbook</span>
           </a>
           <a href="/dashboard" className="label-small-caps text-charcoal/60 hover:text-ink text-sm block mb-4">

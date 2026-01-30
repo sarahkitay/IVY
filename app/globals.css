@@ -2,6 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
+/* IVY logo wipe-in (left to right) */
+@keyframes ivy-wipe-right {
+  from {
+    clip-path: inset(0 100% 0 0);
+    opacity: 1;
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+    opacity: 1;
+  }
+}
+.ivy-logo-wipe {
+  animation: ivy-wipe-right 0.8s ease-out forwards;
+}
+
 @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
 /* Paper texture filter */

@@ -97,8 +97,13 @@ export async function updateProject(
 }
 
 export async function listProjects(limitCount: number = 30): Promise<IvyProject[]> {
-  const ref = collection(db, PROJECTS_COLLECTION);
-  const q = query(ref, orderBy('updatedAt', 'desc'), limit(limitCount));
-  const snap = await getDocs(q);
-  return snap.docs.map((d) => fromFirestore(d.id, (d.data() ?? {}) as Record<string, unknown>));
+  try {
+    const ref = collection(db, PROJECTS_COLLECTION);
+    const q = query(ref, orderBy('updatedAt', 'desc'), limit(limitCount));
+    const snap = await getDocs(q);
+    return snap.docs.map((d) => fromFirestore(d.id, (d.data() ?? {}) as Record<string, unknown>));
+  } catch (e) {
+    console.error('[Ivy] listProjects failed:', e);
+    return [];
+  }
 }
