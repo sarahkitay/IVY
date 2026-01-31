@@ -15,20 +15,28 @@ export default function FirebaseSync() {
   const syncCurrentProjectToFirebase = useProjectStore((s) => s.syncCurrentProjectToFirebase);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const hasHydratedRef = useRef(false);
+  const hydratedProjectIdRef = useRef<string | null>(null);
 
   // Hydrate state from Firebase when app loads with a saved project (so data persists across refresh/close)
   useEffect(() => {
     if (!currentProjectId || String(currentProjectId).startsWith('local-')) return;
-    if (hasHydratedRef.current) return;
-    hasHydratedRef.current = true;
-    loadProject(currentProjectId).catch(() => {
-      hasHydratedRef.current = false;
-    });
+    if (hydratedProjectIdRef.current === currentProjectId && hasHydratedRef.current) return;
+    hydratedProjectIdRef.current = currentProjectId;
+    hasHydratedRef.current = false;
+    loadProject(currentProjectId)
+      .then((ok) => {
+        hasHydratedRef.current = ok;
+      })
+      .catch(() => {
+        hasHydratedRef.current = false;
+      });
   }, [currentProjectId, loadProject]);
 
-  // Debounced save to Firebase when state or progress changes
+  // Debounced save to Firebase when state or progress changes — only AFTER we've loaded from Firebase
+  // so we never overwrite good data with empty state on first load
   useEffect(() => {
     if (!currentProjectId || String(currentProjectId).startsWith('local-')) return;
+    if (!hasHydratedRef.current) return;
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     timeoutRef.current = setTimeout(() => {
       syncCurrentProjectToFirebase();
@@ -43,6 +51,7 @@ export default function FirebaseSync() {
   useEffect(() => {
     const flush = () => {
       if (!currentProjectId || String(currentProjectId).startsWith('local-')) return;
+      if (!hasHydratedRef.current) return;
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
         timeoutRef.current = null;

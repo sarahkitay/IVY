@@ -51,15 +51,34 @@ function toFirestore(project: Omit<IvyProject, 'id'>): Record<string, unknown> {
   return out;
 }
 
+function safeObject(v: unknown): Record<string, unknown> {
+  return v != null && typeof v === 'object' && !Array.isArray(v) ? (v as Record<string, unknown>) : {};
+}
+function safeArray(v: unknown): string[] {
+  return Array.isArray(v) ? v.filter((x): x is string => typeof x === 'string') : [];
+}
+
 function fromFirestore(id: string, data: Record<string, unknown>): IvyProject {
-  const raw = (data.state ?? {}) as Record<string, unknown>;
+  const raw = safeObject(data.state);
+  const moduleOutputsRaw = raw.moduleOutputs;
+  const moduleOutputs = safeObject(moduleOutputsRaw) as BusinessState['moduleOutputs'];
+  const progressRaw = safeObject(data.progress);
+  const defaultProgress = {
+    currentModule: 'module-1',
+    completedModules: [] as string[],
+    unlockedModules: ['module-1'] as string[],
+    overallProgress: 0,
+    pillar1Progress: 0,
+    pillar2Progress: 0,
+    pillar3Progress: 0,
+  };
   const state: IvyProjectState = {
     ...defaultState,
     applicationContext: (raw.applicationContext ?? data.applicationContext ?? {}) as ApplicationContext,
-    moduleOutputs: (raw.moduleOutputs ?? {}) as BusinessState['moduleOutputs'],
+    moduleOutputs,
     boardCredibilityScore: typeof raw.boardCredibilityScore === 'number' ? raw.boardCredibilityScore : 0,
-    economicConstraints: (raw.economicConstraints ?? {}) as BusinessState['economicConstraints'],
-    controlLogic: (raw.controlLogic ?? {}) as BusinessState['controlLogic'],
+    economicConstraints: safeObject(raw.economicConstraints) as BusinessState['economicConstraints'],
+    controlLogic: safeObject(raw.controlLogic) as BusinessState['controlLogic'],
     strategyNote: raw.strategyNote as BusinessState['strategyNote'],
     boardMemoRubricScore: raw.boardMemoRubricScore as number | undefined,
     stakeholderMap: raw.stakeholderMap as BusinessState['stakeholderMap'],
@@ -78,15 +97,15 @@ function fromFirestore(id: string, data: Record<string, unknown>): IvyProject {
     userId: typeof data.userId === 'string' ? data.userId : undefined,
     applicationContext: (data.applicationContext ?? {}) as ApplicationContext,
     state,
-    progress: (data.progress ?? {
-      currentModule: 'module-1',
-      completedModules: [],
-      unlockedModules: ['module-1'],
-      overallProgress: 0,
-      pillar1Progress: 0,
-      pillar2Progress: 0,
-      pillar3Progress: 0,
-    }) as Progress,
+    progress: {
+      currentModule: typeof progressRaw.currentModule === 'string' ? progressRaw.currentModule : defaultProgress.currentModule,
+      completedModules: safeArray(progressRaw.completedModules).length ? safeArray(progressRaw.completedModules) : defaultProgress.completedModules,
+      unlockedModules: safeArray(progressRaw.unlockedModules).length ? safeArray(progressRaw.unlockedModules) : defaultProgress.unlockedModules,
+      overallProgress: typeof progressRaw.overallProgress === 'number' ? progressRaw.overallProgress : defaultProgress.overallProgress,
+      pillar1Progress: typeof progressRaw.pillar1Progress === 'number' ? progressRaw.pillar1Progress : defaultProgress.pillar1Progress,
+      pillar2Progress: typeof progressRaw.pillar2Progress === 'number' ? progressRaw.pillar2Progress : defaultProgress.pillar2Progress,
+      pillar3Progress: typeof progressRaw.pillar3Progress === 'number' ? progressRaw.pillar3Progress : defaultProgress.pillar3Progress,
+    },
     createdAt: typeof data.createdAt === 'string' ? data.createdAt : new Date().toISOString(),
     updatedAt: typeof data.updatedAt === 'string' ? data.updatedAt : new Date().toISOString(),
   };
@@ -144,10 +163,15 @@ export async function createProject(
 
 export async function getProject(projectId: string): Promise<IvyProject | null> {
   if (String(projectId).startsWith('local-')) return null;
-  const ref = doc(db, PROJECTS_COLLECTION, projectId);
-  const snap = await getDoc(ref);
-  if (!snap.exists()) return null;
-  return fromFirestore(snap.id, (snap.data() ?? {}) as Record<string, unknown>);
+  try {
+    const ref = doc(db, PROJECTS_COLLECTION, projectId);
+    const snap = await getDoc(ref);
+    if (!snap.exists()) return null;
+    return fromFirestore(snap.id, (snap.data() ?? {}) as Record<string, unknown>);
+  } catch (e) {
+    console.error('[Ivy] getProject failed:', projectId, e);
+    return null;
+  }
 }
 
 export async function updateProject(
