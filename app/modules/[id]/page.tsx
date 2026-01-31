@@ -18,6 +18,7 @@ import FiveCsFramework from '@/components/FiveCsFramework';
 import { getQuizForModule } from '@/data/moduleQuizzes';
 import { WorksheetData } from '@/types';
 import { getCaseStudyById } from '@/data/caseStudies';
+import { getCasePackById } from '@/data/casePacks';
 import { exportModulePDFWithCorner } from '@/utils/exportModulePDF';
 
 export default function ModulePage() {
@@ -57,7 +58,8 @@ export default function ModulePage() {
   }
 
   const moduleOutput = state.moduleOutputs[moduleId];
-  const isUnlocked = progress.unlockedModules.includes(moduleId);
+  const isObserver = state.applicationContext?.type === 'observer';
+  const isUnlocked = isObserver || progress.unlockedModules.includes(moduleId);
   const isCompleted = progress.completedModules.includes(moduleId);
 
   const handleColdCallComplete = (response: string) => {
@@ -177,7 +179,9 @@ export default function ModulePage() {
               aria-label="Back to modules"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/ivy-corner-logo.png" alt="" className="h-8 w-8 object-contain" />
+              <span className="shrink-0 flex items-center justify-center -translate-y-0.5">
+                <img src="/ivy-corner-logo.png" alt="" className="h-8 w-8 object-contain" />
+              </span>
               ← Back to Modules
             </button>
             <button
@@ -235,6 +239,29 @@ export default function ModulePage() {
             )}
           </div>
         </div>
+
+        {/* Case pack context (HBS-style): show company and key numbers when in Case Mode */}
+        {state.caseMode === 'case' && state.activeCasePackId && (() => {
+          const pack = getCasePackById(state.activeCasePackId);
+          if (!pack) return null;
+          const ue = pack.unit_economics_snapshot;
+          return (
+            <div className="mb-8 p-4 sm:p-6 border border-charcoal/20 bg-parchment/30" style={{ borderRadius: 0 }}>
+              <h3 className="label-small-caps text-charcoal/60 mb-2">CASE CONTEXT</h3>
+              <p className="font-serif text-lg text-ink mb-2">{pack.company_name} — {pack.time_period}</p>
+              <p className="text-sm text-charcoal/70 mb-3">{pack.industry}</p>
+              {ue && (
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 font-mono text-xs">
+                  <div><span className="text-charcoal/60">Gross margin</span> {ue.grossMarginPct}%</div>
+                  <div><span className="text-charcoal/60">CAC</span> ${ue.cac}</div>
+                  <div><span className="text-charcoal/60">LTV</span> ${ue.ltv}</div>
+                  <div><span className="text-charcoal/60">Payback</span> {ue.paybackMonths} mo</div>
+                  {ue.churnMonthlyPct != null && <div><span className="text-charcoal/60">Churn</span> {ue.churnMonthlyPct}%/mo</div>}
+                </div>
+              )}
+            </div>
+          );
+        })()}
 
         {/* Why This Exists - No box, inline flow */}
         <div className="mb-8">

@@ -26,6 +26,8 @@ export type IvyProjectState = Pick<
 export interface IvyProject {
   id: string;
   name: string;
+  /** Firebase Auth UID; projects are scoped per user. */
+  userId?: string;
   applicationContext: ApplicationContext;
   state: IvyProjectState;
   progress: Progress;

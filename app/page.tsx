@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useBusinessState } from '@/store/useBusinessState';
 import { useProgress } from '@/store/useProgress';
 import { useProjectStore } from '@/store/useProjectStore';
+import { useAuthStore } from '@/store/useAuthStore';
 import { getModulesByPillar, getModuleById, getModulesInOrder } from '@/data/all-modules';
 import { useEffect, useState, useRef } from 'react';
 import dynamic from 'next/dynamic';
@@ -23,6 +24,7 @@ export default function Home() {
   const currentProjectId = useProjectStore((s) => s.currentProjectId);
   const loadProject = useProjectStore((s) => s.loadProject);
   const setCurrentProjectId = useProjectStore((s) => s.setCurrentProjectId);
+  const { user, signOut } = useAuthStore();
   const [mounted, setMounted] = useState(false);
   const [hydrating, setHydrating] = useState(false);
   const [showAllModules, setShowAllModules] = useState(false);
@@ -78,8 +80,8 @@ export default function Home() {
       <div className="min-h-screen bg-cream overflow-x-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12 min-w-0">
           <header className="mb-8">
-            <div className="flex items-start gap-4">
-              <a href="/" className="shrink-0 self-start mt-[-2px]" aria-label="Ivy home">
+            <div className="flex items-center gap-4">
+              <a href="/" className="shrink-0 flex items-center justify-center -translate-y-0.5" aria-label="Ivy home">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src="/ivy-corner-logo.png" alt="IVY" className="h-14 w-14 sm:h-16 sm:w-16 object-contain" />
               </a>
@@ -190,8 +192,8 @@ export default function Home() {
         {/* Header */}
         <header className="mb-8 sm:mb-12">
           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-4">
-            <div className="flex items-start gap-4">
-              <a href="/" className="shrink-0 self-start mt-[-2px]" aria-label="Ivy home">
+            <div className="flex items-center gap-4">
+              <a href="/" className="shrink-0 flex items-center justify-center -translate-y-0.5" aria-label="Ivy home">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src="/ivy-corner-logo.png" alt="IVY" className="h-14 w-14 sm:h-16 sm:w-16 object-contain" />
               </a>
@@ -245,6 +247,20 @@ export default function Home() {
             >
               View live stats
             </button>
+            {user ? (
+              <button
+                type="button"
+                onClick={() => signOut().then(() => router.push('/dashboard'))}
+                className="label-small-caps text-charcoal/60 hover:text-ink text-sm"
+                title={user.email ?? undefined}
+              >
+                Log out
+              </button>
+            ) : (
+              <Link href="/login" className="label-small-caps text-charcoal/60 hover:text-ink text-sm">
+                Log in
+              </Link>
+            )}
             {state.applicationContext && (
               <div className="ml-auto sm:ml-0 flex flex-col border-l-2 border-charcoal/25 pl-2 sm:pl-3 py-0.5 min-h-[28px] sm:command-center sm:flex-col sm:px-4 sm:py-2 sm:border sm:border-charcoal/15 sm:bg-parchment/50 sm:border-l-0 sm:pl-4 sm:gap-0.5">
                 <p className="label-small-caps text-charcoal/50 text-[10px] sm:text-xs">CONTEXT</p>

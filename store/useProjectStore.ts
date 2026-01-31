@@ -4,7 +4,10 @@ import { IvyProject } from '@/types/project';
 import { ApplicationContext } from '@/types/context';
 import { BusinessState } from '@/types';
 import { Progress } from '@/types';
+import { auth } from '@/lib/firebase';
 import { createProject as createProjectInFirebase, getProject, listProjects as listProjectsFromFirebase, updateProject as updateProjectInFirebase } from '@/lib/projects';
+import { getObserverPrefill, getAllModuleIds } from '@/data/observerPrefill';
+import { getCaseStudyById } from '@/data/caseStudies';
 import { useBusinessState } from './useBusinessState';
 import { useProgress } from './useProgress';
 
@@ -15,7 +18,7 @@ interface ProjectStore {
   setCurrentProjectId: (id: string | null) => void;
   loadProject: (projectId: string) => Promise<boolean>;
   createProject: (name: string, context: ApplicationContext) => Promise<string>;
-  listProjects: () => Promise<IvyProject[]>;
+  listProjects: (userId: string | null) => Promise<IvyProject[]>;
   cachedProjects: IvyProject[] | null;
   syncCurrentProjectToFirebase: () => Promise<void>;
 }
@@ -33,9 +36,11 @@ export const useProjectStore = create<ProjectStore>()(
         if (!project) return false;
         const { replaceState } = useBusinessState.getState();
         const { setProgress } = useProgress.getState();
+        const isObserver = project.state.applicationContext?.type === 'observer';
+        const allIds = getAllModuleIds();
         replaceState({
           applicationContext: project.state.applicationContext ?? project.applicationContext,
-          moduleOutputs: project.state.moduleOutputs ?? {},
+          moduleOutputs: isObserver ? { ...getObserverPrefill(), ...(project.state.moduleOutputs ?? {}) } : (project.state.moduleOutputs ?? {}),
           boardCredibilityScore: project.state.boardCredibilityScore ?? 0,
           economicConstraints: project.state.economicConstraints ?? {},
           controlLogic: project.state.controlLogic ?? {},
@@ -51,18 +56,20 @@ export const useProjectStore = create<ProjectStore>()(
           caseMode: project.state.caseMode,
           activeCasePackId: project.state.activeCasePackId,
         });
-        setProgress(project.progress);
+        setProgress(isObserver ? { ...project.progress, unlockedModules: allIds } : project.progress);
         set({ currentProjectId: projectId });
         return true;
       },
 
       createProject: async (name, context) => {
-        const { setApplicationContext, reset: resetBusiness } = useBusinessState.getState();
+        const { setApplicationContext, replaceState, reset: resetBusiness } = useBusinessState.getState();
         const { setProgress } = useProgress.getState();
+        const allModuleIds = getAllModuleIds();
+        const isObserver = context.type === 'observer';
         const initialProgress: Progress = {
           currentModule: 'module-1',
           completedModules: [],
-          unlockedModules: ['module-1'],
+          unlockedModules: isObserver ? allModuleIds : ['module-1'],
           overallProgress: 0,
           pillar1Progress: 0,
           pillar2Progress: 0,
@@ -70,6 +77,29 @@ export const useProjectStore = create<ProjectStore>()(
         };
         resetBusiness();
         setApplicationContext(context);
+        if (isObserver) {
+          replaceState({ moduleOutputs: getObserverPrefill() });
+        } else if (context.type === 'case-study') {
+          const caseStudy = getCaseStudyById(context.caseId);
+          const prefill = caseStudy?.prefillData;
+          if (prefill && Object.keys(prefill).length > 0) {
+            const merged: Record<string, import('@/types').ModuleOutput> = {};
+            for (const [modId, worksheets] of Object.entries(prefill)) {
+              const wsMap: Record<string, { worksheetId: string; fields: Record<string, string | number | boolean>; completed: boolean }> = {};
+              for (const [wsId, fields] of Object.entries(worksheets)) {
+                wsMap[wsId] = { worksheetId: wsId, fields: { ...fields } as Record<string, string | number | boolean>, completed: true };
+              }
+              merged[modId] = {
+                moduleId: modId,
+                completed: false,
+                requiredOutputs: {},
+                worksheets: wsMap,
+                timestamp: new Date().toISOString(),
+              };
+            }
+            replaceState({ moduleOutputs: merged });
+          }
+        }
         setProgress(initialProgress);
         const state = useBusinessState.getState().state;
         const progress = useProgress.getState().progress;
@@ -77,18 +107,21 @@ export const useProjectStore = create<ProjectStore>()(
         const localId = `local-${Date.now()}`;
         set({ currentProjectId: localId });
 
-        createProjectInFirebase(name, context, state, progress)
-          .then((realId) => {
-            set({ currentProjectId: realId });
-            get().syncCurrentProjectToFirebase();
-          })
-          .catch(() => {});
+        const uid = auth.currentUser?.uid;
+        if (uid) {
+          createProjectInFirebase(name, context, state, progress, uid)
+            .then((realId) => {
+              set({ currentProjectId: realId });
+              get().syncCurrentProjectToFirebase();
+            })
+            .catch(() => {});
+        }
 
         return localId;
       },
 
-      listProjects: async () => {
-        const list = await listProjectsFromFirebase(30);
+      listProjects: async (userId) => {
+        const list = await listProjectsFromFirebase(userId ?? null, 30);
         set({ cachedProjects: list });
         return list;
       },

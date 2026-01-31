@@ -61,11 +61,12 @@ Projects (context + module outputs + progress) are stored in Firestore so you ca
    - Add the same six `NEXT_PUBLIC_FIREBASE_*` variables (name + value). Apply to **Production**, **Preview**, and **Development** if you use them.
    - Redeploy (e.g. push a commit or **Deployments → … → Redeploy**).
 
-7. **Firestore index** (if the app asks for it): In Firebase Console → Firestore → **Indexes**, create a composite index on collection `projects` with field `updatedAt` (Descending). Or run `firebase deploy --only firestore:indexes` if you use the Firebase CLI.
-8. **Rules**: Firestore → **Rules**. For testing you can use: `match /projects/{id} { allow read, write: if true; }`. For production, restrict with `request.auth != null` or your own conditions.
+7. **Enable Authentication** (for login and per-user data): In Firebase Console → **Build → Authentication** → **Get started**. Under **Sign-in method**, enable **Email/Password**. Users can then create an account and log in; projects are scoped by `userId` so each user sees only their own data.
+8. **Firestore index** (if the app asks for it): Create a composite index on collection `projects` with fields **userId** (Ascending) and **updatedAt** (Descending). Firebase will show a link in the console when the first query runs, or add it under Firestore → **Indexes**.
+9. **Rules**: Firestore → **Rules**. For per-user data use: `match /projects/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.userId; allow create: if request.auth != null && request.resource.data.userId == request.auth.uid; }` so users can only read/write their own projects.
 
 - **Config**: `lib/firebase.ts` reads these env vars. Without them, the app may use fallback config if present; for your own project and for Vercel, set the variables above.
-- **Firestore**: Collection `projects`; each document has `name`, `applicationContext`, `state`, `progress`, `createdAt`, `updatedAt`.
+- **Firestore**: Collection `projects`; each document has `userId`, `name`, `applicationContext`, `state`, `progress`, `createdAt`, `updatedAt`. Logged-in users see only their projects; others can use the app locally without cloud sync.
 
 ## Design System
 

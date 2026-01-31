@@ -4,15 +4,15 @@ export default function NotFound() {
   return (
     <div className="min-h-screen bg-cream flex flex-col items-center justify-center px-4">
       <div className="max-w-md w-full text-center">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/ivy-corner-logo.png"
-          alt=""
-          className="h-16 w-16 mx-auto mb-6 object-contain"
-        />
-        <h1 className="font-cinzel-decorative font-bold text-ink uppercase text-2xl tracking-widest mb-2">
-          IVY
-        </h1>
+        <div className="flex items-center justify-center gap-3 mb-6">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <span className="flex items-center justify-center -translate-y-0.5">
+            <img src="/ivy-corner-logo.png" alt="" className="h-16 w-16 object-contain" />
+          </span>
+          <h1 className="font-cinzel-decorative font-bold text-ink uppercase text-2xl tracking-widest">
+            IVY
+          </h1>
+        </div>
         <h2 className="tier-1-gravitas text-xl sm:text-2xl text-charcoal mb-4">
           Page not found
         </h2>

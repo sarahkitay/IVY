@@ -114,6 +114,21 @@ If you don't set the reference point, the market will — poorly.`,
       { id: 'free-or-risk-removal', label: 'Identified one place free or risk removal matters', type: 'text' },
       { id: 'reframe-loss-to-safety', label: 'Written one sentence that reframes loss into safety', type: 'text' },
     ],
+    professorNotes: {
+      whatStudentsGetWrong: 'Students focus on features and benefits. They avoid naming the loss the customer fears or the mental bucket they are triggering. They treat pricing as a math problem.',
+      whatAplusSmellsLike: 'One specific loss named in the customer\'s words. One mental bucket identified. One reframe from loss to safety. No generic "value" language.',
+      theTrap: 'The trap is answering "What do they gain?" without answering "What do they fear losing?" Prospect theory says loss weighs twice as much as gain.',
+    },
+    sampleAnswers: {
+      strong: { text: 'The loss they fear is "I will look incompetent if this fails in front of my team." We are triggering the "investment" bucket, not "daily spend." One reframe: "You are not buying software — you are removing the risk of a failed launch."', why: 'Names emotional loss, specifies mental bucket, reframes loss to safety.' },
+      weak: { text: 'Our product has great value. Customers get a lot of benefits. We offer a free trial.', whyFails: 'No loss named, no bucket, no reframe. "Great value" is not behavioral economics.' },
+    },
+    legitimacyLens: {
+      whoCouldAttack: 'Who could credibly say this framing manipulates rather than informs?',
+      whatLooksExploitative: 'What would make loss-framing feel exploitative?',
+      implicitPromise: 'What promise are we making implicitly when we reframe loss to safety?',
+    },
+    synthesisDisciplines: ['Behavioral economics', 'Psychology', 'Neuroscience', 'Consumer research'],
     readingCompanion: {
       essentials: {
         canon: { title: 'Competing Against Luck', author: 'Christensen et al.', coreIdea: 'Customers don\'t buy products. They hire solutions to make progress in a specific moment.', whyMatters: 'Jobs-to-be-done beats personas for explaining why people choose, stay, and pay.' },
@@ -216,6 +231,10 @@ The number did not change. The mental bucket did.`,
       { id: 'harmful-comparison', label: 'Eliminated one harmful comparison', type: 'text' },
       { id: 'non-price-anchor', label: 'Designed one non-price anchor to lead with', type: 'text' },
     ],
+    professorNotes: { whatStudentsGetWrong: 'Students list features and justify price. They avoid naming the first comparison or controlling the frame. They treat anchoring as optional.', whatAplusSmellsLike: 'One primary anchor named. At least three price frames. One harmful comparison removed. One non-price anchor designed.', theTrap: 'The trap is debating "Is this price fair?" instead of "What is the first number they see?"' },
+    sampleAnswers: { strong: { text: 'Our primary anchor is the annual contract from the incumbent; we reframe to $X/month and $Y per outcome. We removed the "vs. doing nothing" comparison by leading with "cost of inaction." Non-price anchor: "Used by 3 of the Fortune 10."', why: 'Names anchor, multiple frames, removed harmful comparison, non-price anchor.' }, weak: { text: 'Our price is competitive. We offer great value. Customers can choose monthly or annual.', whyFails: 'No anchor, no frame control, no harmful comparison removed.' } },
+    legitimacyLens: { whoCouldAttack: 'Who could say this anchoring manipulates?', whatLooksExploitative: 'When would framing feel exploitative?', implicitPromise: 'What promise do we make by controlling the frame?' },
+    synthesisDisciplines: ['Behavioral economics', 'Pricing', 'Consumer psychology'],
     readingCompanion: {
       essentials: {
         canon: { title: 'How We Decide', author: 'Jonah Lehrer', coreIdea: 'Decisions are emotional first; reason justifies. Demand spikes around moments of tension.', whyMatters: 'Demand is rarely continuous. It spikes around moments of tension.' },
@@ -323,6 +342,10 @@ Modern elite markets favor inconspicuous status.`,
       { id: 'quiet-status-signal', label: 'A quiet status signal', type: 'text' },
       { id: 'who-this-is-not-for', label: 'A sentence that explains who this is not for', type: 'text' },
     ],
+    professorNotes: { whatStudentsGetWrong: 'Students describe demographics. They avoid naming the enemy, the ritual, or who this is not for. They confuse "target market" with tribe.', whatAplusSmellsLike: 'One tribe defined. One enemy or anti-identity. One ritual. One quiet status signal. One "not for" sentence.', theTrap: 'The trap is "everyone could use this." If no one is excluded, no one is included.' },
+    sampleAnswers: { strong: { text: 'Tribe: operators who have been burned by vendor lock-in. Enemy: "enterprise IT that sells shelfware." Ritual: sharing war stories in Slack. Quiet signal: we never say "enterprise." This is not for teams that need a single throat to choke.', why: 'Tribe, enemy, ritual, signal, not-for.' }, weak: { text: 'Our target is B2B decision-makers. We serve mid-market and enterprise. Everyone benefits from our platform.', whyFails: 'No tribe, no enemy, no "not for."' } },
+    legitimacyLens: { whoCouldAttack: 'Who could say this tribal framing excludes or harms?', whatLooksExploitative: 'When does identity-based marketing feel manipulative?', implicitPromise: 'What promise do we make about belonging?' },
+    synthesisDisciplines: ['Anthropology', 'Social psychology', 'Identity'],
     readingCompanion: {
       essentials: {
         canon: { title: "The Innovator's Solution", author: 'Clayton Christensen', coreIdea: 'Incumbents are disrupted when they optimize for the wrong job. Switching costs and inertia define defensibility.', whyMatters: 'The biggest competitor is almost always "do nothing."' },
@@ -428,6 +451,10 @@ This is why white-glove services win, defaults dominate, "done for you" outperfo
       { id: 'improved-prompt-timing', label: 'Improved prompt timing', type: 'text' },
       { id: 'reduced-cognitive-load', label: 'Reduced cognitive load somewhere', type: 'text' },
     ],
+    professorNotes: { whatStudentsGetWrong: 'Students blame motivation. They avoid diagnosing Ability or Prompt. They add more copy instead of removing steps.', whatAplusSmellsLike: 'One highest-friction step named. One action removed or simplified. One default path. Improved prompt timing. Reduced cognitive load.', theTrap: 'The trap is "they need more motivation." Fogg says if Ability is zero, behavior is zero.' },
+    sampleAnswers: { strong: { text: 'Highest friction: account creation before trial. We removed it — trial with email only. Default path: annual plan pre-selected. Prompt: email 2 days after first use. Cognitive load: cut form from 8 to 3 fields.', why: 'Friction named, action removed, default, prompt, cognitive load.' }, weak: { text: 'We have a great product. Users just need to sign up. We added a video to explain benefits.', whyFails: 'No friction diagnosis, no removal, no default or prompt.' } },
+    legitimacyLens: { whoCouldAttack: 'Who could say reducing friction is dark pattern?', whatLooksExploitative: 'When does default design feel manipulative?', implicitPromise: 'What do we promise by making the path easier?' },
+    synthesisDisciplines: ['Behavioral design', 'BJ Fogg', 'Friction', 'Ability'],
     readingCompanion: {
       essentials: {
         canon: { title: 'Thinking, Fast and Slow', author: 'Daniel Kahneman', coreIdea: 'System 1 is automatic and loss-averse; System 2 is effortful. People fear losses more than they desire gains.', whyMatters: 'People fear losses more than they desire gains.' },
@@ -523,6 +550,10 @@ Random order is amateur hour.`,
       { id: 'reorder-decision-flow', label: 'Reorder at least one decision flow', type: 'text' },
       { id: 'asymmetrical-effort', label: 'Make effort asymmetrical', type: 'text' },
     ],
+    professorNotes: { whatStudentsGetWrong: 'Students add options. They avoid choosing one default or removing decoys. They treat choice as neutral.', whatAplusSmellsLike: 'One intentional default. One decoy added or removed. Reduced options. Reordered flow. Asymmetrical effort.', theTrap: 'The trap is "more choice is better." Defaults and decoys drive most decisions.' },
+    sampleAnswers: { strong: { text: 'Default: annual plan. Removed decoy tier; kept two clear options. Reduced from 5 to 2 plans. Reordered: outcome first, price second. Asymmetrical: cancel is one click; upgrade is highlighted.', why: 'Default, decoy, reduced options, reorder, asymmetrical.' }, weak: { text: 'We offer many plans so customers can choose. All options are clearly presented.', whyFails: 'No default, no decoy strategy, no reduction or reorder.' } },
+    legitimacyLens: { whoCouldAttack: 'Who could say defaults or decoys manipulate?', whatLooksExploitative: 'When does choice architecture feel exploitative?', implicitPromise: 'What do we promise by how we order options?' },
+    synthesisDisciplines: ['Choice architecture', 'Defaults', 'Behavioral economics'],
     readingCompanion: {
       essentials: {
         canon: { title: 'The Presentation of Self in Everyday Life', author: 'Erving Goffman', coreIdea: 'People perform identity. Many purchases are about who the buyer gets to be.', whyMatters: 'Many purchases are about who the buyer gets to be.' },
@@ -620,6 +651,10 @@ People return to brands that treated them well when leaving.`,
       { id: 'memory-sentence', label: 'Rewrite the memory sentence', type: 'text' },
       { id: 'remove-meaningless-step', label: 'Remove one meaningless step', type: 'text' },
     ],
+    professorNotes: { whatStudentsGetWrong: 'Students optimize for efficiency. They skip peaks and endings. They treat experience as linear.', whatAplusSmellsLike: 'One intentional peak. One dignified ending. One ritual. One memory sentence. One meaningless step removed.', theTrap: 'The trap is "get them through fast." Peak-end rule says memory is peak + end.' },
+    sampleAnswers: { strong: { text: 'Peak: first successful outcome (we surface it in 30 sec). Ending: summary + "What\'s next" (no dead stop). Ritual: weekly recap email. Memory sentence: "I got my first result in under a minute." Removed: thank-you page with no next step.', why: 'Peak, ending, ritual, memory sentence, removal.' }, weak: { text: 'We have a great onboarding. Users complete the flow quickly.', whyFails: 'No peak, no ending, no ritual, no memory sentence.' } },
+    legitimacyLens: { whoCouldAttack: 'Who could say peak-end design manipulates memory?', whatLooksExploitative: 'When does experience design feel exploitative?', implicitPromise: 'What do we promise by how we end the experience?' },
+    synthesisDisciplines: ['Peak-end rule', 'Experience design', 'Memory'],
     readingCompanion: {
       essentials: {
         canon: { title: 'The Strategy and Tactics of Pricing', author: 'Thomas Nagle et al.', coreIdea: 'Price is a strategic and psychological lever. It frames quality, risk, and status.', whyMatters: 'Price is never neutral. It frames quality, risk, and status.' },
@@ -701,6 +736,10 @@ Distinctiveness reduces CAC over time by increasing recall per impression.`,
       { id: 'remove-generic-element', label: 'Remove one generic element', type: 'text' },
       { id: 'validate-contrast-trust', label: 'Validate that contrast doesn\'t reduce trust', type: 'text' },
     ],
+    professorNotes: { whatStudentsGetWrong: 'Students blend in. They avoid naming the norm they break or the contrast they create. They fear standing out.', whatAplusSmellsLike: 'One category norm to break. Camouflage or rebellion chosen. One deliberate contrast. One generic element removed. Trust validated.', theTrap: 'The trap is "we look like everyone else but better." Contrast is the only way to be seen.' },
+    sampleAnswers: { strong: { text: 'Norm we break: "Enterprise software is gray and dense." We chose rebellion: editorial tone, no jargon. Contrast: human headlines vs. competitor PDFs. Removed: stock hero images. Validated: trust score unchanged in testing.', why: 'Norm, choice, contrast, removal, validation.' }, weak: { text: 'We have a modern design. We stand out with better UX.', whyFails: 'No norm, no contrast, no validation.' } },
+    legitimacyLens: { whoCouldAttack: 'Who could say contrast is deceptive?', whatLooksExploitative: 'When does standing out feel manipulative?', implicitPromise: 'What do we promise by breaking the norm?' },
+    synthesisDisciplines: ['Category design', 'Contrast', 'Differentiation'],
     readingCompanion: {
       essentials: {
         canon: { title: 'Marketing Management', author: 'Kotler et al.', coreIdea: 'Value is created and captured in the customer\'s perception. Delivered value must translate into perceived value.', whyMatters: 'Value only exists in the customer\'s perception.' },
@@ -794,6 +833,10 @@ Examples:
       { id: 'remove-rational-explanation', label: 'Remove one rational explanation from your page', type: 'text' },
       { id: 'confirm-copy-respectful', label: 'Confirm copy still feels respectful', type: 'text' },
     ],
+    professorNotes: { whatStudentsGetWrong: 'Students lead with features and benefits. They avoid limbic language. They over-explain.', whatAplusSmellsLike: 'One emotional driver. Headline in limbic language. CTA without buy/get. One rational explanation removed. Copy confirmed respectful.', theTrap: 'The trap is "we need to explain why." Limbic system decides before reason engages.' },
+    sampleAnswers: { strong: { text: 'Driver: relief from overwhelm. Headline: "Stop juggling. Start knowing." CTA: "See your numbers in one place." Removed: "Our algorithm uses 50+ data points." Confirmed: user testing, no guilt or shame language.', why: 'Driver, limbic headline, CTA, removal, respectful.' }, weak: { text: 'We help teams be more productive. Get started today. Our platform has many features.', whyFails: 'No driver, no limbic, rational-heavy.' } },
+    legitimacyLens: { whoCouldAttack: 'Who could say emotional copy manipulates?', whatLooksExploitative: 'When does limbic language feel exploitative?', implicitPromise: 'What do we promise emotionally?' },
+    synthesisDisciplines: ['Limbic system', 'Copywriting', 'Emotional drivers'],
     readingCompanion: {
       essentials: {
         canon: { title: 'The Paradox of Choice', author: 'Barry Schwartz', coreIdea: 'More choices increase anxiety and decision paralysis. Too many choices feels like risk.', whyMatters: 'Too many choices feels like risk.' },
@@ -874,6 +917,10 @@ Not everyone is meant to understand.`,
       { id: 'wrong-customers-excluded', label: 'Ensure wrong customers feel subtly excluded', type: 'text' },
       { id: 'right-customers-recognized', label: 'Confirm right customers feel recognized', type: 'text' },
     ],
+    professorNotes: { whatStudentsGetWrong: 'Students explain everything. They use loud signals. They fear excluding anyone.', whatAplusSmellsLike: 'One insider cue (unexplained). One loud signal removed. One restraint-based signal. Wrong customers excluded. Right customers recognized.', theTrap: 'The trap is "we need to be clear for everyone." Inconspicuous status is for insiders only.' },
+    sampleAnswers: { strong: { text: 'Insider cue: "Series A and beyond" (no definition). Removed: badge "Trusted by 500+ companies." Added: minimal footer, no logos. Wrong excluded: no freemium. Right recognized: invite-only community mention.', why: 'Cue, removal, restraint, exclusion, recognition.' }, weak: { text: 'We are the premium choice. Trusted by many. Clear value proposition.', whyFails: 'No insider cue, loud signals, no exclusion.' } },
+    legitimacyLens: { whoCouldAttack: 'Who could say insider cues are exclusionary?', whatLooksExploitative: 'When does quiet status feel elitist?', implicitPromise: 'What do we promise by not explaining?' },
+    synthesisDisciplines: ['Inconspicuous consumption', 'Status', 'Signaling'],
     readingCompanion: {
       essentials: {
         canon: { title: 'Atomic Habits', author: 'James Clear', coreIdea: 'Habits are cue, action, reward, reinforcement. Retention is behavior design, not reminders.', whyMatters: 'Retention is behavior design, not reminders.' },
@@ -949,6 +996,10 @@ Elite brands do not need desperation.`,
       { id: 'reread-from-buyer-perspective', label: 'Re-read your copy from the buyer\'s perspective', type: 'text' },
       { id: 'confirm-mutual-relationship', label: 'Confirm the relationship feels mutual, not extractive', type: 'text' },
     ],
+    professorNotes: { whatStudentsGetWrong: 'Students use scarcity and urgency. They avoid "not for" or buyer-perspective reread. They optimize for conversion over trust.', whatAplusSmellsLike: 'One pressure tactic removed. One clarity explanation. One explicit exclusion. Reread from buyer. Relationship feels mutual.', theTrap: 'The trap is "we need to convert." Legitimacy requires clarity and exclusion.' },
+    sampleAnswers: { strong: { text: 'Removed: "Only 3 left" countdown. Added: "How we make money" section. Exclusion: "Not for teams under 5." Reread: "Would I feel sold or informed?" Mutual: no auto-enroll, clear cancel.', why: 'Removal, clarity, exclusion, reread, mutual.' }, weak: { text: 'We use best practices. Our copy is clear. We have high conversion.', whyFails: 'No removal, no exclusion, no buyer perspective.' } },
+    legitimacyLens: { whoCouldAttack: 'Who could say our copy is extractive?', whatLooksExploitative: 'When does conversion copy cross the line?', implicitPromise: 'What do we promise about the relationship?' },
+    synthesisDisciplines: ['Legitimacy', 'Trust', 'Ethical persuasion'],
     readingCompanion: {
       essentials: {
         canon: { title: 'The Loyalty Effect', author: 'Frederick Reichheld', coreIdea: 'Churn is usually emotional before it is functional. Last meaningful win before churn matters.', whyMatters: 'Most churn is emotional before it is functional.' },
@@ -978,6 +1029,10 @@ Elite brands do not need desperation.`,
     frameworks: [{ id: 'p2-framework-11-1', title: 'Proof Hierarchy', description: 'Peer > expert > brand > claim.', content: 'Borrowed trust often converts better than earned trust.' }],
     worksheets: [{ id: 'p2-worksheet-11-1', title: 'Proof Hierarchy', description: 'Map your proof sources.', fields: [{ id: 'proof-source', label: 'Proof Source', type: 'text', required: true }] }],
     requiredOutputs: [{ id: 'proof-hierarchy', label: 'Proof hierarchy for your offer', type: 'text' }],
+    professorNotes: { whatStudentsGetWrong: 'Students list testimonials. They avoid ordering proof (peer > expert > brand > claim). They treat proof as additive.', whatAplusSmellsLike: 'One proof hierarchy: peer, expert, brand, claim. Ordered and justified.', theTrap: 'The trap is "more proof is better." Hierarchy matters more than volume.' },
+    sampleAnswers: { strong: { text: 'Peer: "3 of 5 in my cohort use this." Expert: G2/Forrester. Brand: logos only for consideration. Claim: last. We lead with peer.', why: 'Hierarchy ordered and justified.' }, weak: { text: 'We have great reviews and case studies. Customers love us.', whyFails: 'No hierarchy, no order.' } },
+    legitimacyLens: { whoCouldAttack: 'Who could say our proof is misleading?', whatLooksExploitative: 'When does proof feel manipulative?', implicitPromise: 'What do we promise by the proof we show?' },
+    synthesisDisciplines: ['Social proof', 'Influence', 'Cialdini'],
     readingCompanion: {
       essentials: {
         canon: { title: 'Influence', author: 'Robert Cialdini', coreIdea: 'Social proof, authority, scarcity, and reciprocity drive compliance. Borrowed trust converts.', whyMatters: 'Borrowed trust often converts better than earned trust.' },
@@ -1006,6 +1061,10 @@ Elite brands do not need desperation.`,
     frameworks: [{ id: 'p2-framework-12-1', title: 'After-State', description: 'What feels different post-purchase.', content: 'Relief is a stronger motivator than excitement.' }],
     worksheets: [{ id: 'p2-worksheet-12-1', title: 'After-State Definition', description: 'What feels different post-purchase.', fields: [{ id: 'after-state', label: 'After-State', type: 'textarea', required: true }] }],
     requiredOutputs: [{ id: 'after-state', label: 'After-state definition', type: 'text' }],
+    professorNotes: { whatStudentsGetWrong: 'Students describe the product. They avoid defining what feels different after purchase. They confuse outcome with after-state.', whatAplusSmellsLike: 'One after-state: what feels different (emotionally) post-purchase. Specific, not generic.', theTrap: 'The trap is "they get the feature." After-state is emotional, not functional.' },
+    sampleAnswers: { strong: { text: 'After-state: "I no longer dread the Monday numbers call. I know the story before anyone asks." Relief, not excitement.', why: 'Emotional, specific, post-purchase.' }, weak: { text: 'They get access to our platform and can run reports.', whyFails: 'Functional, not emotional after-state.' } },
+    legitimacyLens: { whoCouldAttack: 'Who could say we overpromise the after-state?', whatLooksExploitative: 'When does after-state framing feel manipulative?', implicitPromise: 'What do we promise about life after purchase?' },
+    synthesisDisciplines: ['Emotional payoff', 'Relief', 'Experience'],
     readingCompanion: {
       essentials: {
         canon: { title: 'Desire', author: 'William B. Irvine', coreIdea: 'Desire and relief drive behavior. Relief is often stronger than excitement.', whyMatters: 'Relief is a stronger motivator than excitement.' },
@@ -1062,6 +1121,10 @@ Elite brands do not need desperation.`,
     frameworks: [{ id: 'p2-framework-14-1', title: 'Justification Script', description: 'What buyers tell themselves.', content: 'People want to feel good about why they bought.' }],
     worksheets: [{ id: 'p2-worksheet-14-1', title: 'Justification Script', description: 'What buyers tell themselves.', fields: [{ id: 'justification', label: 'Justification', type: 'textarea', required: true }] }],
     requiredOutputs: [{ id: 'justification-script', label: 'Justification script', type: 'text' }],
+    professorNotes: { whatStudentsGetWrong: 'Students focus on features. They avoid naming what buyers tell themselves to feel good. They confuse rationale with justification.', whatAplusSmellsLike: 'One justification script: what buyers say to themselves (and others) to feel good about the purchase.', theTrap: 'The trap is "they buy for the features." They buy for the story they can tell.' },
+    sampleAnswers: { strong: { text: 'Justification script: "I am investing in the team\'s productivity, not just buying software. This pays for itself in one saved meeting per week."', why: 'Moral, story-based, defensible.' }, weak: { text: 'They need our solution. It has the best features.', whyFails: 'No script, no story.' } },
+    legitimacyLens: { whoCouldAttack: 'Who could say we enable self-deception?', whatLooksExploitative: 'When does justification scripting feel manipulative?', implicitPromise: 'What do we promise about how they will feel?' },
+    synthesisDisciplines: ['Moral psychology', 'Haidt', 'Justification'],
     readingCompanion: {
       essentials: {
         canon: { title: 'The Righteous Mind', author: 'Jonathan Haidt', coreIdea: 'Moral intuition precedes reason. People want to feel good about why they bought.', whyMatters: 'People want to feel good about why they bought.' },
@@ -1090,6 +1153,10 @@ Elite brands do not need desperation.`,
     frameworks: [{ id: 'p2-framework-15-1', title: 'Belief Audit', description: 'Which narratives you rely on emotionally.', content: 'Stories feel true even when they\'re wrong.' }],
     worksheets: [{ id: 'p2-worksheet-15-1', title: 'Belief Audit', description: 'Which narratives you rely on emotionally.', fields: [{ id: 'belief', label: 'Belief', type: 'textarea', required: true }] }],
     requiredOutputs: [{ id: 'belief-audit', label: 'Belief audit', type: 'text' }],
+    professorNotes: { whatStudentsGetWrong: 'Students list facts. They avoid naming which narratives they rely on emotionally. They confuse belief with data.', whatAplusSmellsLike: 'One belief audit: which narratives you (or the customer) rely on emotionally. Stress-tested.', theTrap: 'The trap is "we have the data." Beliefs drive choice before data does.' },
+    sampleAnswers: { strong: { text: 'Belief audit: We believe "teams that instrument early win." Stress test: What if instrumentation delays launch and they lose the window? We hold both.', why: 'Narrative named, stress-tested.' }, weak: { text: 'We believe in data-driven decisions. Our product is the best.', whyFails: 'No narrative, no stress test.' } },
+    legitimacyLens: { whoCouldAttack: 'Who could say we exploit narrative bias?', whatLooksExploitative: 'When does belief-based marketing feel manipulative?', implicitPromise: 'What do we promise about the stories we tell?' },
+    synthesisDisciplines: ['Narrative', 'Taleb', 'Belief'],
     readingCompanion: {
       essentials: {
         canon: { title: 'The Black Swan', author: 'Nassim Taleb', coreIdea: 'Rare events and narrative bias shape perception. Stories feel true even when they\'re wrong.', whyMatters: 'Stories feel true even when they\'re wrong.' },

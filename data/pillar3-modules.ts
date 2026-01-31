@@ -83,6 +83,10 @@ You must know both.`,
       { id: 'sensitivity-analysis', label: 'Sensitivity analysis identifying which variable breaks first', type: 'text' },
       { id: 'cac-inflation-scenario', label: 'CAC inflation scenario (+25%, +50%)', type: 'text' },
     ],
+    professorNotes: { whatStudentsGetWrong: 'Students use gross LTV. They avoid contribution margin and payback. They optimize for ratio without cash.', whatAplusSmellsLike: 'LTV from contribution margin. Payback in months. One variable that breaks first. CAC inflation scenario.', theTrap: 'The trap is "our LTV:CAC is 3x." Payback and contribution LTV determine survival.' },
+    sampleAnswers: { strong: { text: 'Contribution LTV $312. Payback 14 months. Breaks first: churn above 5%/mo. CAC +25% extends payback to 18 mo; +50% to 22 mo. We are margin-payback constrained.', why: 'Numbers, break variable, scenario.' }, weak: { text: 'Our LTV is strong. We have good unit economics. We are scaling.', whyFails: 'No numbers, no break variable, no scenario.' } },
+    legitimacyLens: { whoCouldAttack: 'Who could say we misstate unit economics?', whatLooksExploitative: 'When do LTV claims feel misleading?', implicitPromise: 'What do we promise about sustainability?' },
+    synthesisDisciplines: ['Unit economics', 'Finance', 'Wharton'],
     readingCompanion: {
       essentials: {
         canon: { title: 'The Lean Startup', author: 'Eric Ries', coreIdea: 'Build–Measure–Learn. Growth is emergent from a system, not a tactic.', whyMatters: 'Growth is not marketing activity. Growth is the emergent behavior of a system.' },
@@ -151,6 +155,10 @@ Supporting metrics explain why the North Star moves.`,
       { id: 'event-taxonomy', label: 'Customer Journey Data Map (events + properties + tools)', type: 'text' },
       { id: 'north-star-metric', label: 'North Star Metric definition', type: 'text' },
     ],
+    professorNotes: { whatStudentsGetWrong: 'Students add events ad hoc. They avoid taxonomy and North Star definition. They optimize for dashboards, not decisions.', whatAplusSmellsLike: 'One event taxonomy (view → intent → conversion → retention). One North Star metric defined. Map to tools.', theTrap: 'The trap is "we have a lot of data." Without taxonomy, data is noise.' },
+    sampleAnswers: { strong: { text: 'Taxonomy: Signed Up, First Value, Invited Teammate, Paid Conversion, Weekly Active. North Star: Weekly Active Teams. Tools: Segment, Amplitude, Stripe.', why: 'Taxonomy, North Star, tools.' }, weak: { text: 'We track many events. We use industry best practices. We have a North Star.', whyFails: 'No taxonomy, no North Star definition.' } },
+    legitimacyLens: { whoCouldAttack: 'Who could say we game or misdefine metrics?', whatLooksExploitative: 'When does metric definition feel manipulative?', implicitPromise: 'What do we promise about data integrity?' },
+    synthesisDisciplines: ['Data', 'Instrumentation', 'Stanford'],
     readingCompanion: {
       essentials: {
         canon: { title: 'Marketing Metrics', author: 'Farris et al.', coreIdea: 'CAC, LTV, payback, and cohort metrics. High CAC is often a symptom, not a channel problem.', whyMatters: 'High CAC is not a channel problem. It\'s a value or trust problem upstream.' },
@@ -257,6 +265,10 @@ Anything below 1.0 is value destruction.`,
       { id: 'budget-reallocation', label: 'One budget reallocation decision backed by iROAS', type: 'text' },
       { id: 'risk-statement', label: 'One risk statement explaining uncertainty', type: 'text' },
     ],
+    professorNotes: { whatStudentsGetWrong: 'Students trust last-click. They avoid incrementality tests. They reallocate without iROAS or risk statement.', whatAplusSmellsLike: 'One incrementality test plan. One channel as creator vs capturer. One reallocation backed by iROAS. One risk statement.', theTrap: 'The trap is "attribution says so." Attribution lies; incrementality tests reveal.' },
+    sampleAnswers: { strong: { text: 'Test: geo holdout for paid social, 4 weeks. Channel: Paid social is capturer; organic is creator. Reallocation: shift 20% to organic based on iROAS. Risk: test power 80%; we may miss −10% true effect.', why: 'Test, classification, reallocation, risk.' }, weak: { text: 'We use multi-touch attribution. We optimize by channel. Our model is sophisticated.', whyFails: 'No test, no creator/capturer, no risk.' } },
+    legitimacyLens: { whoCouldAttack: 'Who could say we misattribute or game tests?', whatLooksExploitative: 'When does reallocation feel manipulative?', implicitPromise: 'What do we promise about causal truth?' },
+    synthesisDisciplines: ['Attribution', 'Incrementality', 'Causation'],
     readingCompanion: {
       essentials: {
         canon: { title: 'Traction', author: 'Gabriel Weinberg', coreIdea: 'Channels work when they match how buyers already behave. No channel works universally.', whyMatters: 'No channel works universally. Channels work when they match how buyers already behave.' },
@@ -365,6 +377,10 @@ Without stored investment, there is no compounding.`,
       { id: 'loop-health-metric', label: 'One loop health metric', type: 'text' },
       { id: 'kill-criterion', label: 'One kill criterion (when to abandon it)', type: 'text' },
     ],
+    professorNotes: { whatStudentsGetWrong: 'Students list tactics. They avoid naming stored investment or kill criterion. They call funnels "loops."', whatAplusSmellsLike: 'One primary loop. One stored investment. One loop health metric. One kill criterion.', theTrap: 'The trap is "we have viral growth." If there is no stored investment, it is not a loop.' },
+    sampleAnswers: { strong: { text: 'Primary loop: Invite → Sign-up → Use → Invite. Stored investment: team graph + content. Health: invite rate × conversion. Kill: invite rate &lt; 0.1 for 2 cohorts.', why: 'Loop, investment, metric, kill.' }, weak: { text: 'We have referral and content. We are focused on growth.', whyFails: 'No stored investment, no kill criterion.' } },
+    legitimacyLens: { whoCouldAttack: 'Who could say we fake loops or misstate compounding?', whatLooksExploitative: 'When does loop design feel manipulative?', implicitPromise: 'What do we promise about growth sustainability?' },
+    synthesisDisciplines: ['Growth loops', 'Systems', 'Stanford GSB'],
     readingCompanion: {
       essentials: {
         canon: { title: 'Crossing the Chasm', author: 'Geoffrey Moore', coreIdea: 'Early markets require creation; mainstream requires capture. Capture converts existing intent.', whyMatters: 'Capture converts existing intent. Creation manufactures intent — slowly and expensively.' },
@@ -485,6 +501,10 @@ Customers churn before they consciously decide to leave because:
       { id: 'churn-reduction-opportunity', label: 'One quantified churn reduction opportunity', type: 'text' },
       { id: 'month-3-intervention', label: 'One Month-3 intervention hypothesis', type: 'text' },
     ],
+    professorNotes: { whatStudentsGetWrong: 'Students look at revenue. They avoid cohort tables and retention curves. They treat churn as fixed.', whatAplusSmellsLike: 'One cohort table. One retention curve interpretation. One quantified churn opportunity. One Month-3 intervention.', theTrap: 'The trap is "revenue is up." If retention is flat or down by cohort, nothing compounds.' },
+    sampleAnswers: { strong: { text: 'Cohort: by signup month. Curve: smile — flattening at 40%. Churn opportunity: −1% = +$80K LTV. Month-3: trigger email at day 75 if no "aha" event.', why: 'Cohort, curve, opportunity, intervention.' }, weak: { text: 'We have good retention. We track cohorts. We are improving.', whyFails: 'No curve interpretation, no quantified opportunity.' } },
+    legitimacyLens: { whoCouldAttack: 'Who could say we misstate retention or cohort definitions?', whatLooksExploitative: 'When does retention framing feel manipulative?', implicitPromise: 'What do we promise about customer longevity?' },
+    synthesisDisciplines: ['Cohorts', 'Retention', 'HBS'],
     readingCompanion: {
       essentials: {
         canon: { title: 'Advertising Management', author: 'Keller et al.', coreIdea: 'Ads amplify what already works. They do not fix broken value propositions.', whyMatters: 'Ads amplify what already works. They do not fix broken value propositions.' },
@@ -593,6 +613,10 @@ Not everyone deserves convenience.`,
       { id: 'differential-service', label: 'A differential service plan', type: 'text' },
       { id: 'deprioritized-segment', label: 'One segment you intentionally deprioritize', type: 'text' },
     ],
+    professorNotes: { whatStudentsGetWrong: 'Students segment by demographics. They avoid value-based schema and deprioritization. They serve everyone equally.', whatAplusSmellsLike: 'One value-based segmentation. One RFM (or equivalent). One differential service plan. One deprioritized segment.', theTrap: 'The trap is "we serve all customers." Elite operators deprioritize to focus.' },
+    sampleAnswers: { strong: { text: 'Segmentation: LTV quartiles + engagement. RFM: R 0–30d, F 4+, M top 25%. Differential: top quartile gets CSM; bottom gets self-serve. Deprioritized: one-time buyers, no repeat intent.', why: 'Schema, RFM, differential, deprioritized.' }, weak: { text: 'We segment by size and industry. We serve all customers well.', whyFails: 'No value-based, no deprioritization.' } },
+    legitimacyLens: { whoCouldAttack: 'Who could say we discriminate or underserve?', whatLooksExploitative: 'When does deprioritization feel unfair?', implicitPromise: 'What do we promise about who we serve?' },
+    synthesisDisciplines: ['Segmentation', 'RFM', 'Customer value'],
     readingCompanion: {
       essentials: {
         canon: { title: 'Content Inc.', author: 'Joe Pulizzi', coreIdea: 'Organic growth compounds when content creates switching costs or habit. Organic growth compounds only if it creates switching costs or habit.', whyMatters: 'Organic growth compounds only if it creates switching costs or habit.' },
@@ -697,6 +721,10 @@ Stopping early is lying to yourself.`,
       { id: 'killed-experiment', label: 'One killed experiment', type: 'text' },
       { id: 'learning-memo', label: 'One learning memo', type: 'text' },
     ],
+    professorNotes: { whatStudentsGetWrong: 'Students run tests without hypotheses. They avoid killing experiments. They skip learning memos.', whatAplusSmellsLike: 'Three falsifiable hypotheses. One experiment spec. One killed experiment. One learning memo.', theTrap: 'The trap is "we are data-driven." Without hypotheses and kill criteria, tests are theater.' },
+    sampleAnswers: { strong: { text: 'Hypotheses: (1) Headline A &gt; B by 10%. (2) CTA above fold &gt; below. (3) Social proof &gt; no proof. Spec: 50/50, 2 weeks, primary metric signup. Killed: discount test (no lift). Memo: Headline A won; we ship.', why: 'Hypotheses, spec, killed, memo.' }, weak: { text: 'We run A/B tests. We follow best practices. We learn from data.', whyFails: 'No hypotheses, no killed, no memo.' } },
+    legitimacyLens: { whoCouldAttack: 'Who could say we game or misreport experiments?', whatLooksExploitative: 'When does experimentation feel manipulative?', implicitPromise: 'What do we promise about evidence?' },
+    synthesisDisciplines: ['Experimentation', 'Hypothesis', 'Learning'],
     readingCompanion: {
       essentials: {
         canon: { title: 'Contagious', author: 'Jonah Berger', coreIdea: 'Virality is a byproduct of value, not a feature. Social transmission follows STEPPS.', whyMatters: 'Virality is a byproduct of value, not a feature.' },
@@ -807,6 +835,10 @@ The premium tier should:
       { id: 'tier-redesign', label: 'One tier redesign', type: 'text' },
       { id: 'pricing-experiment', label: 'One pricing experiment with guardrails', type: 'text' },
     ],
+    professorNotes: { whatStudentsGetWrong: 'Students discount without elasticity. They run promotions ad hoc. They avoid "never run" or guardrails.', whatAplusSmellsLike: 'One elasticity estimate. One promotion you will never run. One tier redesign. One pricing experiment with guardrails.', theTrap: 'The trap is "we need to discount to win." Elasticity and guardrails prevent margin collapse.' },
+    sampleAnswers: { strong: { text: 'Elasticity: −1.2 (10% price cut ≈ 12% volume). Never run: 50% off annual. Tier redesign: add usage-based middle. Experiment: +10% on new signups, guardrail LTV &gt; 6 mo payback.', why: 'Elasticity, never run, tier, experiment.' }, weak: { text: 'We have competitive pricing. We run promotions when needed. We test pricing.', whyFails: 'No elasticity, no never run, no guardrails.' } },
+    legitimacyLens: { whoCouldAttack: 'Who could say we misstate elasticity or game pricing?', whatLooksExploitative: 'When does pricing experimentation feel unfair?', implicitPromise: 'What do we promise about price integrity?' },
+    synthesisDisciplines: ['Pricing', 'Elasticity', 'Promotions'],
     readingCompanion: {
       essentials: {
         canon: { title: 'Sales Management', author: 'Churchill et al.', coreIdea: 'Sales and product solve different trust problems. Sales-led vs product-led growth.', whyMatters: 'Sales and product are not rivals. They solve different trust problems.' },
@@ -886,6 +918,10 @@ Small retention improvements compound into massive value.`,
       { id: 'streak-mechanic', label: 'One streak or endowed progress mechanic', type: 'text' },
       { id: 'retention-roi-calculation', label: 'One retention ROI calculation', type: 'text' },
     ],
+    professorNotes: { whatStudentsGetWrong: 'Students add features. They avoid hook design or retention ROI. They treat retention as "just make it better."', whatAplusSmellsLike: 'One hook model (trigger, action, reward, investment). One streak or endowed progress. One retention ROI calculation.', theTrap: 'The trap is "retention is a product problem." Retention is a system with ROI.' },
+    sampleAnswers: { strong: { text: 'Hook: External trigger (email) → Action (open report) → Variable reward (insight) → Investment (saved view). Streak: 7-day usage badge. ROI: 1% churn reduction = $X LTV; intervention cost $Y; payback Z months.', why: 'Hook, streak, ROI.' }, weak: { text: 'We have a great product. Users come back. We focus on engagement.', whyFails: 'No hook, no ROI.' } },
+    legitimacyLens: { whoCouldAttack: 'Who could say hooks or streaks are addictive or exploitative?', whatLooksExploitative: 'When does retention design feel manipulative?', implicitPromise: 'What do we promise about habit formation?' },
+    synthesisDisciplines: ['Hooked', 'Retention', 'Habit'],
     readingCompanion: {
       essentials: {
         canon: { title: 'Consumer Behavior', author: 'Solomon et al.', coreIdea: 'Funnels are abstractions. People are not linear. Drop-off truth: why people actually leave at each step.', whyMatters: 'Funnels are abstractions. People are not linear.' },
@@ -979,6 +1015,10 @@ Wait when:
       { id: 'governance-policy', label: 'One data governance policy', type: 'text' },
       { id: 'vendor-decision', label: 'One build vs buy decision', type: 'text' },
     ],
+    professorNotes: { whatStudentsGetWrong: 'Students add tools ad hoc. They avoid governance or build vs buy. They optimize for features, not stack.', whatAplusSmellsLike: 'One stack blueprint. One governance policy. One build vs buy decision with rationale.', theTrap: 'The trap is "we need the best tool." Stack coherence and governance matter more.' },
+    sampleAnswers: { strong: { text: 'Blueprint: Segment (ingest), Amplitude (product), Stripe (revenue), Looker (reporting). Governance: PII in Segment only; no PII in Amplitude. Build vs buy: build cohort builder; buy attribution.', why: 'Blueprint, governance, build vs buy.' }, weak: { text: 'We use best-in-class tools. We have a data stack. We follow governance.', whyFails: 'No blueprint, no policy, no decision.' } },
+    legitimacyLens: { whoCouldAttack: 'Who could say we misuse data or violate governance?', whatLooksExploitative: 'When does stack design feel risky?', implicitPromise: 'What do we promise about data stewardship?' },
+    synthesisDisciplines: ['Data stack', 'Governance', 'Build vs buy'],
     readingCompanion: {
       essentials: {
         canon: { title: 'The Loyalty Effect', author: 'Frederick Reichheld', coreIdea: 'Retention multiplies every dollar you spend on acquisition. First-win moment: when value is first realized.', whyMatters: 'Retention multiplies every dollar you spend on acquisition.' },
@@ -1008,6 +1048,10 @@ Wait when:
     frameworks: [{ id: 'p3-framework-11-1', title: 'Primary Loop Map', description: 'Action → value → reinforcement → repeat.', content: 'Funnels close deals. Loops build businesses.' }],
     worksheets: [{ id: 'p3-worksheet-11-1', title: 'Primary Loop Map', description: 'Action → value → reinforcement → repeat.', fields: [{ id: 'loop-step', label: 'Loop Step', type: 'text', required: true }] }],
     requiredOutputs: [{ id: 'primary-loop', label: 'Primary loop map', type: 'text' }],
+    professorNotes: { whatStudentsGetWrong: 'Students list features. They avoid mapping the primary loop. They confuse funnels with loops.', whatAplusSmellsLike: 'One primary loop map: action → value → reinforcement → repeat.', theTrap: 'The trap is "we have many growth tactics." One loop done well beats many half-built.' },
+    sampleAnswers: { strong: { text: 'Primary loop: Use product → Create asset (report/config) → Asset drives return → Return reinforces use. Repeat. One loop only.', why: 'Action, value, reinforcement, repeat.' }, weak: { text: 'We have referral and content and paid. We focus on growth.', whyFails: 'No single loop map.' } },
+    legitimacyLens: { whoCouldAttack: 'Who could say we misstate the loop or overclaim compounding?', whatLooksExploitative: 'When does loop design feel manipulative?', implicitPromise: 'What do we promise about growth sustainability?' },
+    synthesisDisciplines: ['Platform', 'Loops', 'Compounding'],
     readingCompanion: {
       essentials: {
         canon: { title: 'Platform Revolution', author: 'Geoffrey Parker et al.', coreIdea: 'Platforms grow via loops: action creates value that reinforces action. Funnels close deals; loops build businesses.', whyMatters: 'Funnels close deals. Loops build businesses.' },
@@ -1036,6 +1080,10 @@ Wait when:
     frameworks: [{ id: 'p3-framework-12-1', title: 'Scale Stress Test', description: 'What breaks at 10× volume?', content: 'Scale exposes weaknesses. It does not fix them.' }],
     worksheets: [{ id: 'p3-worksheet-12-1', title: 'Scale Stress Test', description: 'What breaks at 10× volume?', fields: [{ id: 'stress-point', label: 'Stress Point', type: 'textarea', required: true }] }],
     requiredOutputs: [{ id: 'scale-stress-test', label: 'Scale stress test', type: 'text' }],
+    professorNotes: { whatStudentsGetWrong: 'Students assume scale fixes unit economics. They avoid stress-testing. They optimize for growth, not sustainability.', whatAplusSmellsLike: 'One scale stress test: what breaks at 10× volume?', theTrap: 'The trap is "we will fix it at scale." Scale exposes; it does not fix.' },
+    sampleAnswers: { strong: { text: 'At 10×: Support queue 5×; CAC +40% (audience saturation); payback extends to 22 mo. Breaks first: margin payback. We cap paid spend until payback &lt; 18 mo.', why: '10× scenario, what breaks, cap.' }, weak: { text: 'We are built to scale. We have efficient systems. We will optimize as we grow.', whyFails: 'No stress test, no break point.' } },
+    legitimacyLens: { whoCouldAttack: 'Who could say we overstate scale readiness?', whatLooksExploitative: 'When does scale narrative feel misleading?', implicitPromise: 'What do we promise about scale?' },
+    synthesisDisciplines: ['Scale', 'Stress test', 'Finance'],
     readingCompanion: {
       essentials: {
         canon: { title: 'Financial Intelligence', author: 'Karen Berman & Joe Knight', coreIdea: 'Unit economics under scale. Scale exposes weaknesses; it does not fix them.', whyMatters: 'Scale exposes weaknesses. It does not fix them.' },
@@ -1064,6 +1112,10 @@ Wait when:
     frameworks: [{ id: 'p3-framework-13-1', title: 'Saturation Signal', description: 'Rising CAC with flat conversion.', content: 'Every channel eventually gets crowded.' }],
     worksheets: [{ id: 'p3-worksheet-13-1', title: 'Saturation Signal', description: 'Rising CAC with flat conversion.', fields: [{ id: 'signal', label: 'Signal', type: 'text', required: true }] }],
     requiredOutputs: [{ id: 'saturation-signal', label: 'Saturation signal', type: 'text' }],
+    professorNotes: { whatStudentsGetWrong: 'Students double down on winning channels. They avoid saturation signals. They treat CAC rise as execution problem.', whatAplusSmellsLike: 'One saturation signal: when do we stop scaling this channel?', theTrap: 'The trap is "we need to spend more." Saturation signal says when to stop.' },
+    sampleAnswers: { strong: { text: 'Saturation signal: CAC +30% YoY with flat conversion and same audience definition. We cap paid social at $X/month until new creative or audience.', why: 'Signal defined, action (cap) taken.' }, weak: { text: 'We monitor CAC. We optimize channels. We scale what works.', whyFails: 'No signal, no stop rule.' } },
+    legitimacyLens: { whoCouldAttack: 'Who could say we misstate saturation or overinvest?', whatLooksExploitative: 'When does channel narrative feel misleading?', implicitPromise: 'What do we promise about channel sustainability?' },
+    synthesisDisciplines: ['Saturation', 'Porter', 'Channels'],
     readingCompanion: {
       essentials: {
         canon: { title: 'Competitive Strategy', author: 'Michael Porter', coreIdea: 'Industry structure and rivalry. Every channel eventually gets crowded.', whyMatters: 'Every channel eventually gets crowded.' },
@@ -1092,6 +1144,10 @@ Wait when:
     frameworks: [{ id: 'p3-framework-14-1', title: 'Metric Truth Test', description: 'What decision does this metric change?', content: 'Metrics exist to reduce uncertainty, not impress investors.' }],
     worksheets: [{ id: 'p3-worksheet-14-1', title: 'Metric Truth Test', description: 'What decision does this metric change?', fields: [{ id: 'metric', label: 'Metric', type: 'text', required: true }] }],
     requiredOutputs: [{ id: 'metric-truth-test', label: 'Metric truth test', type: 'text' }],
+    professorNotes: { whatStudentsGetWrong: 'Students add metrics. They avoid the truth test. They optimize for dashboards, not decisions.', whatAplusSmellsLike: 'One metric truth test: what decision does this metric change?', theTrap: 'The trap is "we have a lot of data." Metrics exist to change decisions.' },
+    sampleAnswers: { strong: { text: 'Truth test: "Weekly Active Teams" changes decision to invest in onboarding (if down) vs acquisition (if up). We kill metrics that change no decision.', why: 'Decision linked, kill rule.' }, weak: { text: 'We track many metrics. We have dashboards. We are data-driven.', whyFails: 'No decision link.' } },
+    legitimacyLens: { whoCouldAttack: 'Who could say we game or misdefine metrics?', whatLooksExploitative: 'When does metric definition feel manipulative?', implicitPromise: 'What do we promise about metric integrity?' },
+    synthesisDisciplines: ['Measurement', 'Decision', 'Hubbard'],
     readingCompanion: {
       essentials: {
         canon: { title: 'How to Measure Anything', author: 'Douglas Hubbard', coreIdea: 'Measurement reduces uncertainty. Metrics exist to reduce uncertainty, not impress investors.', whyMatters: 'Metrics exist to reduce uncertainty, not impress investors.' },
@@ -1120,6 +1176,10 @@ Wait when:
     frameworks: [{ id: 'p3-framework-15-1', title: 'Growth Kill Criteria', description: 'When to stop scaling a channel.', content: 'Winning strategies define where not to grow.' }],
     worksheets: [{ id: 'p3-worksheet-15-1', title: 'Growth Kill Criteria', description: 'When to stop scaling a channel.', fields: [{ id: 'criterion', label: 'Criterion', type: 'textarea', required: true }] }],
     requiredOutputs: [{ id: 'growth-kill-criteria', label: 'Growth kill criteria', type: 'text' }],
+    professorNotes: { whatStudentsGetWrong: 'Students scale everything. They avoid kill criteria. They treat growth as always good.', whatAplusSmellsLike: 'One growth kill criteria: when do we stop scaling this channel or tactic?', theTrap: 'The trap is "more growth is better." Winning strategies define where not to grow.' },
+    sampleAnswers: { strong: { text: 'Kill criteria: (1) Payback &gt; 18 mo for 2 consecutive quarters. (2) CAC +50% YoY with flat conversion. (3) NPS &lt; 30 for segment. We stop; we do not "optimize."', why: 'Criteria defined, action (stop) clear.' }, weak: { text: 'We focus on growth. We optimize underperforming channels. We are disciplined.', whyFails: 'No kill criteria.' } },
+    legitimacyLens: { whoCouldAttack: 'Who could say we overinvest or misstate kill criteria?', whatLooksExploitative: 'When does growth narrative feel misleading?', implicitPromise: 'What do we promise about growth discipline?' },
+    synthesisDisciplines: ['Strategy', 'Kill criteria', 'Playing to Win'],
     readingCompanion: {
       essentials: {
         canon: { title: 'Playing to Win', author: 'A.G. Lafley & Roger Martin', coreIdea: 'Strategy is choice. Where to play and how to win. Winning strategies define where not to grow.', whyMatters: 'Winning strategies define where not to grow.' },

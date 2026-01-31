@@ -7,6 +7,7 @@ import {
   orderBy,
   query,
   limit,
+  where,
 } from 'firebase/firestore';
 import { db } from './firebase';
 import { IvyProject, IvyProjectState } from '@/types/project';
@@ -24,7 +25,7 @@ const defaultState: IvyProjectState = {
 };
 
 function toFirestore(project: Omit<IvyProject, 'id'>): Record<string, unknown> {
-  return {
+  const out: Record<string, unknown> = {
     name: project.name,
     applicationContext: project.applicationContext,
     state: project.state,
@@ -32,6 +33,8 @@ function toFirestore(project: Omit<IvyProject, 'id'>): Record<string, unknown> {
     createdAt: project.createdAt,
     updatedAt: project.updatedAt,
   };
+  if (project.userId) out.userId = project.userId;
+  return out;
 }
 
 function fromFirestore(id: string, data: Record<string, unknown>): IvyProject {
@@ -58,6 +61,7 @@ function fromFirestore(id: string, data: Record<string, unknown>): IvyProject {
   return {
     id,
     name: typeof data.name === 'string' ? data.name : '',
+    userId: typeof data.userId === 'string' ? data.userId : undefined,
     applicationContext: (data.applicationContext ?? {}) as ApplicationContext,
     state,
     progress: (data.progress ?? {
@@ -99,12 +103,14 @@ export async function createProject(
   name: string,
   applicationContext: ApplicationContext,
   state: BusinessState,
-  progress: Progress
+  progress: Progress,
+  userId: string
 ): Promise<string> {
   const ref = doc(collection(db, PROJECTS_COLLECTION));
   const now = new Date().toISOString();
   const project: Omit<IvyProject, 'id'> = {
     name,
+    userId,
     applicationContext,
     state: stateToProjectState(state),
     progress,
@@ -141,10 +147,17 @@ export async function updateProject(
   );
 }
 
-export async function listProjects(limitCount: number = 30): Promise<IvyProject[]> {
+/** List projects for a user. Returns [] if userId is null (not logged in). */
+export async function listProjects(userId: string | null, limitCount: number = 30): Promise<IvyProject[]> {
+  if (!userId) return [];
   try {
     const ref = collection(db, PROJECTS_COLLECTION);
-    const q = query(ref, orderBy('updatedAt', 'desc'), limit(limitCount));
+    const q = query(
+      ref,
+      where('userId', '==', userId),
+      orderBy('updatedAt', 'desc'),
+      limit(limitCount)
+    );
     const snap = await getDocs(q);
     return snap.docs.map((d) => fromFirestore(d.id, (d.data() ?? {}) as Record<string, unknown>));
   } catch (e) {

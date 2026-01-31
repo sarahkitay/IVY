@@ -1,5 +1,6 @@
 import { initializeApp, getApps, FirebaseApp } from 'firebase/app';
 import { getFirestore, Firestore } from 'firebase/firestore';
+import { getAuth, Auth } from 'firebase/auth';
 
 /**
  * Firebase config. For production, set NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -17,13 +18,16 @@ const firebaseConfig = {
 
 let app: FirebaseApp;
 let db: Firestore;
+let auth: Auth;
 
 if (!getApps().length) {
   app = initializeApp(firebaseConfig);
   db = getFirestore(app);
+  auth = getAuth(app);
 } else {
   app = getApps()[0] as FirebaseApp;
   db = getFirestore(app);
+  auth = getAuth(app);
 }
 
-export { app, db };
+export { app, db, auth };

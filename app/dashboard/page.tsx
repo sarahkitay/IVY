@@ -1,14 +1,17 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useProjectStore } from '@/store/useProjectStore';
+import { useAuthStore } from '@/store/useAuthStore';
 import { IvyProject } from '@/types/project';
 import { caseStudies } from '@/data/caseStudies';
 import { getProject } from '@/lib/projects';
 
 export default function DashboardPage() {
   const router = useRouter();
+  const { user, signOut } = useAuthStore();
   const currentProjectId = useProjectStore((s) => s.currentProjectId);
   const cachedProjects = useProjectStore((s) => s.cachedProjects);
   const { listProjects, loadProject, setCurrentProjectId } = useProjectStore();
@@ -23,12 +26,12 @@ export default function DashboardPage() {
       setProjects(cached);
       setLoading(false);
     }
-    listProjects()
+    listProjects(user?.uid ?? null)
       .then((list) => { if (!cancelled) setProjects(list); })
       .catch(() => { if (!cancelled) setProjects([]); })
       .finally(() => { if (!cancelled) setLoading(false); });
     return () => { cancelled = true; };
-  }, [listProjects]);
+  }, [listProjects, user?.uid]);
 
   useEffect(() => {
     if (!currentProjectId) {
@@ -90,13 +93,42 @@ export default function DashboardPage() {
         <div className="mb-8">
           <a href="/" className="inline-flex items-center gap-3 mb-6" aria-label="IVY home">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/ivy-corner-logo.png" alt="" className="h-12 w-12 object-contain" />
+            <span className="shrink-0 flex items-center justify-center -translate-y-0.5">
+              <img src="/ivy-corner-logo.png" alt="" className="h-12 w-12 object-contain" />
+            </span>
             <span className="font-cinzel-decorative font-bold text-xl uppercase text-ink">IVY</span>
           </a>
-          <h1 className="tier-1-gravitas text-2xl sm:text-4xl mb-2">Dashboard</h1>
-          <p className="text-sm font-normal text-charcoal/55">
-            Open a project or start a new one. Each project keeps its own data.
-          </p>
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <h1 className="tier-1-gravitas text-2xl sm:text-4xl mb-2">Dashboard</h1>
+              <p className="text-sm font-normal text-charcoal/55">
+                Open a project or start a new one. {user ? 'Your data is saved to the cloud and visible only to you.' : 'Log in to save and see your projects across devices.'}
+              </p>
+            </div>
+            <div className="flex items-center gap-2">
+              {user ? (
+                <>
+                  <span className="text-xs text-charcoal/60 truncate max-w-[140px] sm:max-w-[200px]" title={user.email ?? ''}>
+                    {user.email}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => signOut().then(() => router.push('/dashboard'))}
+                    className="label-small-caps text-charcoal/60 hover:text-ink border border-charcoal/20 px-3 py-2 text-sm"
+                  >
+                    Log out
+                  </button>
+                </>
+              ) : (
+                <Link
+                  href="/login"
+                  className="label-small-caps bg-ink text-cream hover:bg-charcoal px-4 py-2 text-sm"
+                >
+                  Log in
+                </Link>
+              )}
+            </div>
+          </div>
         </div>
 
         <div className="mb-8">
