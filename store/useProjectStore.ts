@@ -6,6 +6,7 @@ import { BusinessState } from '@/types';
 import { Progress } from '@/types';
 import { auth } from '@/lib/firebase';
 import { createProject as createProjectInFirebase, getProject, listProjects as listProjectsFromFirebase, updateProject as updateProjectInFirebase } from '@/lib/projects';
+import { useAuthStore } from '@/store/useAuthStore';
 import { getObserverPrefill, getAllModuleIds } from '@/data/observerPrefill';
 import { getCaseStudyById } from '@/data/caseStudies';
 import { useBusinessState } from './useBusinessState';
@@ -21,6 +22,8 @@ interface ProjectStore {
   listProjects: (userId: string | null) => Promise<IvyProject[]>;
   cachedProjects: IvyProject[] | null;
   syncCurrentProjectToFirebase: () => Promise<void>;
+  /** Create a Firebase project from current in-memory state and switch to it (for local → cloud). */
+  saveCurrentSessionToCloud: () => Promise<void>;
 }
 
 export const useProjectStore = create<ProjectStore>()(
@@ -104,19 +107,17 @@ export const useProjectStore = create<ProjectStore>()(
         const state = useBusinessState.getState().state;
         const progress = useProgress.getState().progress;
 
-        const localId = `local-${Date.now()}`;
-        set({ currentProjectId: localId });
-
-        const uid = auth.currentUser?.uid;
+        const uid = auth.currentUser?.uid ?? useAuthStore.getState().user?.uid;
         if (uid) {
-          createProjectInFirebase(name, context, state, progress, uid)
-            .then((realId) => {
-              set({ currentProjectId: realId });
-              get().syncCurrentProjectToFirebase();
-            })
-            .catch(() => {});
+          // Logged in: create in Firebase first, then set project ID so data persists
+          const realId = await createProjectInFirebase(name, context, state, progress, uid);
+          set({ currentProjectId: realId });
+          return realId;
         }
 
+        // Not logged in: use local ID (no cloud save)
+        const localId = `local-${Date.now()}`;
+        set({ currentProjectId: localId });
         return localId;
       },
 
@@ -132,6 +133,23 @@ export const useProjectStore = create<ProjectStore>()(
         const { state } = useBusinessState.getState();
         const { progress } = useProgress.getState();
         await updateProjectInFirebase(currentProjectId, state, progress);
+      },
+
+      saveCurrentSessionToCloud: async () => {
+        const { currentProjectId } = get();
+        if (!currentProjectId || !String(currentProjectId).startsWith('local-')) return;
+        const uid = auth.currentUser?.uid ?? useAuthStore.getState().user?.uid;
+        if (!uid) throw new Error('Not logged in');
+        const { state } = useBusinessState.getState();
+        const { progress } = useProgress.getState();
+        const ctx = state.applicationContext;
+        const name =
+          ctx?.type === 'my-company' ? ctx.companyName
+          : ctx?.type === 'case-study' ? ctx.caseName
+          : ctx?.type === 'hypothetical' ? ctx.category
+          : 'Observer Mode';
+        const realId = await createProjectInFirebase(name ?? 'Saved session', ctx ?? { type: 'observer' }, state, progress, uid);
+        set({ currentProjectId: realId });
       },
     }),
     { name: 'ivy-project-store', partialize: (s) => ({ currentProjectId: s.currentProjectId }) }

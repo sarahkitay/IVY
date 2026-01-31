@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useProjectStore } from '@/store/useProjectStore';
 import { useAuthStore } from '@/store/useAuthStore';
+import { useBusinessState } from '@/store/useBusinessState';
+import { useProgress } from '@/store/useProgress';
 import { IvyProject } from '@/types/project';
 import { caseStudies } from '@/data/caseStudies';
 import { getProject } from '@/lib/projects';
@@ -12,12 +14,15 @@ import { getProject } from '@/lib/projects';
 export default function DashboardPage() {
   const router = useRouter();
   const { user, signOut } = useAuthStore();
+  const { state } = useBusinessState();
+  const { progress } = useProgress();
   const currentProjectId = useProjectStore((s) => s.currentProjectId);
   const cachedProjects = useProjectStore((s) => s.cachedProjects);
-  const { listProjects, loadProject, setCurrentProjectId } = useProjectStore();
+  const { listProjects, loadProject, setCurrentProjectId, saveCurrentSessionToCloud } = useProjectStore();
   const [projects, setProjects] = useState<IvyProject[]>(cachedProjects ?? []);
   const [currentProject, setCurrentProject] = useState<IvyProject | null>(null);
   const [loading, setLoading] = useState(!cachedProjects?.length);
+  const [savingToCloud, setSavingToCloud] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -43,9 +48,9 @@ export default function DashboardPage() {
       setCurrentProject({
         id: currentProjectId,
         name: 'Current session (not saved to cloud)',
-        applicationContext: { type: 'observer' },
-        state: { moduleOutputs: {}, boardCredibilityScore: 0, economicConstraints: {}, controlLogic: {} },
-        progress: { currentModule: 'module-1', completedModules: [], unlockedModules: ['module-1'], overallProgress: 0, pillar1Progress: 0, pillar2Progress: 0, pillar3Progress: 0 },
+        applicationContext: state.applicationContext ?? { type: 'observer' },
+        state: { moduleOutputs: state.moduleOutputs ?? {}, boardCredibilityScore: state.boardCredibilityScore ?? 0, economicConstraints: state.economicConstraints ?? {}, controlLogic: state.controlLogic ?? {} },
+        progress,
         createdAt: '',
         updatedAt: '',
       });
@@ -55,7 +60,7 @@ export default function DashboardPage() {
       .then((p) => { if (!cancelled && p) setCurrentProject(p); })
       .catch(() => { if (!cancelled) setCurrentProject(null); });
     return () => { cancelled = true; };
-  }, [currentProjectId]);
+  }, [currentProjectId, state.applicationContext, state.moduleOutputs, state.boardCredibilityScore, state.economicConstraints, state.controlLogic, progress]);
 
   const handleOpenProject = async (projectId: string) => {
     if (projectId === currentProjectId) {
@@ -69,6 +74,25 @@ export default function DashboardPage() {
   const handleStartNew = () => {
     setCurrentProjectId(null);
     router.push('/context-selection');
+  };
+
+  const handleSaveToCloud = async () => {
+    if (!user || !currentProjectId || !String(currentProjectId).startsWith('local-')) return;
+    if (!state.applicationContext) {
+      alert('No session to save. Start a new project first.');
+      return;
+    }
+    setSavingToCloud(true);
+    try {
+      await saveCurrentSessionToCloud();
+      await listProjects(user.uid);
+      router.refresh();
+    } catch (e) {
+      console.error(e);
+      alert('Could not save to cloud. Check that you\'re logged in and try again.');
+    } finally {
+      setSavingToCloud(false);
+    }
   };
 
   const getProjectLabel = (p: IvyProject) => {
@@ -153,19 +177,31 @@ export default function DashboardPage() {
           {currentProject && (
             <div className="mb-6">
               <h2 className="tier-2-instruction text-xl mb-4">Current session</h2>
-              <button
-                onClick={() => handleOpenProject(currentProject.id)}
-                className="w-full command-center p-4 text-left hover:shadow-md transition-all flex items-center justify-between border-2 border-oxblood/30"
-                style={{ borderRadius: 0 }}
-              >
-                <div>
-                  <p className="tier-2-instruction font-medium">{getProjectLabel(currentProject)}</p>
-                  <p className="tier-3-guidance text-xs text-charcoal/60">
-                    {getProjectTypeLabel(currentProject)} · {currentProject.progress.completedModules.length} / 35 modules · Board: {currentProject.state?.boardCredibilityScore ?? 0}
-                  </p>
-                </div>
-                <span className="label-small-caps text-oxblood">Open</span>
-              </button>
+              <div className="space-y-2">
+                <button
+                  onClick={() => handleOpenProject(currentProject.id)}
+                  className="w-full command-center p-4 text-left hover:shadow-md transition-all flex items-center justify-between border-2 border-oxblood/30"
+                  style={{ borderRadius: 0 }}
+                >
+                  <div>
+                    <p className="tier-2-instruction font-medium">{getProjectLabel(currentProject)}</p>
+                    <p className="tier-3-guidance text-xs text-charcoal/60">
+                      {getProjectTypeLabel(currentProject)} · {currentProject.progress.completedModules.length} / 35 modules · Board: {currentProject.state?.boardCredibilityScore ?? 0}
+                    </p>
+                  </div>
+                  <span className="label-small-caps text-oxblood">Open</span>
+                </button>
+                {user && String(currentProject.id).startsWith('local-') && (
+                  <button
+                    type="button"
+                    onClick={handleSaveToCloud}
+                    disabled={savingToCloud}
+                    className="w-full label-small-caps text-sm py-2 px-4 border border-charcoal/30 bg-parchment hover:bg-charcoal/5 text-ink"
+                  >
+                    {savingToCloud ? 'Saving…' : 'Save current session to cloud'}
+                  </button>
+                )}
+              </div>
             </div>
           )}
           <h2 className="tier-2-instruction text-xl mb-4">Your projects</h2>
