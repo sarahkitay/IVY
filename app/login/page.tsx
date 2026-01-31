@@ -42,10 +42,18 @@ export default function LoginPage() {
       router.push('/dashboard');
       router.refresh();
     } catch (err: unknown) {
+      const code = err && typeof err === 'object' && 'code' in err ? String((err as { code: string }).code) : '';
       const message = err && typeof err === 'object' && 'message' in err
         ? String((err as { message: string }).message)
         : 'Something went wrong.';
-      setError(message.replace(/^Firebase:?\s*/i, ''));
+      const raw = message.replace(/^Firebase:?\s*/i, '');
+      if (code === 'auth/configuration-not-found' || /configuration\s*not\s*found/i.test(raw)) {
+        setError(
+          'Sign-in isn\'t set up yet. In Firebase Console: Build → Authentication → Get started, then enable the "Email/Password" sign-in method.'
+        );
+      } else {
+        setError(raw);
+      }
     } finally {
       setSubmitting(false);
     }
