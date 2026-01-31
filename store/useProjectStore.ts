@@ -34,11 +34,22 @@ export const useProjectStore = create<ProjectStore>()(
         const { replaceState } = useBusinessState.getState();
         const { setProgress } = useProgress.getState();
         replaceState({
-          applicationContext: project.applicationContext,
-          moduleOutputs: project.state.moduleOutputs,
-          boardCredibilityScore: project.state.boardCredibilityScore,
-          economicConstraints: project.state.economicConstraints,
-          controlLogic: project.state.controlLogic,
+          applicationContext: project.state.applicationContext ?? project.applicationContext,
+          moduleOutputs: project.state.moduleOutputs ?? {},
+          boardCredibilityScore: project.state.boardCredibilityScore ?? 0,
+          economicConstraints: project.state.economicConstraints ?? {},
+          controlLogic: project.state.controlLogic ?? {},
+          strategyNote: project.state.strategyNote,
+          boardMemoRubricScore: project.state.boardMemoRubricScore,
+          stakeholderMap: project.state.stakeholderMap,
+          boardPushbackResponses: project.state.boardPushbackResponses,
+          coldCallDefenseResponses: project.state.coldCallDefenseResponses,
+          strategicThesisLedger: project.state.strategicThesisLedger,
+          studioSubmission: project.state.studioSubmission,
+          peerCritiquesGiven: project.state.peerCritiquesGiven,
+          studioCredibilityBonusApplied: project.state.studioCredibilityBonusApplied,
+          caseMode: project.state.caseMode,
+          activeCasePackId: project.state.activeCasePackId,
         });
         setProgress(project.progress);
         set({ currentProjectId: projectId });
@@ -87,16 +98,7 @@ export const useProjectStore = create<ProjectStore>()(
         if (!currentProjectId || String(currentProjectId).startsWith('local-')) return;
         const { state } = useBusinessState.getState();
         const { progress } = useProgress.getState();
-        await updateProjectInFirebase(
-          currentProjectId,
-          {
-            moduleOutputs: state.moduleOutputs,
-            boardCredibilityScore: state.boardCredibilityScore,
-            economicConstraints: state.economicConstraints,
-            controlLogic: state.controlLogic,
-          },
-          progress
-        );
+        await updateProjectInFirebase(currentProjectId, state, progress);
       },
     }),
     { name: 'ivy-project-store', partialize: (s) => ({ currentProjectId: s.currentProjectId }) }

@@ -41,10 +41,31 @@ Unlike most apps, you cannot "scroll" to the end. Progression is blocked by `req
 
 Projects (context + module outputs + progress) are stored in Firestore so you can switch between projects without losing data.
 
-- **Config**: `lib/firebase.ts` uses your project config; override with `NEXT_PUBLIC_FIREBASE_*` env vars if needed.
+### How to connect Firebase (env vars)
+
+1. **Open [Firebase Console](https://console.firebase.google.com)** and sign in.
+2. **Create a project** (or use an existing one). If prompted, enable Google Analytics or skip.
+3. **Enable Firestore**: In the left sidebar click **Build → Firestore Database → Create database**. Choose **Start in test mode** (you can tighten rules later). Pick a region and confirm.
+4. **Get your config**: Click the gear icon → **Project settings**. Under **Your apps**, add a web app (</> icon) if you don’t have one. Copy the `firebaseConfig` object (apiKey, authDomain, projectId, etc.).
+5. **Set env vars locally**:
+   - Copy `.env.example` to `.env.local`: `cp .env.example .env.local`
+   - In `.env.local`, set each value from your Firebase config, e.g.:
+     - `NEXT_PUBLIC_FIREBASE_API_KEY` = your `apiKey`
+     - `NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN` = your `authDomain`
+     - `NEXT_PUBLIC_FIREBASE_PROJECT_ID` = your `projectId`
+     - `NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET` = your `storageBucket`
+     - `NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID` = your `messagingSenderId`
+     - `NEXT_PUBLIC_FIREBASE_APP_ID` = your `appId`
+6. **Set env vars on Vercel** (so the deployed app saves data):
+   - In [Vercel](https://vercel.com) open your project → **Settings → Environment Variables**.
+   - Add the same six `NEXT_PUBLIC_FIREBASE_*` variables (name + value). Apply to **Production**, **Preview**, and **Development** if you use them.
+   - Redeploy (e.g. push a commit or **Deployments → … → Redeploy**).
+
+7. **Firestore index** (if the app asks for it): In Firebase Console → Firestore → **Indexes**, create a composite index on collection `projects` with field `updatedAt` (Descending). Or run `firebase deploy --only firestore:indexes` if you use the Firebase CLI.
+8. **Rules**: Firestore → **Rules**. For testing you can use: `match /projects/{id} { allow read, write: if true; }`. For production, restrict with `request.auth != null` or your own conditions.
+
+- **Config**: `lib/firebase.ts` reads these env vars. Without them, the app may use fallback config if present; for your own project and for Vercel, set the variables above.
 - **Firestore**: Collection `projects`; each document has `name`, `applicationContext`, `state`, `progress`, `createdAt`, `updatedAt`.
-- **Index**: For "Your projects" (ordered by `updatedAt`), deploy indexes: `firebase deploy --only firestore:indexes` (or create the index in Firebase Console when prompted).
-- **Rules**: In Firebase Console → Firestore → Rules, allow read/write for testing, e.g. `match /projects/{id} { allow read, write: if true; }`. Tighten for production (e.g. require auth).
 
 ## Design System
 

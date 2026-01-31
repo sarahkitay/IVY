@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import Link from 'next/link';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 interface ScenarioData {
@@ -185,6 +186,15 @@ export default function ScenarioSimulator() {
               </p>
             </div>
           </div>
+        </div>
+
+        <div className="mt-12 pt-8 border-t border-charcoal/20">
+          <Link
+            href="/"
+            className="label-small-caps inline-flex items-center gap-2 text-charcoal/70 hover:text-ink border border-charcoal/20 px-4 py-2"
+          >
+            ← Back to home page
+          </Link>
         </div>
       </div>
     </div>

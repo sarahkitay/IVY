@@ -210,19 +210,19 @@ export default function Home() {
               </div>
             </div>
             <div className="flex flex-wrap items-center justify-end gap-2 sm:gap-4 ml-auto sm:ml-0">
-            {/* Case Mode toggle: My Company | Case Mode (HBS-style immersion) */}
+            {/* Case Mode toggle: My Company | Case Mode (HBS-style immersion) — selected = darker cream + black text for readability */}
             <div className="flex border border-charcoal/20" style={{ borderRadius: 0 }}>
               <button
                 type="button"
                 onClick={() => setCaseMode('my-company')}
-                className={`label-small-caps px-3 py-2 text-xs transition-colors ${state.caseMode !== 'case' ? 'bg-ink text-cream' : 'bg-cream text-charcoal/70 hover:bg-parchment/50'}`}
+                className={`label-small-caps px-3 py-2 text-xs transition-colors ${state.caseMode !== 'case' ? 'bg-parchment text-ink border border-charcoal/30' : 'bg-cream text-charcoal/70 hover:bg-parchment/50'}`}
               >
                 My Company
               </button>
               <button
                 type="button"
                 onClick={() => setCaseMode('case', casePacks[0]?.id)}
-                className={`label-small-caps px-3 py-2 text-xs transition-colors ${state.caseMode === 'case' ? 'bg-ink text-cream' : 'bg-cream text-charcoal/70 hover:bg-parchment/50'}`}
+                className={`label-small-caps px-3 py-2 text-xs transition-colors ${state.caseMode === 'case' ? 'bg-parchment text-ink border border-charcoal/30' : 'bg-cream text-charcoal/70 hover:bg-parchment/50'}`}
               >
                 Case Mode
               </button>
@@ -236,14 +236,14 @@ export default function Home() {
               href="/dashboard"
               className="label-small-caps text-charcoal/60 hover:text-ink text-sm"
             >
-              Back to Dashboard
+              Back to home page
             </Link>
             <button
               type="button"
               onClick={() => dashboardRef.current?.scrollIntoView({ behavior: 'smooth' })}
               className="label-small-caps text-charcoal/60 hover:text-ink text-sm"
             >
-              View Dashboard
+              View live stats
             </button>
             {state.applicationContext && (
               <div className="ml-auto sm:ml-0 flex flex-col border-l-2 border-charcoal/25 pl-2 sm:pl-3 py-0.5 min-h-[28px] sm:command-center sm:flex-col sm:px-4 sm:py-2 sm:border sm:border-charcoal/15 sm:bg-parchment/50 sm:border-l-0 sm:pl-4 sm:gap-0.5">

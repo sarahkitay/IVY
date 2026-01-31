@@ -9,12 +9,19 @@ import {
   limit,
 } from 'firebase/firestore';
 import { db } from './firebase';
-import { IvyProject } from '@/types/project';
+import { IvyProject, IvyProjectState } from '@/types/project';
 import { ApplicationContext } from '@/types/context';
 import { BusinessState } from '@/types';
 import { Progress } from '@/types';
 
 const PROJECTS_COLLECTION = 'projects';
+
+const defaultState: IvyProjectState = {
+  moduleOutputs: {},
+  boardCredibilityScore: 0,
+  economicConstraints: {},
+  controlLogic: {},
+};
 
 function toFirestore(project: Omit<IvyProject, 'id'>): Record<string, unknown> {
   return {
@@ -28,11 +35,31 @@ function toFirestore(project: Omit<IvyProject, 'id'>): Record<string, unknown> {
 }
 
 function fromFirestore(id: string, data: Record<string, unknown>): IvyProject {
+  const raw = (data.state ?? {}) as Record<string, unknown>;
+  const state: IvyProjectState = {
+    ...defaultState,
+    applicationContext: (raw.applicationContext ?? data.applicationContext ?? {}) as ApplicationContext,
+    moduleOutputs: (raw.moduleOutputs ?? {}) as BusinessState['moduleOutputs'],
+    boardCredibilityScore: typeof raw.boardCredibilityScore === 'number' ? raw.boardCredibilityScore : 0,
+    economicConstraints: (raw.economicConstraints ?? {}) as BusinessState['economicConstraints'],
+    controlLogic: (raw.controlLogic ?? {}) as BusinessState['controlLogic'],
+    strategyNote: raw.strategyNote as BusinessState['strategyNote'],
+    boardMemoRubricScore: raw.boardMemoRubricScore as number | undefined,
+    stakeholderMap: raw.stakeholderMap as BusinessState['stakeholderMap'],
+    boardPushbackResponses: raw.boardPushbackResponses as BusinessState['boardPushbackResponses'],
+    coldCallDefenseResponses: raw.coldCallDefenseResponses as BusinessState['coldCallDefenseResponses'],
+    strategicThesisLedger: raw.strategicThesisLedger as BusinessState['strategicThesisLedger'],
+    studioSubmission: raw.studioSubmission as BusinessState['studioSubmission'],
+    peerCritiquesGiven: raw.peerCritiquesGiven as BusinessState['peerCritiquesGiven'],
+    studioCredibilityBonusApplied: raw.studioCredibilityBonusApplied as boolean | undefined,
+    caseMode: raw.caseMode as BusinessState['caseMode'],
+    activeCasePackId: raw.activeCasePackId as string | undefined,
+  };
   return {
     id,
     name: typeof data.name === 'string' ? data.name : '',
     applicationContext: (data.applicationContext ?? {}) as ApplicationContext,
-    state: (data.state ?? { moduleOutputs: {}, boardCredibilityScore: 0, economicConstraints: {}, controlLogic: {} }) as IvyProject['state'],
+    state,
     progress: (data.progress ?? {
       currentModule: 'module-1',
       completedModules: [],
@@ -47,6 +74,27 @@ function fromFirestore(id: string, data: Record<string, unknown>): IvyProject {
   };
 }
 
+function stateToProjectState(state: BusinessState): IvyProjectState {
+  return {
+    applicationContext: state.applicationContext,
+    moduleOutputs: state.moduleOutputs ?? {},
+    boardCredibilityScore: state.boardCredibilityScore ?? 0,
+    economicConstraints: state.economicConstraints ?? {},
+    controlLogic: state.controlLogic ?? {},
+    strategyNote: state.strategyNote,
+    boardMemoRubricScore: state.boardMemoRubricScore,
+    stakeholderMap: state.stakeholderMap,
+    boardPushbackResponses: state.boardPushbackResponses,
+    coldCallDefenseResponses: state.coldCallDefenseResponses,
+    strategicThesisLedger: state.strategicThesisLedger,
+    studioSubmission: state.studioSubmission,
+    peerCritiquesGiven: state.peerCritiquesGiven,
+    studioCredibilityBonusApplied: state.studioCredibilityBonusApplied,
+    caseMode: state.caseMode,
+    activeCasePackId: state.activeCasePackId,
+  };
+}
+
 export async function createProject(
   name: string,
   applicationContext: ApplicationContext,
@@ -58,12 +106,7 @@ export async function createProject(
   const project: Omit<IvyProject, 'id'> = {
     name,
     applicationContext,
-    state: {
-      moduleOutputs: state.moduleOutputs ?? {},
-      boardCredibilityScore: state.boardCredibilityScore ?? 0,
-      economicConstraints: state.economicConstraints ?? {},
-      controlLogic: state.controlLogic ?? {},
-    },
+    state: stateToProjectState(state),
     progress,
     createdAt: now,
     updatedAt: now,
@@ -82,7 +125,7 @@ export async function getProject(projectId: string): Promise<IvyProject | null> 
 
 export async function updateProject(
   projectId: string,
-  state: Pick<BusinessState, 'moduleOutputs' | 'boardCredibilityScore' | 'economicConstraints' | 'controlLogic'>,
+  state: BusinessState,
   progress: Progress
 ): Promise<void> {
   if (String(projectId).startsWith('local-')) return;
@@ -90,7 +133,7 @@ export async function updateProject(
   await setDoc(
     ref,
     {
-      state,
+      state: stateToProjectState(state),
       progress,
       updatedAt: new Date().toISOString(),
     },

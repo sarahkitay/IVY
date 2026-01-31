@@ -22,9 +22,9 @@ export default function NotFound() {
         <Link
           href="/dashboard"
           className="inline-block px-6 py-3 bg-ink text-cream font-medium rounded hover:bg-charcoal transition-colors"
-          aria-label="Go to dashboard"
+          aria-label="Back to home page"
         >
-          Go to Dashboard
+          Back to home page
         </Link>
       </div>
     </div>

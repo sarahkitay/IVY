@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useBusinessState } from '@/store/useBusinessState';
 import { getModulesInOrder } from '@/data/all-modules';
 import { useState } from 'react';
@@ -308,6 +309,15 @@ export default function BoardMemoPage() {
               </div>
             </div>
           )}
+        </div>
+
+        <div className="mt-8 pt-6 border-t border-charcoal/20">
+          <Link
+            href="/"
+            className="label-small-caps inline-flex items-center gap-2 text-charcoal/70 hover:text-ink border border-charcoal/20 px-4 py-2"
+          >
+            ← Back to home page
+          </Link>
         </div>
       </div>
     </div>
