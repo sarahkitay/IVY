@@ -62,8 +62,24 @@ Projects (context + module outputs + progress) are stored in Firestore so you ca
    - Redeploy (e.g. push a commit or **Deployments → … → Redeploy**).
 
 7. **Enable Authentication** (for login and per-user data): In Firebase Console → **Build → Authentication** → **Get started**. Under **Sign-in method**, enable **Email/Password**. Users can then create an account and log in; projects are scoped by `userId` so each user sees only their own data.
-8. **Firestore index** (if the app asks for it): Create a composite index on collection `projects` with fields **userId** (Ascending) and **updatedAt** (Descending). Firebase will show a link in the console when the first query runs, or add it under Firestore → **Indexes**.
-9. **Rules**: Firestore → **Rules**. For per-user data use: `match /projects/{id} { allow read, write: if request.auth != null && request.auth.uid == resource.data.userId; allow create: if request.auth != null && request.resource.data.userId == request.auth.uid; }` so users can only read/write their own projects.
+8. **Firestore index** (required for "Your projects" list): Firestore → **Indexes** → **Composite** → Collection ID `projects`, add fields **userId** (Ascending) and **updatedAt** (Descending). Create index. (Or run the app, try opening Dashboard; if the query fails, the browser console may show a link to auto-create the index.)
+9. **Firestore Rules** (required for save/create): Firestore → **Rules**. Replace the default rules with the following so logged-in users can create and read/update only their own projects. Without this, "Save to cloud" and "Start project" while logged in will fail with permission errors:
+
+   ```firestore
+   rules_version = '2';
+   service cloud.firestore {
+     match /databases/{database}/documents {
+       match /projects/{projectId} {
+         allow create: if request.auth != null && request.resource.data.userId == request.auth.uid;
+         allow read, update, delete: if request.auth != null && resource.data.userId == request.auth.uid;
+       }
+       match /{document=**} {
+         allow read, write: if false;
+       }
+     }
+   }
+   ```
+   (The last block denies everything else. You can remove it if you only have a `projects` collection.) Then click **Publish**.
 
 - **Config**: `lib/firebase.ts` reads these env vars. Without them, the app may use fallback config if present; for your own project and for Vercel, set the variables above.
 - **Firestore**: Collection `projects`; each document has `userId`, `name`, `applicationContext`, `state`, `progress`, `createdAt`, `updatedAt`. Logged-in users see only their projects; others can use the app locally without cloud sync.

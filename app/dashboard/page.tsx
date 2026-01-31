@@ -88,8 +88,9 @@ export default function DashboardPage() {
       await listProjects(user.uid);
       router.refresh();
     } catch (e) {
-      console.error(e);
-      alert('Could not save to cloud. Check that you\'re logged in and try again.');
+      console.error('Save to cloud error:', e);
+      const msg = e instanceof Error ? e.message : String(e);
+      alert(`Could not save to cloud: ${msg}\n\nCheck: Firebase Console → Firestore → Rules (allow authenticated writes); Firestore → Indexes if the error mentions an index.`);
     } finally {
       setSavingToCloud(false);
     }

@@ -24,16 +24,30 @@ const defaultState: IvyProjectState = {
   controlLogic: {},
 };
 
+/** Firestore does not allow undefined. Convert undefined -> null recursively (objects + arrays). */
+function firestoreSafe<T>(value: T): T extends undefined ? null : T extends (infer U)[] ? U[] : T extends object ? { [k: string]: unknown } : T {
+  if (value === undefined) return null as T extends undefined ? null : T;
+  if (value === null) return value;
+  if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') return value;
+  if (value instanceof Date) return value;
+  if (Array.isArray(value)) return value.map((item) => firestoreSafe(item)) as T extends (infer U)[] ? U[] : T;
+  const out: Record<string, unknown> = {};
+  for (const [k, v] of Object.entries(value as Record<string, unknown>)) {
+    out[k] = firestoreSafe(v);
+  }
+  return out as T extends object ? { [k: string]: unknown } : T;
+}
+
 function toFirestore(project: Omit<IvyProject, 'id'>): Record<string, unknown> {
-  const out: Record<string, unknown> = {
+  const out: Record<string, unknown> = firestoreSafe({
     name: project.name,
     applicationContext: project.applicationContext,
     state: project.state,
     progress: project.progress,
     createdAt: project.createdAt,
     updatedAt: project.updatedAt,
-  };
-  if (project.userId) out.userId = project.userId;
+    ...(project.userId ? { userId: project.userId } : {}),
+  }) as Record<string, unknown>;
   return out;
 }
 
@@ -106,19 +120,26 @@ export async function createProject(
   progress: Progress,
   userId: string
 ): Promise<string> {
-  const ref = doc(collection(db, PROJECTS_COLLECTION));
-  const now = new Date().toISOString();
-  const project: Omit<IvyProject, 'id'> = {
-    name,
-    userId,
-    applicationContext,
-    state: stateToProjectState(state),
-    progress,
-    createdAt: now,
-    updatedAt: now,
-  };
-  await setDoc(ref, toFirestore(project));
-  return ref.id;
+  try {
+    const ref = doc(collection(db, PROJECTS_COLLECTION));
+    const now = new Date().toISOString();
+    const project: Omit<IvyProject, 'id'> = {
+      name,
+      userId,
+      applicationContext,
+      state: stateToProjectState(state),
+      progress,
+      createdAt: now,
+      updatedAt: now,
+    };
+    const data = toFirestore(project);
+    await setDoc(ref, data);
+    return ref.id;
+  } catch (e) {
+    const err = e as { code?: string; message?: string };
+    console.error('[Ivy] createProject failed:', err.code ?? err.message ?? String(e), e);
+    throw e;
+  }
 }
 
 export async function getProject(projectId: string): Promise<IvyProject | null> {
@@ -135,16 +156,19 @@ export async function updateProject(
   progress: Progress
 ): Promise<void> {
   if (String(projectId).startsWith('local-')) return;
-  const ref = doc(db, PROJECTS_COLLECTION, projectId);
-  await setDoc(
-    ref,
-    {
+  try {
+    const ref = doc(db, PROJECTS_COLLECTION, projectId);
+    const payload = firestoreSafe({
       state: stateToProjectState(state),
       progress,
       updatedAt: new Date().toISOString(),
-    },
-    { merge: true }
-  );
+    }) as Record<string, unknown>;
+    await setDoc(ref, payload, { merge: true });
+  } catch (e) {
+    const err = e as { code?: string; message?: string };
+    console.error('[Ivy] updateProject failed:', err.code ?? err.message ?? String(e), e);
+    throw e;
+  }
 }
 
 /** List projects for a user. Returns [] if userId is null (not logged in). */

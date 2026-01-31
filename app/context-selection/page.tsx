@@ -84,8 +84,9 @@ export default function ContextSelectionPage() {
       await createProject(name, context);
       router.push('/');
     } catch (e) {
-      console.error(e);
-      alert('Failed to create project. You can try again or start without saving to the cloud.');
+      console.error('Create project error:', e);
+      const msg = e instanceof Error ? e.message : String(e);
+      alert(`Failed to create project: ${msg}\n\nCheck: Firebase Console → Firestore → Rules (allow authenticated writes); Firestore → Indexes if you see an index link in the error.`);
     } finally {
       setSaving(false);
     }
