@@ -60,14 +60,69 @@ export function exportModulePDF(
     addText(fw.description, 9);
     y += 4;
   });
-  addText('REQUIRED OUTPUTS', 10, true);
   const moduleOutput = state.moduleOutputs?.[moduleId];
+
+  addText('REQUIRED OUTPUTS', 10, true);
   moduleData.requiredOutputs.forEach((req) => {
     const val = req.source
       ? (moduleOutput?.worksheets?.[req.source]?.fields?.[req.id] ?? '—')
       : (moduleOutput?.requiredOutputs?.[req.id] ?? '—');
     addText(`${req.label}: ${String(val)}`, 9);
   });
+  y += 8;
+
+  // All worksheet content (every worksheet, every field)
+  if (moduleOutput?.worksheets && Object.keys(moduleOutput.worksheets).length > 0) {
+    addText('WORKSHEETS', 10, true);
+    moduleData.worksheets.forEach((ws) => {
+      const wsData = moduleOutput.worksheets[ws.id];
+      if (!wsData?.fields) return;
+      addText(ws.title, 9, true);
+      Object.entries(wsData.fields).forEach(([fieldId, value]) => {
+        const field = ws.fields.find((f) => f.id === fieldId);
+        const label = field?.label ?? fieldId;
+        addText(`  ${label}: ${String(value ?? '—')}`, 9);
+      });
+      y += 4;
+    });
+    y += 8;
+  }
+
+  if (moduleOutput?.coldCallResponse?.trim()) {
+    addText('COLD CALL RESPONSE', 10, true);
+    addText(moduleOutput.coldCallResponse.trim(), 9);
+    y += 8;
+  }
+  if (moduleOutput?.redTeamResponse?.trim()) {
+    addText('RED TEAM / ENTER RECORD', 10, true);
+    addText(moduleOutput.redTeamResponse.trim(), 9);
+    y += 8;
+  }
+  if (moduleOutput?.readingCompanionApplyResponse?.trim()) {
+    addText('READING COMPANION — APPLY', 10, true);
+    addText(moduleOutput.readingCompanionApplyResponse.trim(), 9);
+    y += 8;
+  }
+  if (moduleOutput?.legitimacyLensResponses && moduleData.legitimacyLens) {
+    addText('STRUCTURAL REALITY / LEGITIMACY LENS', 10, true);
+    const { whoCouldAttack, whatLooksExploitative, implicitPromise } = moduleData.legitimacyLens;
+    const r = moduleOutput.legitimacyLensResponses;
+    if (r.whoCouldAttack?.trim()) addText(`${whoCouldAttack}: ${r.whoCouldAttack.trim()}`, 9);
+    if (r.whatLooksExploitative?.trim()) addText(`${whatLooksExploitative}: ${r.whatLooksExploitative.trim()}`, 9);
+    if (r.implicitPromise?.trim()) addText(`${implicitPromise}: ${r.implicitPromise.trim()}`, 9);
+    y += 8;
+  }
+  if (moduleOutput?.whatWouldChangeIn7Days?.trim()) {
+    addText('WHAT WOULD CHANGE IN 7 DAYS', 10, true);
+    addText(moduleOutput.whatWouldChangeIn7Days.trim(), 9);
+    y += 8;
+  }
+  if (moduleOutput?.synthesisResponse?.trim()) {
+    addText('SYNTHESIS', 10, true);
+    addText(moduleOutput.synthesisResponse.trim(), 9);
+    y += 8;
+  }
+
   doc.save(`Ivy-Workbook-${moduleData.title.replace(/\s+/g, '-')}-${moduleId}.pdf`);
 }
 
