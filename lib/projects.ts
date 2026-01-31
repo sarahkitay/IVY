@@ -25,17 +25,17 @@ const defaultState: IvyProjectState = {
 };
 
 /** Firestore does not allow undefined. Convert undefined -> null recursively (objects + arrays). */
-function firestoreSafe<T>(value: T): T extends undefined ? null : T extends (infer U)[] ? U[] : T extends object ? { [k: string]: unknown } : T {
-  if (value === undefined) return null as T extends undefined ? null : T;
+function firestoreSafe(value: unknown): unknown {
+  if (value === undefined) return null;
   if (value === null) return value;
   if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') return value;
   if (value instanceof Date) return value;
-  if (Array.isArray(value)) return value.map((item) => firestoreSafe(item)) as T extends (infer U)[] ? U[] : T;
+  if (Array.isArray(value)) return value.map((item) => firestoreSafe(item));
   const out: Record<string, unknown> = {};
   for (const [k, v] of Object.entries(value as Record<string, unknown>)) {
     out[k] = firestoreSafe(v);
   }
-  return out as T extends object ? { [k: string]: unknown } : T;
+  return out;
 }
 
 function toFirestore(project: Omit<IvyProject, 'id'>): Record<string, unknown> {
