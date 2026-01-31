@@ -286,6 +286,21 @@ code, pre {
   letter-spacing: 0.1em;
 }
 
+/* Dark primary button: always light text on dark bg.
+   Use .btn-dark for any black/charcoal button so text stays readable (cream on ink). */
+.btn-dark {
+  background-color: var(--ink);
+  color: var(--cream) !important;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+.btn-dark:hover {
+  background-color: var(--charcoal);
+  color: var(--cream) !important;
+}
+.btn-dark:disabled {
+  opacity: 0.5;
+}
+
 /* Academic block quotes */
 .academic-quote {
   @apply font-serif italic text-charcoal/80;

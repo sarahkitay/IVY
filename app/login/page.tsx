@@ -129,7 +129,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={submitting || authLoading}
-            className="w-full bg-ink text-cream px-4 py-3 font-medium hover:bg-charcoal disabled:opacity-50 transition-colors"
+            className="w-full btn-dark px-4 py-3 font-medium disabled:opacity-50"
           >
             {submitting ? 'Please wait…' : mode === 'login' ? 'Log in' : 'Create account'}
           </button>

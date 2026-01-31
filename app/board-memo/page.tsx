@@ -281,7 +281,7 @@ export default function BoardMemoPage() {
         <div className="command-center rounded-lg p-6 mb-6">
           <button
             onClick={generateMemo}
-            className="bg-ink text-white px-6 py-3 rounded-sm hover:bg-charcoal transition-all mb-4"
+            className="btn-dark px-6 py-3 rounded-sm transition-all mb-4"
           >
             Generate Memo
           </button>
@@ -297,7 +297,7 @@ export default function BoardMemoPage() {
                 </button>
                 <button
                   onClick={downloadPDF}
-                  className="bg-ink text-white px-4 py-2 rounded-sm hover:bg-charcoal transition-all"
+                  className="btn-dark px-4 py-2 rounded-sm transition-all"
                 >
                   Download PDF
                 </button>

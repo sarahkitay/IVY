@@ -122,7 +122,7 @@ export default function DashboardPage() {
               ) : (
                 <Link
                   href="/login"
-                  className="label-small-caps bg-ink text-cream hover:bg-charcoal px-4 py-2 text-sm"
+                  className="label-small-caps btn-dark px-4 py-2 text-sm inline-block"
                 >
                   Log in
                 </Link>

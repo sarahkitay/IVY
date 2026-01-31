@@ -48,7 +48,7 @@ export default function ModulePage() {
           <h1 className="font-serif text-2xl mb-4">Module not found</h1>
           <button
             onClick={() => router.push('/')}
-            className="bg-ink text-white px-6 py-3 rounded-sm hover:bg-charcoal"
+            className="btn-dark px-6 py-3 rounded-sm"
           >
             Return Home
           </button>
@@ -149,7 +149,7 @@ export default function ModulePage() {
           </p>
           <button
             onClick={() => router.push('/')}
-            className="bg-ink text-white px-6 py-3 rounded-sm hover:bg-charcoal"
+            className="btn-dark px-6 py-3 rounded-sm"
           >
             Return Home
           </button>

@@ -21,7 +21,7 @@ export default function NotFound() {
         </p>
         <Link
           href="/dashboard"
-          className="inline-block px-6 py-3 bg-ink text-cream font-medium rounded hover:bg-charcoal transition-colors"
+          className="inline-block btn-dark px-6 py-3 font-medium rounded transition-colors"
           aria-label="Back to home page"
         >
           Back to home page

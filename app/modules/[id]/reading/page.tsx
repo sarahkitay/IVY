@@ -26,7 +26,7 @@ export default function ModuleReadingPage() {
           <h1 className="font-serif text-2xl mb-4">Module not found</h1>
           <button
             onClick={() => router.push('/')}
-            className="bg-ink text-white px-6 py-3 rounded-sm hover:bg-charcoal"
+            className="btn-dark px-6 py-3 rounded-sm"
           >
             Return Home
           </button>
@@ -50,7 +50,7 @@ export default function ModuleReadingPage() {
           <h1 className="font-serif text-xl mb-4">No Reading Companion for this module</h1>
           <Link
             href={`/modules/${moduleId}`}
-            className="inline-block bg-ink text-cream px-6 py-3 hover:bg-charcoal transition-colors"
+            className="inline-block btn-dark px-6 py-3 transition-colors"
           >
             Back to module
           </Link>
