@@ -15,6 +15,8 @@ import RedTeamValidator from '@/components/RedTeamValidator';
 import ChurnSlider from '@/components/ChurnSlider';
 import HindsightGraph from '@/components/HindsightGraph';
 import FiveCsFramework from '@/components/FiveCsFramework';
+import FiveForcesAccordion from '@/components/FiveForcesAccordion';
+import FrameworkReveal from '@/components/FrameworkReveal';
 import { getQuizForModule } from '@/data/moduleQuizzes';
 import { WorksheetData } from '@/types';
 import { getCaseStudyById } from '@/data/caseStudies';
@@ -279,33 +281,50 @@ export default function ModulePage() {
         </div>
 
         {/* Frameworks */}
-        {moduleData.frameworks.map((framework) => (
-          <div key={framework.id} className="mb-8">
-            <h2 className="tier-2-instruction text-xl mb-2">{framework.title}</h2>
-            <p className="tier-3-guidance mb-4">{framework.description}</p>
-            
-            {/* Special handling for 5Cs Framework */}
-            {framework.id === 'framework-1-1' ? (
-              <FiveCsFramework content={framework.content} />
-            ) : (
-              <div className="border border-charcoal/20 p-4 mb-4" style={{ borderRadius: 0, boxShadow: 'none' }}>
-                <pre className="font-mono text-sm whitespace-pre-wrap text-charcoal leading-relaxed">
-                  {framework.content}
-                </pre>
-              </div>
-            )}
-            {framework.operatorWarning && (
-              <div className="vertical-rule mb-4">
-                <p className="font-mono text-xs font-bold text-charcoal mb-3 warning-flash tracking-widest uppercase">
-                  WARNING
-                </p>
-                <p className="font-mono text-base font-medium text-charcoal leading-relaxed whitespace-pre-wrap tracking-tight">
-                  {framework.operatorWarning}
-                </p>
-              </div>
-            )}
+        {moduleId === 'module-2' ? (
+          <div className="mb-8">
+            <h2 className="tier-2-instruction text-xl mb-2">Porter&apos;s Five Forces — Applied</h2>
+            <p className="tier-3-guidance mb-4">Five Forces are not a checklist. They are a stress test.</p>
+            <div className="border-l-2 border-charcoal/30 bg-parchment/20 py-3 px-4 mb-6" style={{ borderRadius: 0 }}>
+              <p className="label-small-caps text-charcoal/60 mb-1">Core design principle</p>
+              <p className="text-sm text-charcoal/90">
+                Do not show the &quot;answers&quot; first. Force the learner to take a position, then reveal the framework.
+                <strong className="block mt-2"> Judgment → Evidence → Correction → Insight</strong>
+                <span className="block mt-1 text-charcoal/70">Not: Explanation → Passive nodding.</span>
+              </p>
+            </div>
+            <FiveForcesAccordion />
+            <div className="mt-6 p-4 border border-charcoal/15 bg-parchment/10" style={{ borderRadius: 0 }}>
+              <p className="label-small-caps text-charcoal/60 mb-2">Scoring rule (total / 25)</p>
+              <p className="text-sm text-charcoal/80">
+                ≤12 structurally attractive · 13–14 playable with clear positioning · 15–17 only playable with a real moat · ≥18 value extraction unlikely.
+              </p>
+              <p className="text-xs text-charcoal/60 mt-2">Non-negotiable: state facts only. Each force = one number (or bounded estimate) + one observed behavior.</p>
+            </div>
           </div>
-        ))}
+        ) : (
+          moduleData.frameworks.map((framework) => (
+            <div key={framework.id} className="mb-8">
+              <h2 className="tier-2-instruction text-xl mb-2">{framework.title}</h2>
+              <p className="tier-3-guidance mb-4">{framework.description}</p>
+              {framework.id === 'framework-1-1' ? (
+                <FiveCsFramework content={framework.content} />
+              ) : (
+                <FrameworkReveal content={framework.content} />
+              )}
+              {framework.operatorWarning && (
+                <div className="vertical-rule mb-4">
+                  <p className="font-mono text-xs font-bold text-charcoal mb-3 warning-flash tracking-widest uppercase">
+                    WARNING
+                  </p>
+                  <p className="font-mono text-base font-medium text-charcoal leading-relaxed whitespace-pre-wrap tracking-tight">
+                    {framework.operatorWarning}
+                  </p>
+                </div>
+              )}
+            </div>
+          ))
+        )}
 
         {/* Professor Notes (Faculty layer: what students get wrong, A+ smell, the trap) */}
         {moduleData.professorNotes && (
