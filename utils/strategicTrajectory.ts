@@ -14,6 +14,17 @@ const NEGATIVE_KEYWORDS = [
   'unsure', 'maybe', 'probably', 'hope', 'assume', 'generic',
 ];
 
+function countRepeats(text: string, keywords: string[]): number {
+  const lower = text.toLowerCase();
+  let total = 0;
+  for (const k of keywords) {
+    const re = new RegExp(k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+    const matches = lower.match(re);
+    if (matches) total += matches.length;
+  }
+  return Math.max(0, total - keywords.length);
+}
+
 /**
  * Derives a profit-impact delta (-1 to +1) from all module answers.
  * Used to drive the strategic trajectory graph on the dashboard.
@@ -48,9 +59,11 @@ export function getStrategicTrajectoryScore(state: BusinessState): number {
     }
 
     const text = allText.join(' ').toLowerCase();
-    const positiveHits = POSITIVE_KEYWORDS.filter((k) => text.includes(k)).length;
-    const negativeHits = NEGATIVE_KEYWORDS.filter((k) => text.includes(k)).length;
-    const keywordDelta = (positiveHits - negativeHits) * 0.05;
+    const uniquePos = new Set(POSITIVE_KEYWORDS.filter((k) => text.includes(k))).size;
+    const uniqueNeg = new Set(NEGATIVE_KEYWORDS.filter((k) => text.includes(k))).size;
+    const repeats = countRepeats(text, POSITIVE_KEYWORDS);
+    const spamPenalty = Math.min(0.3, repeats * 0.02);
+    const keywordDelta = (uniquePos - uniqueNeg) * 0.05 - spamPenalty;
     totalDelta += keywordDelta;
   });
 
@@ -90,10 +103,12 @@ export function getStrategicTrajectorySeries(state: BusinessState): { step: numb
     if (output.coldCallResponse) allText.push(output.coldCallResponse);
     if (output.redTeamResponse) allText.push(output.redTeamResponse);
     const text = allText.join(' ').toLowerCase();
-    const pos = POSITIVE_KEYWORDS.filter((k) => text.includes(k)).length;
-    const neg = NEGATIVE_KEYWORDS.filter((k) => text.includes(k)).length;
-    const keywordDelta = (pos - neg) * 0.5;
-    profit += qualityDelta + keywordDelta;
+    const uniquePos = new Set(POSITIVE_KEYWORDS.filter((k) => text.includes(k))).size;
+    const uniqueNeg = new Set(NEGATIVE_KEYWORDS.filter((k) => text.includes(k))).size;
+    const repeats = countRepeats(text, POSITIVE_KEYWORDS);
+    const spamPenalty = Math.min(3, repeats * 0.15);
+    const keywordDelta = (uniquePos - uniqueNeg) * 0.4 - spamPenalty;
+    profit += qualityDelta + Math.max(0, keywordDelta);
     series.push({
       step: idx + 1,
       profit: Math.round(profit * 10) / 10,

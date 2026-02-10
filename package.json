@@ -8,7 +8,9 @@
     "start": "next start",
     "lint": "next lint",
     "deploy": "vercel --prod",
-    "deploy:preview": "vercel"
+    "deploy:preview": "vercel",
+    "test": "jest",
+    "test:watch": "jest --watch"
   },
   "dependencies": {
     "@types/node": "^20.14.12",

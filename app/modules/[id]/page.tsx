@@ -35,6 +35,8 @@ export default function ModulePage() {
   const [showColdCall, setShowColdCall] = useState(false);
   const [coldCallCompleted, setColdCallCompleted] = useState(false);
   const [worksheetData, setWorksheetData] = useState<{ [key: string]: WorksheetData }>({});
+  const [grading, setGrading] = useState(false);
+  const [gradeError, setGradeError] = useState<string | null>(null);
 
   const handleWorksheetUpdate = useCallback((data: WorksheetData) => {
     setWorksheetData((prev) => ({
@@ -80,6 +82,32 @@ export default function ModulePage() {
   const handleExportPDF = () => {
     if (!moduleData) return;
     exportModulePDFWithCorner(moduleData, moduleId, state);
+  };
+
+  const handleGradeAnswers = async () => {
+    setGradeError(null);
+    setGrading(true);
+    try {
+      const res = await fetch('/api/grade', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          moduleId,
+          moduleOutput: state.moduleOutputs[moduleId] ?? { moduleId, completed: false, requiredOutputs: {}, worksheets: {}, timestamp: new Date().toISOString() },
+          stateSnapshot: state,
+        }),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || `Grade failed: ${res.status}`);
+      }
+      const data = await res.json();
+      updateModuleOutput(moduleId, { aiGrade: data.grade });
+    } catch (e) {
+      setGradeError(e instanceof Error ? e.message : 'Grading failed');
+    } finally {
+      setGrading(false);
+    }
   };
 
   const handleCompleteModule = () => {
@@ -194,7 +222,26 @@ export default function ModulePage() {
             >
               Save as Ivy PDF
             </button>
+            <button
+              type="button"
+              onClick={handleGradeAnswers}
+              disabled={grading}
+              className="label-small-caps border border-charcoal/25 hover:bg-charcoal/5 px-3 py-2 text-sm min-h-[44px] disabled:opacity-60"
+              style={{ borderRadius: 0 }}
+            >
+              {grading ? 'Grading…' : 'Grade my answers'}
+            </button>
           </div>
+          {gradeError && (
+            <p className="text-sm text-oxblood/90 mb-2" role="alert">
+              {gradeError}
+            </p>
+          )}
+          {moduleOutput?.aiGrade && (
+            <p className="text-sm text-sage/90 mb-2">
+              AI grade: {moduleOutput.aiGrade.overall}/10 · Confidence: {Math.round(moduleOutput.aiGrade.confidence * 100)}%
+            </p>
+          )}
           <div className="label-small-caps mb-2">
             {moduleData.pillar === 'pillar-1' ? 'PILLAR I' : moduleData.pillar === 'pillar-2' ? 'PILLAR II' : 'PILLAR III'} — MODULE {moduleData.order}
           </div>
@@ -293,7 +340,7 @@ export default function ModulePage() {
                 <span className="block mt-1 text-charcoal/70">Not: Explanation → Passive nodding.</span>
               </p>
             </div>
-            <FiveForcesAccordion />
+            <FiveForcesAccordion moduleId={moduleId} />
             <div className="mt-6 p-4 border border-charcoal/15 bg-parchment/10" style={{ borderRadius: 0 }}>
               <p className="label-small-caps text-charcoal/60 mb-2">Scoring rule (total / 25)</p>
               <p className="text-sm text-charcoal/80">

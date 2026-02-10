@@ -163,7 +163,69 @@ export interface ModuleOutput {
   readingCompanionListenCompleted?: boolean;
   /** Reading Companion: user completed Essentials or Listen (unlocks Apply). */
   readingCompanionEssentialsCompleted?: boolean;
+  /** Porter's Five Forces (module-2): per-force judgment, slider, reflection. Keyed by force id. */
+  fiveForcesJudgments?: Record<string, { judgment: 'favorable' | 'neutral' | 'hostile' | null; slider: number; reflection: string }>;
+  /** AI grader output (rubric + evidence). Used for valuation/CAC; raw text does not drive numbers directly. */
+  aiGrade?: AIGrade;
   timestamp: string;
+}
+
+/** Per-module AI grade from OpenAI grader. Structured output; blended with heuristics for valuation. */
+export interface AIGrade {
+  overall: number; // 0–10
+  rubric: {
+    specificity: number;
+    falsifiability: number;
+    tradeoffClarity: number;
+    evidenceLinkage: number;
+    riskHonesty: number;
+  };
+  confidence: number; // 0–1
+  redFlags: string[];
+  evidenceQuotes: string[];
+  suggestions: string[];
+}
+
+// --- Rubric-based grading (0–100, deterministic + optional LLM) ---
+
+/** Weights per criterion; must sum to 100 before penalties. Penalties are subtracted. */
+export interface RubricWeights {
+  correctness: number;    // 0–40
+  completeness: number;   // 0–20
+  reasoning: number;     // 0–15
+  specificity: number;   // 0–10
+  clarity: number;       // 0–10
+  /** Max penalty for hallucination/unsupported claims (0 to -15). */
+  hallucinationPenaltyMax: number; // negative
+  /** Max penalty for fluff/word-salad (0 to -10). */
+  fluffPenaltyMax: number; // negative
+}
+
+/** Sub-scores per criterion before penalties. */
+export interface CriterionScore {
+  correctness: number;
+  completeness: number;
+  reasoning: number;
+  specificity: number;
+  clarity: number;
+  /** Combined penalties (0 or negative). */
+  penalties: number;
+}
+
+/** Result of grading a single answer. 0–100, verdict, optional feedback. */
+export interface GradeResult {
+  finalScore: number;       // 0–100, clamped
+  criteria: CriterionScore;
+  verdict: 'pass' | 'borderline' | 'fail';
+  notes: string[];          // 1–2 short bullets when requestFeedback false
+  /** Only present when requestFeedback was true. */
+  feedback?: {
+    strengths: string[];
+    improvements: string[];
+    nextStep: string;
+  };
+  /** Source: deterministic vs LLM (for debugging). */
+  source: 'deterministic' | 'llm';
 }
 
 export interface WorksheetData {

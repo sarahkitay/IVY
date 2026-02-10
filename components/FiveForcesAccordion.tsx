@@ -1,7 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { FIVE_FORCES_DATA, FIVE_FORCES_INTERPRETATION } from '@/data/fiveForcesData';
+import { useBusinessState } from '@/store/useBusinessState';
+import { useProjectStore } from '@/store/useProjectStore';
 
 type Judgment = 'favorable' | 'neutral' | 'hostile' | null;
 type ForceJudgment = { judgment: Judgment; slider: number; reflection: string };
@@ -20,23 +22,40 @@ const SLIDER_LABELS: Record<number, string> = {
   5: '5 — Hostile',
 };
 
-export default function FiveForcesAccordion() {
+const DEFAULT_JUDGMENT: ForceJudgment = { judgment: null, slider: 3, reflection: '' };
+
+interface FiveForcesAccordionProps {
+  moduleId: string;
+}
+
+export default function FiveForcesAccordion({ moduleId }: FiveForcesAccordionProps) {
   const [openId, setOpenId] = useState<string | null>(null);
-  const [judgments, setJudgments] = useState<Record<string, ForceJudgment>>({});
+  const { state, updateModuleOutput } = useBusinessState();
+  const syncCurrentProjectToFirebase = useProjectStore((s) => s.syncCurrentProjectToFirebase);
 
-  const getJudgment = (id: string): ForceJudgment => {
-    return judgments[id] ?? { judgment: null, slider: 3, reflection: '' };
-  };
+  // Persisted in Firebase via moduleOutputs[moduleId].fiveForcesJudgments
+  const judgments: Record<string, ForceJudgment> = state.moduleOutputs[moduleId]?.fiveForcesJudgments ?? {};
 
-  const setJudgment = (id: string, update: Partial<ForceJudgment>) => {
-    setJudgments((prev) => ({
-      ...prev,
-      [id]: { ...getJudgment(id), ...update },
-    }));
-  };
+  const getJudgment = useCallback((id: string): ForceJudgment => {
+    return judgments[id] ?? DEFAULT_JUDGMENT;
+  }, [judgments]);
+
+  const setJudgment = useCallback((id: string, update: Partial<ForceJudgment>) => {
+    const latest = useBusinessState.getState().state.moduleOutputs[moduleId]?.fiveForcesJudgments ?? {};
+    const current = latest[id] ?? DEFAULT_JUDGMENT;
+    const next = { ...latest, [id]: { ...current, ...update } };
+    updateModuleOutput(moduleId, { fiveForcesJudgments: next });
+  }, [moduleId, updateModuleOutput]);
 
   const toggle = (id: string) => {
-    setOpenId((prev) => (prev === id ? null : id));
+    setOpenId((prev) => {
+      const next = prev === id ? null : id;
+      // When closing a panel, flush to Firebase so selections and text are saved immediately
+      if (prev === id) {
+        syncCurrentProjectToFirebase().catch(() => {});
+      }
+      return next;
+    });
   };
 
   const hasJudgment = (id: string) => getJudgment(id).judgment !== null;

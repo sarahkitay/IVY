@@ -27,6 +27,51 @@ Unlike most apps, you cannot "scroll" to the end. Progression is blocked by `req
 - **Logic Gate**: To unlock "Module 2," the Module1_State must contain five non-null entries: Market Assumption, Non-Obvious Competitor, Job Layer, Context Risk, and Advantage.
 - **Final Exam**: Each module ends with a "Final Exam Prompt" that requires the user to solve a crisis using the mathematical models they built in that module.
 
+## Grading (rubric-based)
+
+Free-text answers are scored with a **deterministic rubric** (0–100) and optional **LLM-assisted** grading. Feedback is generated only when requested.
+
+### Defining rubrics for new questions
+
+Use the default rubric or pass custom weights when grading:
+
+```ts
+import { deterministicGrade, DEFAULT_RUBRIC } from '@/utils/grading';
+import type { RubricWeights } from '@/types';
+
+// Default: correctness 40, completeness 20, reasoning 15, specificity 10, clarity 10; penalties -15 / -10
+const result = deterministicGrade(questionPrompt, userAnswer, {
+  expectedAnswer: 'optional key phrases or model answer',
+  rubric: DEFAULT_RUBRIC,
+  includeKeywordModifier: true,
+});
+
+// Custom rubric for a question that emphasizes reasoning
+const customRubric: RubricWeights = {
+  correctness: 35,
+  completeness: 20,
+  reasoning: 25,
+  specificity: 10,
+  clarity: 10,
+  hallucinationPenaltyMax: -15,
+  fluffPenaltyMax: -10,
+};
+const r2 = deterministicGrade(prompt, answer, { rubric: customRubric });
+```
+
+- **correctness** (0–40): Alignment with expected answer or key facts; numbers and concrete terms.
+- **completeness** (0–20): Addresses all parts of the question; multiple distinct points.
+- **reasoning** (0–15): "Because", "if…then", causal chain, metrics.
+- **specificity** (0–10): Numbers, names, examples, bullets.
+- **clarity** (0–10): Structure, readability; penalize rambling or fluff density.
+- **penalties**: Confident unsupported claims (up to -15); word-salad / buzzwords (up to -10).
+
+Keywords are a **small modifier only** (±5 points); repeated keywords are penalized (anti-gaming).
+
+### API: single-answer grading
+
+`POST /api/grade` with `{ questionPrompt, userAnswer, expectedAnswer?, requestFeedback?, useLLM? }` returns `gradeResult` (0–100, criteria, verdict, notes) and optionally `feedback` when `requestFeedback === true`. Use `useLLM: true` and set `OPENAI_API_KEY` for LLM grading; otherwise deterministic scoring is used.
+
 ## Tech Stack
 
 - **Next.js 14** (App Router)

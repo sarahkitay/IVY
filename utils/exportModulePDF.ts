@@ -1,6 +1,7 @@
 import { jsPDF } from 'jspdf';
 import { Module } from '@/types';
 import { BusinessState } from '@/types';
+import { FIVE_FORCES_DATA } from '@/data/fiveForcesData';
 
 /**
  * Generate an Ivy-branded PDF for a single module. Used from module page and home page.
@@ -120,6 +121,23 @@ export function exportModulePDF(
   if (moduleOutput?.synthesisResponse?.trim()) {
     addText('SYNTHESIS', 10, true);
     addText(moduleOutput.synthesisResponse.trim(), 9);
+    y += 8;
+  }
+
+  // Porter's Five Forces: judgments, sliders, and reflections (saved in Firebase and included in PDF)
+  const fiveForcesJudgments = moduleOutput?.fiveForcesJudgments;
+  if (fiveForcesJudgments && Object.keys(fiveForcesJudgments).length > 0) {
+    addText("PORTER'S FIVE FORCES", 10, true);
+    FIVE_FORCES_DATA.forEach((force) => {
+      const j = fiveForcesJudgments[force.id];
+      if (!j) return;
+      const judgmentLabel = j.judgment ? j.judgment.charAt(0).toUpperCase() + j.judgment.slice(1) : '—';
+      addText(`${force.title}: ${judgmentLabel} (${j.slider}/5)`, 9, true);
+      if (j.reflection?.trim()) {
+        addText(`  Reflection: ${j.reflection.trim()}`, 9);
+      }
+      y += 4;
+    });
     y += 8;
   }
 
